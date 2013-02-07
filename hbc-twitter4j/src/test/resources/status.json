@@ -1,0 +1,40 @@
+{
+  "coordinates": null,
+  "favorited": false,
+  "truncated": false,
+  "created_at": "Tue Apr 17 16:38:18 +0000 2012",
+  "id_str": "192290904646754304",
+  "entities": {
+    "urls": [
+
+    ],
+    "hashtags": [
+
+    ],
+    "user_mentions": [
+      {
+        "name": "Micah McVicker",
+        "id_str": "166661446",
+        "id": 166661446,
+        "indices": [
+          0,
+          14
+        ],
+        "screen_name": "MicahMcVicker"
+      }
+    ]
+  },
+  "in_reply_to_user_id_str": "166661446",
+  "contributors": null,
+  "text": "@MicahMcVicker make sure you're using include_rts=true and no other filters, then walking your timeline by since_id and max_id",
+  "retweet_count": 0,
+  "in_reply_to_status_id_str": "192290470427246594",
+  "id": 192290904646754304,
+  "geo": null,
+  "retweeted": false,
+  "in_reply_to_user_id": 166661446,
+  "place": null,
+  "in_reply_to_screen_name": "MicahMcVicker",
+  "source": "<a href=\"http://sites.google.com/site/yorufukurou/\" rel=\"nofollow\">YoruFukurou</a>",
+  "in_reply_to_status_id": 192290470427246594
+}

@@ -1,0 +1,7 @@
+{
+  "disconnect":{
+    "code": 5,
+    "stream_name":"somestreamname123",
+    "reason":"reason for disconnection"
+  }
+}
