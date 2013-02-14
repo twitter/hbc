@@ -14,9 +14,9 @@
 package com.twitter.hbc.twitter4j.handler;
 
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
-import twitter4j.UserStreamListener;
+import twitter4j.SiteStreamsListener;
 
-public interface SitestreamHandler extends UserStreamListener {
+public interface SitestreamHandler extends SiteStreamsListener {
   /**
    * See documentation on disconnect messages here: https://dev.twitter.com/docs/streaming-apis/messages#Disconnect_messages_disconnect
    */
