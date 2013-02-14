@@ -11,6 +11,7 @@
   <modules>
     <module>hbc-core</module>
     <module>hbc-twitter4j</module>
+    <module>hbc-example</module>
   </modules>
 
   <dependencies>

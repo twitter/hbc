@@ -138,7 +138,6 @@ public class BasicClient implements Client {
   /**
    * Stops the current connection. No reconnecting will occur. Kills thread + cleanup.
    * Waits for the thread to end
-   * TODO: there shouldn't be a stop and a shutdown
    **/
   @Override
   public void stop() {

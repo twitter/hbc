@@ -32,7 +32,6 @@ public class StatusesFilterEndpoint extends DefaultStreamingEndpoint {
    */
   public StatusesFilterEndpoint(boolean backfillable) {
     super(PATH, HttpConstants.HTTP_POST, backfillable);
-    delimited(true);
   }
 
   public StatusesFilterEndpoint followings(List<Long> userIds) {

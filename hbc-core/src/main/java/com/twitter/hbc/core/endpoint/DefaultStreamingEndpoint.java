@@ -22,6 +22,8 @@ public class DefaultStreamingEndpoint extends BaseEndpoint implements StreamingE
 
   protected final boolean backfillable;
   private volatile boolean delimited;
+  private volatile boolean stallWarnings;
+
   /**
    * All endpoints have delimited=length by default
    * @param path must start with "/". Should not contain the api version
@@ -31,6 +33,7 @@ public class DefaultStreamingEndpoint extends BaseEndpoint implements StreamingE
     super(path, httpMethod);
     this.backfillable = backfillable;
     this.delimited = true;
+    this.stallWarnings = true;
   }
 
   public boolean isBackfillable() {
@@ -39,25 +42,25 @@ public class DefaultStreamingEndpoint extends BaseEndpoint implements StreamingE
 
   @Override
   protected void addDefaultParams() {
-    delimited(this.delimited);
-  }
-
-  public final void delimited(boolean on) {
-    if (on) {
+    if (this.delimited) {
       addQueryParameter(Constants.DELIMITED_PARAM, Constants.DELIMITED_VALUE);
-      delimited = true;
     } else {
       removeQueryParameter(Constants.DELIMITED_PARAM);
-      delimited = false;
     }
-  }
 
-  public final void stallWarnings(boolean on) {
-    if (on) {
+    if (this.stallWarnings) {
       addQueryParameter(Constants.STALL_WARNING_PARAM, Constants.STALL_WARNING_VALUE);
     } else {
       removeQueryParameter(Constants.STALL_WARNING_PARAM);
     }
+  }
+
+  public final void delimited(boolean on) {
+    delimited = on;
+  }
+
+  public final void stallWarnings(boolean on) {
+    stallWarnings = on;
   }
 
   @Override

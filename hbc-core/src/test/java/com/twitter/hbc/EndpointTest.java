@@ -19,7 +19,10 @@ import com.twitter.hbc.core.endpoint.DefaultStreamingEndpoint;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static junit.framework.Assert.*;
 
 public class EndpointTest {
 
@@ -35,5 +38,26 @@ public class EndpointTest {
     StreamingEndpoint endpoint = new DefaultStreamingEndpoint("/path", HttpConstants.HTTP_GET, false);
     endpoint.setApiVersion("2");
     assertEquals(endpoint.getURI().split("/")[1], "2");
+  }
+
+  @Test
+  public void testDefaultParams() throws MalformedURLException {
+    StreamingEndpoint endpoint = new DefaultStreamingEndpoint("/path", HttpConstants.HTTP_GET, false);
+    URL url = new URL(Constants.STREAM_HOST + endpoint.getURI());
+    assertTrue(url.getQuery().contains(Constants.DELIMITED_PARAM + "=" + Constants.DELIMITED_VALUE));
+    assertTrue(url.getQuery().contains(Constants.STALL_WARNING_PARAM + "=" + Constants.STALL_WARNING_VALUE));
+  }
+
+  @Test
+  public void testChangeDefaultParamValues() throws MalformedURLException {
+    DefaultStreamingEndpoint endpoint = new DefaultStreamingEndpoint("/path", HttpConstants.HTTP_GET, false);
+    endpoint.delimited(false);
+    URL url = new URL(Constants.STREAM_HOST + endpoint.getURI());
+    assertFalse(url.getQuery().contains(Constants.DELIMITED_PARAM));
+    assertTrue(url.getQuery().contains(Constants.STALL_WARNING_PARAM + "=" + Constants.STALL_WARNING_VALUE));
+
+    endpoint.stallWarnings(false);
+    url = new URL(Constants.STREAM_HOST + endpoint.getURI());
+    assertNull(url.getQuery());
   }
 }
