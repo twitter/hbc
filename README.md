@@ -26,10 +26,14 @@ BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>(1000);
 
 /** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
 Hosts hosebirdHosts = new BasicHost(Constants.STREAM_HOST);
-StreamingEndpoint hosebirdEndpoint = new StatusesFirehoseEndpoint();
-Authentication hosebirdAuth = new BasicAuth("username", "password");
+StreamingEndpoint endpoint = new StatusesFilterEndpoint();
+// Optional: set up some followings and track terms
+List<Long> followings = Lists.newArrayList(1234L, 566788L);
+List<String> terms = Lists.newArrayList("twitter", "api");
+endpoint.followings(followings);
+endpoint.trackTerms(terms);
 
-hosebirdEndpoint.partitions(Lists.newLinkedList(0,1,2,3));   // passing in some parameters to the firehose endpoint
+Authentication hosebirdAuth = new OAuth1("consumerKey", "consumerSecret", "token", "secret");
 ```
 
 Creating a client:
@@ -99,11 +103,11 @@ endpoint.trackTerms(terms);
 ```java
 StreamingEndpoint endpoint = new StatusesFirehoseEndpoint();
 // Optional: set up the partitions you want to connect to
-List<Integer> partitions = Lists.newArrayList(1);
+List<Integer> partitions = Lists.newArrayList(0,1,2,3);
 endpoint.partitions(partitions);
 // By default, delimited=length is already set for use by our StringDelimitedProcessor
 // Do this to unset it (Be sure you really want to do this)
-endpoint.delimited(false);
+// endpoint.delimited(false);
 ```
 
 #### Setting up a Processor:
