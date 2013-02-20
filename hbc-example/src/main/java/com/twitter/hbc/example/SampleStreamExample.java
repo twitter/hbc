@@ -26,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class SampleStreamExample {
 
-  public void oauth(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
+  public static void oauth(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
     // Create an appropriately sized blocking queue
     BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
 
@@ -59,5 +59,13 @@ public class SampleStreamExample {
 
     // Print some stats
     System.out.printf("The client read %d messages!\n", client.getStatsTracker().getNumMessages());
+  }
+  
+  public static void main(String[] args) {
+	  try {
+	  SampleStreamExample.oauth(args[0], args[1], args[2], args[3]);
+	  } catch (InterruptedException e) {
+		  System.out.println(e);
+	  }
   }
 }
