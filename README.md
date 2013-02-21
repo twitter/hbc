@@ -33,6 +33,7 @@ List<String> terms = Lists.newArrayList("twitter", "api");
 endpoint.followings(followings);
 endpoint.trackTerms(terms);
 
+// These secrets should be read from a config file
 Authentication hosebirdAuth = new OAuth1("consumerKey", "consumerSecret", "token", "secret");
 ```
 
@@ -67,9 +68,27 @@ You can close a connection with
 hosebirdClient.shutdown();
 ```
 
+### Quick Start Example
+
+To run the sample stream example:
+
+```
+mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Daccess.token=ABC -Daccess.token.secret=ABCSECRET
+```
+
+Alternatively you can set those properties in hbc-examples/pom.xml
+
+Note: You may need to run ```mvn install``` prior to this
+
 ## The Details
 
 ### Authentication:
+
+Declaring OAuth1 credentials in the client (preferred):
+
+```java
+new OAuth1("consumerKey", "consumerSecret", "token", "tokenSecret")
+```
 
 Declaring basic auth credentials in the client:
 
@@ -77,11 +96,7 @@ Declaring basic auth credentials in the client:
 new BasicAuth("username", "password")
 ```
 
-Declaring OAuth1 credentials in the client:
-
-```java
-new OAuth1("consumerKey", "consumerSecret", "token", "tokenSecret")
-```
+Be sure not to pass your tokens/passwords as strings directly into the initializers. They should be read from a configuration file that isn't checked in with your code or something similar. Safety first.
 
 ### Specifying an endpoint
 
@@ -185,6 +200,21 @@ UserstreamListener listener = new UserstreamHandler() {
 listeners.append(listener);
 Twitter4jClient t4jClient = new Twitter4jUserstreamClient(client, msgQueue, listeners, executorService);
 ```
+
+## Building / Testing
+
+To build locally:
+
+```
+mvn compile
+```
+To run tests:
+
+```
+mvn test
+```
+
+There is currently an issue compiling with Java 1.7 involving JSONObjectParser in the twitter4j module overriding an abstract method in Comparable. We're still investigating why.
 
 ## Problems?
 

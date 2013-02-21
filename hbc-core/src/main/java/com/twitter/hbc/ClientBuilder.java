@@ -28,7 +28,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * TODO: Some real comments
+ * A builder class for our BasicClient.
  */
 public class ClientBuilder {
 
@@ -63,16 +63,25 @@ public class ClientBuilder {
     reconnectionManager = new ReconnectionManager(5);
   }
 
+  /**
+   * @param name Name of the client used for logging and other diagnostic purposes.
+   */
   public ClientBuilder name(String name) {
     this.name = Preconditions.checkNotNull(name);
     return this;
   }
 
+  /**
+   * @param gzip Turn gzip on or off. Enabled by default
+   */
   public ClientBuilder gzipEnabled(boolean gzip) {
     this.enableGZip = gzip;
     return this;
   }
 
+  /**
+   * @param host Http host in the form of <scheme>://<host>
+   */
   public ClientBuilder hosts(String host) {
     this.hosts = new HttpHosts(Preconditions.checkNotNull(host));
     return this;
@@ -83,6 +92,9 @@ public class ClientBuilder {
     return this;
   }
 
+  /**
+   * @param endpoint StreamingEndpoint that the client will connect to
+   */
   public ClientBuilder endpoint(StreamingEndpoint endpoint){
     this.endpoint = Preconditions.checkNotNull(endpoint);
     return this;
@@ -103,6 +115,9 @@ public class ClientBuilder {
     return this;
   }
 
+  /**
+   * @param retries Number of retries to attempt when we experience retryable connection errors
+   */
   public ClientBuilder retries(int retries) {
     this.reconnectionManager = new ReconnectionManager(retries);
     return this;

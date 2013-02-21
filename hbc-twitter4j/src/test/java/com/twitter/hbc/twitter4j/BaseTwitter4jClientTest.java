@@ -93,7 +93,6 @@ public class BaseTwitter4jClientTest {
     verify(executor).shutdown();
   }
 
-  // TODO: test whether individual messages hit the listeners? would require one of each different msg type
   @Test
   public void testStatusListener() throws JSONException, TwitterException, IOException {
     t4jClient.processMessage(-1, new JSONObject(status));
