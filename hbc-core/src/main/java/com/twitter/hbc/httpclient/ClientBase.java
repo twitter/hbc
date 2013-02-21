@@ -212,7 +212,6 @@ class ClientBase implements Runnable {
     logger.warn(name + " Error connecting w/ status code - {}, reason - {}", statusCode, statusLine.getReasonPhrase());
     statsReporter.incrNumConnectionFailures();
     addEvent(new HttpResponseEvent(EventType.HTTP_ERROR, statusLine));
-    logger.warn(name + " Error connecting w/ status code - %d, reason - %s", statusCode, statusLine.getReasonPhrase());
     if (HttpConstants.FATAL_CODES.contains(statusCode)) {
       setExitStatus(new Event(EventType.STOPPED_BY_ERROR, "Fatal error code: " + statusCode));
     } else if (statusCode < 500 && statusCode >= 400) {
@@ -246,7 +245,7 @@ class ClientBase implements Runnable {
         }
       }
     } catch (RuntimeException e) {
-      logger.warn("%s Unknown processing connection: fatal", name);
+      logger.warn(name + " Unknown error processing connection: ", e);
       setExitStatus(new Event(EventType.PROCESSING, e));
     } catch (IOException ex) {
       // connection issue? whatever. let's try connecting again

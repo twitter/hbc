@@ -35,7 +35,6 @@ public class Twitter4jStatusClient extends BaseTwitter4jClient {
   // immutable
   private final List<? extends StatusListener> statusListeners;
 
-  // TODO: consider using a builder pattern for this like our other client implementations
   public Twitter4jStatusClient(BasicClient client, BlockingQueue<String> blockingQueue, List<? extends StatusListener> listeners, ExecutorService executorService) {
     super(client, blockingQueue, executorService);
     Preconditions.checkNotNull(listeners);
