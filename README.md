@@ -1,32 +1,33 @@
 # Hosebird Client (hbc) [![Build Status](https://travis-ci.org/twitter/hbc.png)](http://travis-ci.org/twitter/hbc)
 
-A Java HTTP client for consuming Twitter's Streaming API
+A Java HTTP client for consuming Twitter's [Streaming API](https://dev.twitter.com/docs/streaming-apis)
 
 ## Features
 * GZip support
 * OAuth support
 * Partitioning support
-* Automatic reconnections w/ appropriate backfill counts
+* Automatic reconnections with appropriate backfill counts
 * Access to raw bytes payload
 * Proper backoffs/retry schemes
 * Relevant statistics/events
+* Control stream support for sitestreams
 
 ## Getting Started
 
-The Hosebird client is broken down into two modules: hbc-core and hbc-twitter4j. The hbc-core module uses a message queue, which the consumer can poll for the raw String messages, while the hbc-twitter4j module uses [twitter4j](www.twitter4j.org) listeners and data model on top of the message queue to provide a parsing layer.
+The Hosebird client is broken down into two modules: hbc-core and hbc-twitter4j. The hbc-core module uses a message queue, which the consumer can poll for the raw String messages, while the hbc-twitter4j module uses the [twitter4j](http://twitter4j.org) listeners and data model on top of the message queue to provide a parsing layer.
 
 ### Quickstart
 
 Declaring the connection information:
 ```java
 /** Set up your blocking queues: Be sure to size these properly based on expected TPS of your stream */
-BlockingQueue<String> = new LinkedBlockingQueue<String>(100000);
-BlockingQueue<Event> = new LinkedBlockingQueue<Event>(1000);
-    
+BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(100000);
+BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>(1000);
+
 /** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
 Hosts hosebirdHosts = new BasicHost(Constants.STREAM_HOST);
 StreamingEndpoint hosebirdEndpoint = new StatusesFirehoseEndpoint();
-Authentication hosebirdAuth = new BasicAuth("username", "password")
+Authentication hosebirdAuth = new BasicAuth("username", "password");
 
 hosebirdEndpoint.partitions(Lists.newLinkedList(0,1,2,3));   // passing in some parameters to the firehose endpoint
 ```
@@ -34,12 +35,12 @@ hosebirdEndpoint.partitions(Lists.newLinkedList(0,1,2,3));   // passing in some 
 Creating a client:
 ```java
 ClientBuilder builder = new ClientBuilder()
-    .name("Hosebird-Client-01") // optional: mainly for the logs
-    .hosts(hosebirdHosts)
-    .authentication(hosebirdAuth)
-    .endpoint(hosebirdEndpoint)
-    .processor(new StringDelimitedProcessor(msgQueue))
-    .eventMessageQueue(eventQueue); // optional: use this if you want to process client events
+  .name("Hosebird-Client-01")                              // optional: mainly for the logs
+  .hosts(hosebirdHosts)
+  .authentication(hosebirdAuth)
+  .endpoint(hosebirdEndpoint)
+  .processor(new StringDelimitedProcessor(msgQueue))
+  .eventMessageQueue(eventQueue);                          // optional: use this if you want to process client events
 
 Client hosebirdClient = builder.build();
 // Attempts to establish a connection.
@@ -50,7 +51,9 @@ Now, msgQueue and eventQueue will now start being filled with messages/events. R
 ```java
 // on a different thread, or multiple different threads....
 while (!client.isDone()) {
-  msgQueue.take();
+  String msg = msgQueue.take();
+  something(msg);
+  profit();
 }
 ```
 
@@ -105,7 +108,7 @@ endpoint.delimited(false);
 
 #### Setting up a Processor:
 
-The hosebird client uses the notion of a "processor" which processes the stream and put individual messages into the provided BlockingQueue. We provide a StringDelimitedProcessor class which should be used in conjunction with the StreamingEndpoints provided. The processor takes as its parameter a BlockingQueue, which the client will put String messages into as it streams them. 
+The hosebird client uses the notion of a "processor" which processes the stream and put individual messages into the provided BlockingQueue. We provide a StringDelimitedProcessor class which should be used in conjunction with the StreamingEndpoints provided. The processor takes as its parameter a BlockingQueue, which the client will put String messages into as it streams them.
 
 Setting up a StringDelimitedProcessor is as easy as:
 
@@ -121,10 +124,10 @@ To make control stream calls with the hosebird client, first create a client. Wh
 
 ```java
 SitestreamController controlStreams = client.getSitestreamController();
+// When making a connection to the stream with control stream support one of the response messages will include the streamId.
+// You'll want to hold on to that when processing the messages if you plan on using control streams
+
 // add userId to our control stream
-// Typically when making a connection to the stream with control stream support, 
-// the first message you receive will be the streamId. You'll want to hold on to 
-// that when processing the messages if you plan on using control streams
 controlStreams.addUser(streamId, userId);
 // remove userId to our control stream
 controlStreams.removeUser(streamId, userId);
@@ -132,7 +135,7 @@ controlStreams.removeUser(streamId, userId);
 
 ### The hbc-twitter4j module
 
-The hbc-twitter4j module uses the twitter4j listeners and models. To use it, create a normal Client object like before using the ClientBuilder, then depending on which type of stream you are reading from, create an appropriate Twitter4jClient. The Twitter4jClient wraps around the Client it is passed, and calls the callback methods in the twitter4j listeners whenever it retrieves a message from the message queue. The actual work of polling from the message queue, parsing, and executing the callback method is done by forking threads from an executor service that the client is passed. 
+The hbc-twitter4j module uses the twitter4j listeners and models. To use it, create a normal Client object like before using the ClientBuilder, then depending on which type of stream you are reading from, create an appropriate Twitter4jClient. The Twitter4jClient wraps around the Client it is passed, and calls the callback methods in the twitter4j listeners whenever it retrieves a message from the message queue. The actual work of polling from the message queue, parsing, and executing the callback method is done by forking threads from an executor service that the client is passed.
 
 If connecting to a status stream (filter, firehose, sample), use Twitter4jStatusClient:
 
@@ -181,8 +184,8 @@ Twitter4jClient t4jClient = new Twitter4jUserstreamClient(client, msgQueue, list
 
 ## Problems?
 
-In the remote possibility that there exist bugs in this code, please report them to:
-<https://github.com/twitter/hbc/issues>
+If you find any issues please [report them](https://github.com/twitter/hosebird-client/issues) or better,
+send a [pull request](https://github.com/twitter/hosebird-client/pulls).
 
 ## Authors:
 * Steven Liu
