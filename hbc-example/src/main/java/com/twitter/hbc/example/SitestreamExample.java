@@ -24,7 +24,12 @@ import com.twitter.hbc.httpclient.ControlStreamException;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 import com.twitter.hbc.twitter4j.Twitter4jSitestreamClient;
-import shaded.twitter4j.*;
+
+/**
+ * Use the shaded versions if you are using a stable version of the library:
+ *   import shadedtwitter4j.Status;
+ */
+import twitter4j.*;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;

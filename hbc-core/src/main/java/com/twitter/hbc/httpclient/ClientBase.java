@@ -172,10 +172,7 @@ class ClientBase implements Runnable {
       addEvent(new ConnectionEvent(EventType.CONNECTION_ATTEMPT, request));
       status = conn.connect(request);
     } catch (UnknownHostException e) {
-      // skip? banking on some httpHosts.nextHost() being legitimate, or else this connection will fail.
-      // All of these silently caught exceptions that mask some potential underlying problem seem to be something
-      // that the library user might want to know about. I'm thinking about providing some callback methods that
-      // get invoked whenever an interesting/dangerous exception like this gets thrown. Thoughts?
+      // banking on some httpHosts.nextHost() being legitimate, or else this connection will fail.
       logger.warn("{} Unknown host - {}", name, request.getURI().getHost());
       addEvent(new Event(EventType.CONNECTION_ERROR, e));
     } catch (IOException e) {

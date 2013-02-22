@@ -49,8 +49,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BasicClient implements Client {
 
   private final static int DEFAULT_STOP_TIMEOUT_MILLIS = 5000;
-  // TODO: need a better way to keep this up to sync with version
-  private final static String USER_AGENT = "Hosebird-Client v1.2.0";
 
   private final ExecutorService executorService;
 
@@ -61,7 +59,7 @@ public class BasicClient implements Client {
 
   public BasicClient(String name, Hosts hosts, StreamingEndpoint endpoint, Authentication auth, boolean enableGZip, HosebirdMessageProcessor processor,
                      ReconnectionManager reconnectionManager, RateTracker rateTracker, ExecutorService executorService,
-                     @Nullable BlockingQueue<Event> eventsQueue) {
+                     @Nullable BlockingQueue<Event> eventsQueue, final String userAgent) {
     Preconditions.checkNotNull(auth);
     HttpClient client;
     DefaultHttpClient defaultClient = new DefaultHttpClient();
@@ -70,7 +68,7 @@ public class BasicClient implements Client {
     defaultClient.addRequestInterceptor(new HttpRequestInterceptor() {
       @Override
       public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
-        httpRequest.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
+        httpRequest.addHeader(HttpHeaders.USER_AGENT, userAgent);
       }
     });
 

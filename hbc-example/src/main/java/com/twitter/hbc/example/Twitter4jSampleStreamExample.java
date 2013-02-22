@@ -24,9 +24,16 @@ import com.twitter.hbc.httpclient.auth.OAuth1;
 import com.twitter.hbc.twitter4j.Twitter4jStatusClient;
 import com.twitter.hbc.twitter4j.handler.StatusStreamHandler;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
-import shaded.twitter4j.Status;
-import shaded.twitter4j.StatusDeletionNotice;
-import shaded.twitter4j.StatusListener;
+
+/**
+ * Use the shaded versions if you are using a stable version of the library:
+ *   import shadedtwitter4j.Status;
+ *   import shaded.twitter4j.StatusDeletionNotice;
+ *   import shaded.twitter4j.StatusListener;
+ */
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;

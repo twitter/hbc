@@ -20,13 +20,18 @@
     <consumer.key>TODO</consumer.key>
     <consumer.secret>TODO</consumer.secret>
     <access.token>TODO</access.token>
-    <acesss.token.secret>TODO</acesss.token.secret>
+    <access.token.secret>TODO</access.token.secret>
   </properties>
   <dependencies>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>hbc-twitter4j</artifactId>
       <version>1.2.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.2</version>
     </dependency>
   </dependencies>
   <build>
@@ -49,7 +54,7 @@
             <argument>${consumer.key}</argument>
             <argument>${consumer.secret}</argument>
             <argument>${access.token}</argument>
-            <argument>${acesss.token.secret}</argument>
+            <argument>${access.token.secret}</argument>
           </arguments>
         </configuration>
       </plugin>

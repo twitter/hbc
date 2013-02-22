@@ -78,8 +78,6 @@ mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Dacce
 
 Alternatively you can set those properties in hbc-examples/pom.xml
 
-Note: You may need to run ```mvn install``` prior to this
-
 ## The Details
 
 ### Authentication:
@@ -181,6 +179,10 @@ All Twitter4jClients support Handlers, which extend their respective Twitter4j l
 
 ```java
 UserstreamListener listener = new UserstreamHandler() {
+  /**
+   * <UserstreamListener methods here>
+   */
+
   @Override
   public void onDisconnectMessage(DisconnectMessage disconnectMessage) {
     // this method is called when a disconnect message is received

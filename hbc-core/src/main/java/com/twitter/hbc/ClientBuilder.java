@@ -24,6 +24,9 @@ import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,6 +46,27 @@ public class ClientBuilder {
   protected ExecutorService executorService;
   protected BlockingQueue<Event> eventQueue;
   protected ReconnectionManager reconnectionManager;
+
+  private static String loadVersion() {
+    String userAgent = "Hosebird-Client";
+    try {
+      InputStream stream = ClientBuilder.class.getClassLoader().getResourceAsStream("build.properties");
+      try {
+        Properties prop = new Properties();
+        prop.load(stream);
+
+        String version = prop.getProperty("version");
+        userAgent += " " + version;
+      } finally {
+        stream.close();
+      }
+    } catch (IOException ex) {
+      // ignore
+    }
+    return userAgent;
+  }
+
+  private static final String USER_AGENT = loadVersion();
 
   public ClientBuilder() {
     enableGZip = true;
@@ -131,7 +155,7 @@ public class ClientBuilder {
 
   public BasicClient build() {
     return new BasicClient(name, hosts, endpoint, auth, enableGZip, processor, reconnectionManager,
-            rateTracker, executorService, eventQueue);
+            rateTracker, executorService, eventQueue, USER_AGENT);
   }
 }
 
