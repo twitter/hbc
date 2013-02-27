@@ -49,6 +49,7 @@ public class CharacterStreamReader {
       if (offset >= buffer.length || end - offset <= 0) {
         offset = 0;
         end = 0;
+        // We don't want DEFAULT_READ_COUNT to be too big: InputStreamReader will block until the amount is read
         readAmount(DEFAULT_READ_COUNT);
       }
 
