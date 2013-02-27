@@ -243,7 +243,8 @@ class ClientBase implements Runnable {
       }
     } catch (RuntimeException e) {
       logger.warn(name + " Unknown error processing connection: ", e);
-      setExitStatus(new Event(EventType.PROCESSING, e));
+      statsReporter.incrNumDisconnects();
+      addEvent(new Event(EventType.DISCONNECTED, e));
     } catch (IOException ex) {
       // connection issue? whatever. let's try connecting again
       // we can't really diagnosis the actual disconnection reason without parsing (looking at disconnect message)

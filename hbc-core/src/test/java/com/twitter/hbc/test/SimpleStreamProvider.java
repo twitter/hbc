@@ -27,10 +27,17 @@ public class SimpleStreamProvider implements InputStreamProvider {
 
   private final String CRLF = "\r\n";
 
-  public SimpleStreamProvider(String[] messages, boolean delimited) {
+  public SimpleStreamProvider(String[] messages, boolean delimited, boolean idleProbes) {
     this.messages = new ArrayList<String>(messages.length);
     for (String message : messages) {
+      if (idleProbes) {
+        this.messages.add("");
+      }
       if (delimited) {
+        if (idleProbes) {
+          this.messages.add("");  // add some idle probes
+          this.messages.add("");
+        }
         this.messages.add(delimitedMessage(message));
       } else {
         this.messages.add(message);
