@@ -23,6 +23,9 @@ import com.twitter.hbc.core.event.Event;
 import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +49,8 @@ public class ClientBuilder {
   protected ExecutorService executorService;
   protected BlockingQueue<Event> eventQueue;
   protected ReconnectionManager reconnectionManager;
+  protected int socketTimeoutMillis;
+  protected int connectionTimeoutMillis;
 
   private static String loadVersion() {
     String userAgent = "Hosebird-Client";
@@ -85,6 +90,9 @@ public class ClientBuilder {
     ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1, rateTrackerThreadFactory);
     rateTracker = new RateTracker(30000, 100, true, scheduledExecutor);
     reconnectionManager = new ReconnectionManager(5);
+
+    socketTimeoutMillis = 10000;
+    connectionTimeoutMillis = 4000;
   }
 
   /**
@@ -139,6 +147,16 @@ public class ClientBuilder {
     return this;
   }
 
+  public ClientBuilder socketTimeout(int millis) {
+    this.socketTimeoutMillis = millis;
+    return this;
+  }
+
+  public ClientBuilder connectionTimeout(int millis) {
+    this.connectionTimeoutMillis = millis;
+    return this;
+  }
+
   /**
    * @param retries Number of retries to attempt when we experience retryable connection errors
    */
@@ -154,8 +172,11 @@ public class ClientBuilder {
   }
 
   public BasicClient build() {
+    HttpParams params = new BasicHttpParams();
+    HttpConnectionParams.setSoTimeout(params, socketTimeoutMillis);
+    HttpConnectionParams.setConnectionTimeout(params, connectionTimeoutMillis);
     return new BasicClient(name, hosts, endpoint, auth, enableGZip, processor, reconnectionManager,
-            rateTracker, executorService, eventQueue, USER_AGENT);
+            rateTracker, executorService, eventQueue, USER_AGENT, params);
   }
 }
 

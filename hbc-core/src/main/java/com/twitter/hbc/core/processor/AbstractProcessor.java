@@ -13,6 +13,7 @@
 
 package com.twitter.hbc.core.processor;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -40,8 +41,15 @@ public abstract class AbstractProcessor<T> implements HosebirdMessageProcessor {
 
   @Override
   public boolean process() throws IOException, InterruptedException {
-    return queue.offer(processNextMessage(), offerTimeoutMillis, TimeUnit.MILLISECONDS);
+    T msg = processNextMessage();
+    if (msg != null) {
+      return queue.offer(msg, offerTimeoutMillis, TimeUnit.MILLISECONDS);
+    } else {
+      // if its null, just try again
+      return process();
+    }
   }
 
+  @Nullable
   protected abstract T processNextMessage() throws IOException;
 }
