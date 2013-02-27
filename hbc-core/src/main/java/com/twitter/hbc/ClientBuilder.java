@@ -91,7 +91,7 @@ public class ClientBuilder {
     rateTracker = new RateTracker(30000, 100, true, scheduledExecutor);
     reconnectionManager = new ReconnectionManager(5);
 
-    socketTimeoutMillis = 10000;
+    socketTimeoutMillis = 60000;
     connectionTimeoutMillis = 4000;
   }
 
