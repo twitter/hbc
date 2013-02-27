@@ -37,9 +37,13 @@ public class JSONObjectParser {
         return userId;
       }
 
-      @Override
+      //@Override -> Java7 compile issue
       public int compareTo(StatusDeletionNotice statusDeletionNotice) {
         return Longs.compare(getStatusId(), statusDeletionNotice.getStatusId());
+      }
+      // this should not be needed, but java7 compile issue.
+      public int compareTo(Object statusDeletionNotice) {
+        return compareTo((StatusDeletionNotice)statusDeletionNotice);
       }
     };
   }
