@@ -32,6 +32,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DecompressingHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +60,10 @@ public class BasicClient implements Client {
 
   public BasicClient(String name, Hosts hosts, StreamingEndpoint endpoint, Authentication auth, boolean enableGZip, HosebirdMessageProcessor processor,
                      ReconnectionManager reconnectionManager, RateTracker rateTracker, ExecutorService executorService,
-                     @Nullable BlockingQueue<Event> eventsQueue, final String userAgent) {
+                     @Nullable BlockingQueue<Event> eventsQueue, final String userAgent, HttpParams params) {
     Preconditions.checkNotNull(auth);
     HttpClient client;
-    DefaultHttpClient defaultClient = new DefaultHttpClient();
+    DefaultHttpClient defaultClient = new DefaultHttpClient(params);
 
     /** User-Agent processor */
     defaultClient.addRequestInterceptor(new HttpRequestInterceptor() {
