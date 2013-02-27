@@ -43,7 +43,30 @@ public class StringDelimitedProcessorTest {
    */
   @Test
   public void testStreamProcessing() throws Exception {
-    SimpleStreamProvider simpleStream = new SimpleStreamProvider(messages, true);
+    SimpleStreamProvider simpleStream = new SimpleStreamProvider(messages, true, false);
+    int count = 0;
+    try {
+      InputStream stream = simpleStream.createInputStream();
+      BlockingQueue<String> queue = new ArrayBlockingQueue<String>(10);
+      HosebirdMessageProcessor processor = new StringDelimitedProcessor(queue);
+      processor.setup(stream);
+      // read until we hit the IOException
+      while (count < messages.length * 2) {
+        processor.process();
+        // trimming to get rid of the CRLF
+        assertTrue(messages[count].equals(queue.take().trim()));
+        count++;
+      }
+      fail();
+    } catch (IOException e) {
+      // expected
+    }
+    assertEquals(messages.length, count);
+  }
+
+  @Test
+  public void testIdleProbe() throws Exception {
+    SimpleStreamProvider simpleStream = new SimpleStreamProvider(messages, true, true);
     int count = 0;
     try {
       InputStream stream = simpleStream.createInputStream();
