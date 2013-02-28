@@ -14,14 +14,15 @@
 package com.twitter.hbc.common;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
- * A single-threaded character stream reader that buffers minimally
+ * A single-threaded character stream reader that buffers minimally. This avoids the problem where low velocity streams
+ * would not see messages coming in due to it being buffered by the BufferedReader/InputStreamReader combo.
  */
 public class CharacterStreamReader {
 
-  private InputStreamReader is = null;
+  private final Reader reader;
 
   private final char[] buffer;
   private final StringBuilder sb;
@@ -31,8 +32,8 @@ public class CharacterStreamReader {
 
   private static int DEFAULT_READ_COUNT = 64;
 
-  public CharacterStreamReader(InputStreamReader reader, int bufferSize) {
-    is = reader;
+  public CharacterStreamReader(Reader reader, int bufferSize) {
+    this.reader = reader;
     buffer = new char[bufferSize];
     sb = new StringBuilder();
     offset = 0;
@@ -56,8 +57,8 @@ public class CharacterStreamReader {
       int curIndex = offset;
       for (; !done && curIndex < end; curIndex++) {
         if (buffer[curIndex] == '\n') {
-          // this string doesn't include the \n
-          sb.append(new String(buffer, offset, curIndex - offset));
+          // this string doesn't include the \n: the actual length with the \n is curIndex - offset + 1
+          sb.append(buffer, offset, curIndex - offset);
 
           // we don't want \r either
           int count = 0;
@@ -74,7 +75,7 @@ public class CharacterStreamReader {
       }
 
       if (!done) {
-        sb.append(new String(buffer, offset, end - offset));
+        sb.append(buffer, offset, end - offset);
         offset = end;
       }
     }
@@ -98,19 +99,19 @@ public class CharacterStreamReader {
       numBytesRemaining -= length;
     }
 
-    // next
+    // next read the remaining chars directly into our strBuffer
     if (numBytesRemaining > 0) {
-      IOUtils.readFully(is, strBuffer, strBufferIndex);
+      IOUtils.readFully(reader, strBuffer, strBufferIndex);
     }
 
     return new String(strBuffer);
   }
 
   private void readAmount(int numChars) throws IOException {
-    int bytesRead = is.read(buffer, end, Math.min(numChars, buffer.length - end));
+    int bytesRead = reader.read(buffer, end, Math.min(numChars, buffer.length - end));
     if (bytesRead < 0) {
       // EOF
-      throw new IOException(String.format("Reached end of stream."));
+      throw new IOException("Reached end of stream.");
     }
     end = end + bytesRead;
   }

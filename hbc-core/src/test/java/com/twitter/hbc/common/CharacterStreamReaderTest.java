@@ -93,7 +93,7 @@ public class CharacterStreamReaderTest {
 
   @Test
   public void testEmptyReadline() throws Exception {
-    InputStreamReader reader = mock(InputStreamReader.class);
+    Reader reader = mock(Reader.class);
 
     when(reader.read(any(char[].class), anyInt(), anyInt()))
             .thenReturn(-1);
@@ -182,16 +182,16 @@ public class CharacterStreamReaderTest {
 
     CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() * 10);
 
-    String msg1 = r.readline();
-    String msg2 = r.readline();
+    String msg1 = r.read(myMessage.length());
+    String msg2 = r.read(myMessage2.length());
 
-    assertEquals(msg1, myMessage.trim());
-    assertEquals(msg2, myMessage2.trim());
+    assertEquals(msg1, myMessage);
+    assertEquals(msg2, myMessage2);
   }
 
   @Test
   public void testEmptyRead() throws Exception {
-    InputStreamReader reader = mock(InputStreamReader.class);
+    Reader reader = mock(Reader.class);
 
     when(reader.read(any(char[].class), anyInt(), anyInt()))
             .thenReturn(-1);
