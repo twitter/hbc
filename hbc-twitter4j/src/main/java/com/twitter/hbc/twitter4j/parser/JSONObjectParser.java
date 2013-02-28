@@ -22,35 +22,10 @@ import twitter4j.internal.org.json.JSONObject;
 
 public class JSONObjectParser {
 
-//  public static class CompatibleStatusDeletionNotice implements StatusDeletionNotice {
-//    private final long statusId;
-//    private final long userId;
-//    CompatibleStatusDeletionNotice(long statusId, long userId) {
-//      this.statusId = statusId;
-//      this.userId = userId;
-//    }
-//
-//    @Override
-//    public long getStatusId() {
-//      return statusId;
-//    }
-//
-//    @Override
-//    public long getUserId() {
-//      return userId;
-//    }
-//
-//    // @Override
-//    public int compareTo(Object o) {
-//      return Longs.compare(statusId, ((StatusDeletionNotice)o).getStatusId());
-//    }
-//  }
-
   public static StatusDeletionNotice parseStatusDelete(JSONObject json) throws JSONException {
     JSONObject statusDelete = json.getJSONObject("delete").getJSONObject("status");
     final long statusId = statusDelete.getLong("id");
     final long userId = statusDelete.getLong("user_id");
-    //return new CompatibleStatusDeletionNotice(statusId, userId);
     return new StatusDeletionNotice() {
       @Override
       public long getStatusId() {
@@ -62,7 +37,10 @@ public class JSONObjectParser {
         return userId;
       }
 
-      // @Override lol java 7's javac
+      // lol java 7's javac fails to compile if we use the generic type:
+      // [ERROR] /hosebird-client/client-twitter4j/src/main/java/com/twitter/hbc/twitter4j/parser/JSONObjectParser.java:[16,38]
+      // error: <anonymous com.twitter.hbc.twitter4j.parser.JSONObjectParser$1> is not abstract and does not override
+      // abstract method compareTo(Object) in Comparable
       public int compareTo(Object o) {
         return Longs.compare(getStatusId(), ((StatusDeletionNotice)o).getStatusId());
       }

@@ -164,7 +164,7 @@ If connecting to a status stream (filter, firehose, sample), use Twitter4jStatus
 Twitter4jClient t4jClient = new Twitter4jStatusClient(client, msgQueue, listeners, executorService);
 t4jClient.connect();
 
-// Call this once for every thread you want to spin off for processing the raw messages. 
+// Call this once for every thread you want to spin off for processing the raw messages.
 // This should be called at least once.
 t4jClient.process(); // required to start processing the messages
 t4jClient.process(); // optional: another Runnable is submitted to the executorService to process the msgQueue
@@ -205,7 +205,7 @@ Twitter4jClient t4jClient = new Twitter4jUserstreamClient(client, msgQueue, list
 
 ## Building / Testing
 
-To build locally:
+To build locally (you must use java 1.7 for compiling, though we produce 1.6 compatible classes):
 
 ```
 mvn compile
@@ -216,7 +216,6 @@ To run tests:
 mvn test
 ```
 
-There is currently an issue compiling with Java 1.7 involving JSONObjectParser in the twitter4j module overriding an abstract method in Comparable. We're still investigating why.
 
 ## Problems?
 
