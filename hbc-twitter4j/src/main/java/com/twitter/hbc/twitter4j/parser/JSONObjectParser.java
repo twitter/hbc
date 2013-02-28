@@ -37,9 +37,12 @@ public class JSONObjectParser {
         return userId;
       }
 
-      @Override
-      public int compareTo(StatusDeletionNotice statusDeletionNotice) {
-        return Longs.compare(getStatusId(), statusDeletionNotice.getStatusId());
+      // lol java 7's javac fails to compile if we use the generic type:
+      // [ERROR] /hosebird-client/client-twitter4j/src/main/java/com/twitter/hbc/twitter4j/parser/JSONObjectParser.java:[16,38]
+      // error: <anonymous com.twitter.hbc.twitter4j.parser.JSONObjectParser$1> is not abstract and does not override
+      // abstract method compareTo(Object) in Comparable
+      public int compareTo(Object o) {
+        return Longs.compare(getStatusId(), ((StatusDeletionNotice)o).getStatusId());
       }
     };
   }
