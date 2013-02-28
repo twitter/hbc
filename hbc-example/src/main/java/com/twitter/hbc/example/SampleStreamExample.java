@@ -37,7 +37,7 @@ public class SampleStreamExample {
     endpoint.stallWarnings(false);
 
     Authentication auth = new OAuth1(consumerKey, consumerSecret, token, secret);
-    // Authentication auth = new BasicAuth(username, password);
+    //Authentication auth = new com.twitter.hbc.httpclient.auth.BasicAuth(username, password);
 
     // Create a new BasicClient. By default gzip is enabled.
     BasicClient client = new ClientBuilder()
@@ -71,7 +71,7 @@ public class SampleStreamExample {
     // Print some stats
     System.out.printf("The client read %d messages!\n", client.getStatsTracker().getNumMessages());
   }
-  
+
   public static void main(String[] args) {
 	  try {
 	  SampleStreamExample.oauth(args[0], args[1], args[2], args[3]);
