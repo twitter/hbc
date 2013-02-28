@@ -27,7 +27,7 @@ import com.twitter.hbc.twitter4j.message.DisconnectMessage;
 
 /**
  * Use the shaded versions if you are using a stable version of the library:
- *   import shadedtwitter4j.Status;
+ *   import shaded.twitter4j.Status;
  *   import shaded.twitter4j.StatusDeletionNotice;
  *   import shaded.twitter4j.StatusListener;
  */
