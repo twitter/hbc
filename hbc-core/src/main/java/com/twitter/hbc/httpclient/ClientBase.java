@@ -156,10 +156,12 @@ class ClientBase implements Runnable {
     } catch (Exception e) {
       logger.warn(name + " Uncaught exception", e);
       setExitStatus(new Event(EventType.STOPPED_BY_ERROR, e));
+    } finally {
+      rateTracker.stop();
+      logger.info("{} Shutting down httpclient connection manager", name);
+      client.getConnectionManager().shutdown();
+      isRunning.countDown();
     }
-    rateTracker.stop();
-    client.getConnectionManager().shutdown();
-    isRunning.countDown();
   }
 
   @Nullable()
@@ -296,8 +298,6 @@ class ClientBase implements Runnable {
     if (!waitForFinish(waitMillis)) {
       logger.warn("{} Client thread failed to finish in {} millis", name, waitMillis);
     }
-    logger.info("{} Shutting down httpclient connection manager", name);
-    client.getConnectionManager().shutdown();
   }
 
   public void shutdown(int millis) {
