@@ -70,10 +70,11 @@
                   <pattern>com.twitter.joauth</pattern>
                   <shadedPattern>shaded.com.twitter.joauth</shadedPattern>
                 </relocation>
+<!--
                 <relocation>
                   <pattern>twitter4j</pattern>
                   <shadedPattern>shaded.twitter4j</shadedPattern>
-                </relocation>
+                </relocation> -->
               </relocations>
             </configuration>
           </execution>
