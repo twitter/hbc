@@ -38,48 +38,4 @@
       <version>2.2.6</version>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>2.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <artifactSet>
-                <includes>
-                  <include>com.twitter:joauth</include>
-                  <include>org.apache.*</include>
-                  <include>commons-logging</include>
-                  <include>commons-codec</include>
-                  <include>org.twitter4j</include>
-                </includes>
-              </artifactSet>
-              <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-              <relocations>
-                <relocation>
-                  <pattern>org.apache</pattern>
-                  <shadedPattern>shaded.org.apache</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>com.twitter.joauth</pattern>
-                  <shadedPattern>shaded.com.twitter.joauth</shadedPattern>
-                </relocation>
-<!--
-                <relocation>
-                  <pattern>twitter4j</pattern>
-                  <shadedPattern>shaded.twitter4j</shadedPattern>
-                </relocation> -->
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
