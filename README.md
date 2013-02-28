@@ -218,8 +218,8 @@ mvn test
 
 ## Problems?
 
-If you find any issues please [report them](https://github.com/twitter/hosebird-client/issues) or better,
-send a [pull request](https://github.com/twitter/hosebird-client/pulls).
+If you find any issues please [report them](https://github.com/twitter/hbc/issues) or better,
+send a [pull request](https://github.com/twitter/hbc/pulls).
 
 ## Authors:
 * Steven Liu
