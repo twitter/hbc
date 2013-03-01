@@ -32,6 +32,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DecompressingHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
@@ -63,7 +64,7 @@ public class BasicClient implements Client {
                      @Nullable BlockingQueue<Event> eventsQueue, final String userAgent, HttpParams params) {
     Preconditions.checkNotNull(auth);
     HttpClient client;
-    DefaultHttpClient defaultClient = new DefaultHttpClient(params);
+    DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager(), params);
 
     /** User-Agent processor */
     defaultClient.addRequestInterceptor(new HttpRequestInterceptor() {
