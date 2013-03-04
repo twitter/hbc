@@ -13,6 +13,8 @@
 
 package com.twitter.hbc.core.endpoint;
 
+import java.util.List;
+import com.google.common.base.Joiner;
 import com.twitter.hbc.core.Constants;
 
 /**
@@ -73,4 +75,20 @@ public class DefaultStreamingEndpoint extends BaseEndpoint implements StreamingE
       }
     }
   }
+
+  /**
+   * Filter for public tweets on these languages.
+   *
+   * @param languages
+   *   Valid BCP 47 (http://tools.ietf.org/html/bcp47) language identifiers,
+   *   and may represent any of the languages listed on Twitter's advanced search page
+   *   (https://twitter.com/search-advanced), or "und" if no language could be detected.
+   *   These strings should NOT be url-encoded.
+   * @return this
+   */
+  public DefaultStreamingEndpoint languages(List<String> languages) {
+    addPostParameter(Constants.LANGUAGE_PARAM, Joiner.on(',').join(languages));
+    return this;
+  }
+
 }

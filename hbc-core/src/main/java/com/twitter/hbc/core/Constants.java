@@ -39,6 +39,8 @@ public class Constants {
 
   public static final String LOCATION_PARAM = "locations";
 
+  public static final String LANGUAGE_PARAM = "language";
+
   public static final String FOLLOW_PARAM = "follow";
 
   public static final String WITH_PARAM = "with";
