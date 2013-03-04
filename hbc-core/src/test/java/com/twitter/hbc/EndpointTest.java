@@ -69,7 +69,7 @@ public class EndpointTest {
   public void testStatusesFilterEndpointTest() {
     StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
     endpoint.locations(Lists.newArrayList(
-            new Location(new Location.Coordinate(-122.75, 36.8), new Location.Coordinate(-121.75, 37.8))));
+        new Location(new Location.Coordinate(-122.75, 36.8), new Location.Coordinate(-121.75, 37.8))));
     assertEquals(endpoint.getPostParamString(), "locations=" + UrlEncoder.apply("-122.75,36.8,-121.75,37.8"));
 
     StatusesFilterEndpoint endpoint2 = new StatusesFilterEndpoint();
@@ -77,4 +77,19 @@ public class EndpointTest {
             "twitterapi", "#!@?"));
     assertEquals(endpoint2.getPostParamString(), "track=" + UrlEncoder.apply("twitterapi,#!@?"));
   }
+
+  @Test
+  public void testLanguages() {
+    DefaultStreamingEndpoint endpoint = new StatusesFilterEndpoint();
+    endpoint.languages(Lists.newArrayList("en", "de"));
+    assertEquals(endpoint.getPostParamString(), "language=" + UrlEncoder.apply("en,de"));
+  }
+
+  @Test
+  public void testFilterLevel() {
+    DefaultStreamingEndpoint endpoint = new StatusesFilterEndpoint();
+    endpoint.filterLevel(Constants.FilterLevel.Medium);
+    assertEquals(endpoint.getPostParamString(), "filter_level=medium");
+  }
+
 }
