@@ -15,6 +15,18 @@ A Java HTTP client for consuming Twitter's [Streaming API](https://dev.twitter.c
 
 The Hosebird client is broken down into two modules: hbc-core and hbc-twitter4j. The hbc-core module uses a message queue, which the consumer can poll for the raw String messages, while the hbc-twitter4j module uses the [twitter4j](http://twitter4j.org) listeners and data model on top of the message queue to provide a parsing layer.
 
+The latest hbc artifacts are published to maven central. Bringing hbc into your project should be as simple as adding the following to your maven pom.xml file:
+
+```xml
+  <dependencies>
+    <dependency>
+      <groupId>com.twitter</groupId>
+      <artifactId>hbc-core</artifactId> <!-- or hbc-twitter4j -->
+      <version>1.3.0</version> <!-- or whatever the latest version is -->
+    </dependency>
+  </dependencies>
+```
+
 ### Quickstart
 
 Declaring the connection information:
@@ -72,7 +84,7 @@ hosebirdClient.shutdown();
 To run the sample stream example:
 
 ```
-mvn compile && mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Daccess.token=ABC -Daccess.token.secret=ABCSECRET
+mvn install && mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Daccess.token=ABC -Daccess.token.secret=ABCSECRET
 ```
 
 Alternatively you can set those properties in hbc-examples/pom.xml
@@ -214,7 +226,6 @@ To run tests:
 ```
 mvn test
 ```
-
 
 ## Problems?
 
