@@ -13,10 +13,14 @@
 
 package com.twitter.hbc;
 
+import com.google.common.collect.Lists;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpConstants;
 import com.twitter.hbc.core.endpoint.DefaultStreamingEndpoint;
+import com.twitter.hbc.core.endpoint.Location;
+import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
+import com.twitter.joauth.UrlEncoder;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
@@ -59,5 +63,18 @@ public class EndpointTest {
     endpoint.stallWarnings(false);
     url = new URL(Constants.STREAM_HOST + endpoint.getURI());
     assertNull(url.getQuery());
+  }
+
+  @Test
+  public void testStatusesFilterEndpointTest() {
+    StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
+    endpoint.locations(Lists.newArrayList(
+            new Location(new Location.Coordinate(-122.75, 36.8), new Location.Coordinate(-121.75, 37.8))));
+    assertEquals(endpoint.getPostParamString(), "locations=" + UrlEncoder.apply("-122.75,36.8,-121.75,37.8"));
+
+    StatusesFilterEndpoint endpoint2 = new StatusesFilterEndpoint();
+    endpoint2.trackTerms(Lists.newArrayList(
+            "twitterapi", "#!@?"));
+    assertEquals(endpoint2.getPostParamString(), "track=" + UrlEncoder.apply("twitterapi,#!@?"));
   }
 }
