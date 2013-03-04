@@ -57,4 +57,8 @@ public class Location {
     return northeast;
   }
 
+  @Override
+  public String toString() {
+    return southwest + "," + northeast;
+  }
 }
