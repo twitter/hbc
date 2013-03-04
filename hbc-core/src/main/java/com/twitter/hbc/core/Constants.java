@@ -39,6 +39,10 @@ public class Constants {
 
   public static final String LOCATION_PARAM = "locations";
 
+  public static final String LANGUAGE_PARAM = "language";
+
+  public static final String FILTER_LEVEL_PARAM = "filter_level";
+
   public static final String FOLLOW_PARAM = "follow";
 
   public static final String WITH_PARAM = "with";
@@ -67,5 +71,25 @@ public class Constants {
     public static final int STALL = 4;
     public static final int NORMAL = 5;
     public static final int TOKEN_REVOKED = 6;
+  }
+
+  public static enum FilterLevel {
+    /** No filtering */
+    None("none"),
+
+    Low("low"),
+
+    /** Highest level of filtering currently available */
+    Medium("medium");
+
+    private final String parameterValue;
+
+    private FilterLevel(String value) {
+      this.parameterValue = value;
+    }
+
+    public String asParameter() {
+      return this.parameterValue;
+    }
   }
 }
