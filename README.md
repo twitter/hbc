@@ -84,7 +84,7 @@ hosebirdClient.shutdown();
 To run the sample stream example:
 
 ```
-mvn compile && mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Daccess.token=ABC -Daccess.token.secret=ABCSECRET
+mvn install && mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Daccess.token=ABC -Daccess.token.secret=ABCSECRET
 ```
 
 Alternatively you can set those properties in hbc-examples/pom.xml
