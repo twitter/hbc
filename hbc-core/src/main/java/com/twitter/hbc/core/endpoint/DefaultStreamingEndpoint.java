@@ -91,4 +91,9 @@ public class DefaultStreamingEndpoint extends BaseEndpoint implements StreamingE
     return this;
   }
 
+  public DefaultStreamingEndpoint filterLevel(Constants.FilterLevel filterLevel) {
+    addPostParameter(Constants.FILTER_LEVEL_PARAM, filterLevel.asParameter());
+    return this;
+  }
+
 }
