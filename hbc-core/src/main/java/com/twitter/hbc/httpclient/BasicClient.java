@@ -106,10 +106,9 @@ public class BasicClient implements Client {
    **/
   @Override
   public void connect() {
-    if (!canRun.get() || clientBase.isDone()) {
+    if (!canRun.compareAndSet(true, false) || clientBase.isDone()) {
       throw new IllegalStateException("There is already a connection thread running for " + this.clientBase);
     }
-    canRun.set(false);
     executorService.execute(clientBase);
     logger.info("New connection executed: {}", this.clientBase);
   }
