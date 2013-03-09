@@ -14,6 +14,7 @@
 package com.twitter.hbc.httpclient.auth;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.twitter.hbc.core.HttpConstants;
 import com.twitter.joauth.*;
 import org.apache.http.HttpHeaders;
@@ -46,11 +47,11 @@ public class OAuth1 implements Authentication {
   private final SecureRandom secureRandom;
 
   public OAuth1(String consumerKey, String consumerSecret, String token, String tokenSecret) {
-    this.consumerKey = consumerKey;
-    this.consumerSecret = consumerSecret;
+    this.consumerKey = Preconditions.checkNotNull(consumerKey);
+    this.consumerSecret = Preconditions.checkNotNull(consumerSecret);
 
-    this.token = token;
-    this.tokenSecret = tokenSecret;
+    this.token = Preconditions.checkNotNull(token);
+    this.tokenSecret = Preconditions.checkNotNull(tokenSecret);
 
     this.normalizer = new StandardNormalizer();
     this.signer = new StandardSigner();
