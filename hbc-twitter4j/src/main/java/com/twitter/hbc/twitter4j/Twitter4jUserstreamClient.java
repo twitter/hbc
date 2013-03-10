@@ -184,6 +184,13 @@ public class Twitter4jUserstreamClient extends BaseTwitter4jClient {
   }
 
   @Override
+  protected void onFollow(long sitestreamUser, final User user, final User target) {
+    for (UserStreamListener listener : userstreamListeners) {
+      listener.onFollow(user, target);
+    }
+  }
+
+  @Override
   protected void onUnfollow(long sitestreamUser, final User user, final User target) {
     for (UserStreamListener listener : userstreamListeners) {
       if (listener instanceof UserstreamHandler) {
