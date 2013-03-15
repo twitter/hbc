@@ -56,6 +56,10 @@ public class Connection {
       // aborting the request
       this.request.abort();
     }
+    if (client instanceof RestartableHttpClient) {
+      // restart the entire client
+      ((RestartableHttpClient) client).restart();
+    }
     Closeables.closeQuietly(this.stream);
   }
 }
