@@ -115,6 +115,9 @@ class ClientBase implements Runnable {
     //   do some backoff, set backfill
     // if stop signal set, time to kill/clean the connection, and end this thread.
     try {
+      if (client instanceof RestartableHttpClient) {
+        ((RestartableHttpClient) client).setup();
+      }
       rateTracker.start();
       while (!isDone()) {
         String host = hosts.nextHost();
