@@ -30,7 +30,6 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DecompressingHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.HttpParams;
@@ -64,25 +63,30 @@ public class BasicClient implements Client {
                      @Nullable BlockingQueue<Event> eventsQueue, final String userAgent, HttpParams params) {
     Preconditions.checkNotNull(auth);
     HttpClient client;
-    DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager(), params);
-
-    /** User-Agent processor */
-    defaultClient.addRequestInterceptor(new HttpRequestInterceptor() {
-      @Override
-      public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
-        httpRequest.addHeader(HttpHeaders.USER_AGENT, userAgent);
-      }
-    });
-
-    /** Set auth **/
-    auth.setupConnection(defaultClient);
-
-    /** Set up gzip if necessary **/
     if (enableGZip) {
-      client = new DecompressingHttpClient(defaultClient);
+      client = new RestartableHttpClient(auth, enableGZip, userAgent, params);
     } else {
+      DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager(), params);
+
+      /** User-Agent processor */
+      defaultClient.addRequestInterceptor(new HttpRequestInterceptor() {
+        @Override
+        public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
+          httpRequest.addHeader(HttpHeaders.USER_AGENT, userAgent);
+        }
+      });
+
+      /** Set auth **/
+      auth.setupConnection(defaultClient);
+
+
+      //if (enableGZip) {
+      //  client = new DecompressingHttpClient(defaultClient);
+      //} else {
       client = defaultClient;
+      //}
     }
+
 
     this.canRun = new AtomicBoolean(true);
     this.executorService = executorService;
