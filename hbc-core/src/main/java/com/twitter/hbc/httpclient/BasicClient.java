@@ -78,13 +78,7 @@ public class BasicClient implements Client {
 
       /** Set auth **/
       auth.setupConnection(defaultClient);
-
-
-      //if (enableGZip) {
-      //  client = new DecompressingHttpClient(defaultClient);
-      //} else {
       client = defaultClient;
-      //}
     }
 
 

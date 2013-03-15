@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class RestartableHttpClient implements HttpClient {
 
-  private AtomicReference<HttpClient> underlying;
+  private final AtomicReference<HttpClient> underlying;
   private final String userAgent;
   private final Authentication auth;
   private final HttpParams params;
