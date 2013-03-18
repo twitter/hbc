@@ -172,7 +172,7 @@ public class DelimitedStreamReader {
 
     // next read the remaining chars directly into our strBuffer
     if (numBytesRemaining > 0) {
-      readSetAmount(numBytesRemaining);
+      readAmountToStrBuffer(numBytesRemaining);
     }
 
     if (strBufferIndex > 0 && strBuffer[strBufferIndex - 1] != LF) {
@@ -185,18 +185,18 @@ public class DelimitedStreamReader {
     return new String(strBuffer, 0, strBufferLength, charset);
   }
 
-  private void readSetAmount(int length) throws IOException {
+  private void readAmountToStrBuffer(int length) throws IOException {
     int actualOffset = strBufferIndex;
     int remainingBytes = length;
     while (remainingBytes > 0) {
-      int bytesRead = readIntoStrBuffer(actualOffset, remainingBytes);
+      int bytesRead = readStreamToStrBuffer(actualOffset, remainingBytes);
       remainingBytes -= bytesRead;
       actualOffset += bytesRead;
     }
     strBufferIndex = actualOffset;
   }
 
-  private int readIntoStrBuffer(int offset, int length) throws IOException {
+  private int readStreamToStrBuffer(int offset, int length) throws IOException {
     if (length > strBuffer.length - offset) {
       expandStrBuffer(strBuffer.length - offset);
     }
