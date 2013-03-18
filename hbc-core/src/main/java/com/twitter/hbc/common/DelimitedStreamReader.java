@@ -72,17 +72,7 @@ public class DelimitedStreamReader {
         int bytesRead = inputStream.read(buffer, end, Math.min(DEFAULT_READ_COUNT, buffer.length - end));
         if (bytesRead < 0) {
           // we failed to read anything more...
-          if (sawCarriage) {
-            // if we last saw a carriage return, then just return everything from the last read
-            done = true;
-            if (trim) {
-              // don't want the \r
-              removalBytes = -1;
-            }
-          } else {
-            // otherwise we reached the end of the stream with no new line
-            throw new IOException("Reached the end of the stream");
-          }
+          throw new IOException("Reached the end of the stream");
         } else {
           end += bytesRead;
         }
@@ -90,7 +80,7 @@ public class DelimitedStreamReader {
 
       int originalOffset = offset;
       for (; !done && offset < end; offset++) {
-        if (buffer[offset] == LF || sawCarriage) {
+        if (buffer[offset] == LF) {
           int cpLength = offset - originalOffset + 1;
           if (trim) {
             int length = 0;
@@ -99,10 +89,6 @@ public class DelimitedStreamReader {
               if (sawCarriage) {
                 length++;
               }
-            } else {
-              // We only saw /r and this is not an \n. Need to be careful to "unread" this byte
-              offset--;
-              length += 2;
             }
             cpLength -= length;
           }

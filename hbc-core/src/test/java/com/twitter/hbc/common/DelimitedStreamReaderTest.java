@@ -53,20 +53,8 @@ public class DelimitedStreamReaderTest {
   }
 
   @Test
-  public void testReadlineWithCarriage() throws Exception {
-    String myMessage = "{msg1}\r";
-    byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
-
-    InputStream stream = new ByteArrayInputStream(bytes);
-    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() - 1);
-
-    String msg = r.readLine();
-    assertEquals(msg, myMessage.trim());
-  }
-
-  @Test
   public void testReadlineMultipleSmallBuffer() throws Exception {
-    String myMessage = "{msg1}\r";
+    String myMessage = "{msg1}\r\n";
     String myMessage2 = "{this is my message}\n";
     String myMessage3 = "{this is my message2}\r\n";
     byte[] bytes = (myMessage + myMessage2 + myMessage3).getBytes(Charsets.UTF_8);
