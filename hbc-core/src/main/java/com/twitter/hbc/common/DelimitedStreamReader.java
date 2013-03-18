@@ -13,6 +13,8 @@
 
 package com.twitter.hbc.common;
 
+import com.google.common.base.Preconditions;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -32,15 +34,16 @@ public class DelimitedStreamReader {
   private int offset;
   private int end; // first invalid byte
 
-  private static int DEFAULT_READ_COUNT = 64;
-  private final static int MAX_ALLOWABLE_BUFFER_SIZE = 500000;
+  private static final int DEFAULT_READ_COUNT = 64;
+  private static final int MAX_ALLOWABLE_BUFFER_SIZE = 500000;
 
-  private byte CR = 13;
-  private byte LF = 10;
+  private static final byte CR = 13;
+  private static final byte LF = 10;
 
   public DelimitedStreamReader(InputStream stream, Charset charset, int bufferSize) {
-    this.inputStream = stream;
-    this.charset = charset;
+    Preconditions.checkArgument(bufferSize > 0);
+    this.inputStream = Preconditions.checkNotNull(stream);
+    this.charset = Preconditions.checkNotNull(charset);
 
     this.strBuffer = new byte[bufferSize * 2];
 
@@ -73,7 +76,7 @@ public class DelimitedStreamReader {
             // if we last saw a carriage return, then just return everything from the last read
             done = true;
             if (trim) {
-              // don't want the /r
+              // don't want the \r
               removalBytes = -1;
             }
           } else {
@@ -133,6 +136,7 @@ public class DelimitedStreamReader {
    * @param length length to copy
    */
   private void copyToStrBuffer(byte[] buffer, int offset, int length) {
+    Preconditions.checkArgument(length >= 0);
     if (strBuffer.length - strBufferIndex < length) {
       // cannot fit, expanding buffer
       expandStrBuffer(length);
@@ -144,7 +148,7 @@ public class DelimitedStreamReader {
 
   private void expandStrBuffer(int minLength) {
     byte[] oldBuffer = strBuffer;
-    int newLength = Math.min (
+    int newLength = Math.min(
       Math.max(oldBuffer.length * 2, minLength),
       MAX_ALLOWABLE_BUFFER_SIZE
     );
@@ -157,10 +161,10 @@ public class DelimitedStreamReader {
 
   /**
    * Reads numBytes bytes, and returns the corresponding string
-   * @throws IOException
    */
   public String read(int numBytes) throws IOException {
-    assert numBytes < MAX_ALLOWABLE_BUFFER_SIZE;
+    Preconditions.checkArgument(numBytes >= 0);
+    Preconditions.checkArgument(numBytes <= MAX_ALLOWABLE_BUFFER_SIZE);
     int numBytesRemaining = numBytes;
     // first read whatever we need from our buffer
     if (!isReadBufferEmpty()) {
