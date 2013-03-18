@@ -19,13 +19,14 @@ import org.junit.Test;
 import java.io.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CharacterStreamReaderTest {
+public class DelimitedStreamReaderTest {
 
   @Test
   public void testReadlineWithSmallBuffer() throws Exception {
@@ -33,11 +34,9 @@ public class CharacterStreamReaderTest {
     byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() / 3);
 
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() / 3);
-
-    String msg = r.readline();
+    String msg = r.readLine();
     assertEquals(msg, myMessage.trim());
   }
 
@@ -47,30 +46,29 @@ public class CharacterStreamReaderTest {
     byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() * 3);
 
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() * 3);
-
-    String msg = r.readline();
+    String msg = r.readLine();
     assertEquals(msg, myMessage.trim());
   }
 
   @Test
   public void testReadlineMultipleSmallBuffer() throws Exception {
     String myMessage = "{msg1}\r\n";
-    String myMessage2 = "{this is my message}\r\n";
-    byte[] bytes = (myMessage + myMessage2).getBytes(Charsets.UTF_8);
+    String myMessage2 = "{this is my message}\n";
+    String myMessage3 = "{this is my message2}\r\n";
+    byte[] bytes = (myMessage + myMessage2 + myMessage3).getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length());
 
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() - 1);
-
-    String msg1 = r.readline();
-    String msg2 = r.readline();
+    String msg1 = r.readLine();
+    String msg2 = r.readLine();
+    String msg3 = r.readLine();
 
     assertEquals(msg1, myMessage.trim());
     assertEquals(msg2, myMessage2.trim());
+    assertEquals(msg3, myMessage3.trim());
   }
 
   @Test
@@ -80,12 +78,10 @@ public class CharacterStreamReaderTest {
     byte[] bytes = (myMessage + myMessage2).getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() * 10 );
 
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() * 10);
-
-    String msg1 = r.readline();
-    String msg2 = r.readline();
+    String msg1 = r.readLine();
+    String msg2 = r.readLine();
 
     assertEquals(msg1, myMessage.trim());
     assertEquals(msg2, myMessage2.trim());
@@ -93,14 +89,14 @@ public class CharacterStreamReaderTest {
 
   @Test
   public void testEmptyReadline() throws Exception {
-    Reader reader = mock(Reader.class);
+    InputStream stream = mock(InputStream.class);
 
-    when(reader.read(any(char[].class), anyInt(), anyInt()))
+    when(stream.read(any(byte[].class), anyInt(), anyInt()))
             .thenReturn(-1);
 
-    CharacterStreamReader r = new CharacterStreamReader(reader, 10);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, 10);
     try {
-      r.readline();
+      r.readLine();
       fail();
     } catch (IOException e) {
       // expected
@@ -113,11 +109,10 @@ public class CharacterStreamReaderTest {
     byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length());
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length());
 
     try {
-      r.readline();
+      r.readLine();
       fail();
     } catch (IOException e) {
       // expected
@@ -131,9 +126,7 @@ public class CharacterStreamReaderTest {
     byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
-
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() / 3);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() / 3);
 
     String msg = r.read(myMessage.length());
     assertEquals(msg, myMessage);
@@ -145,9 +138,7 @@ public class CharacterStreamReaderTest {
     byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
-
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() * 3);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() * 3);
 
     String msg = r.read(myMessage.length());
     assertEquals(msg, myMessage);
@@ -160,9 +151,7 @@ public class CharacterStreamReaderTest {
     byte[] bytes = (myMessage + myMessage2).getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
-
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() - 1);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() - 1);
 
     String msg1 = r.read(myMessage.length());
     String msg2 = r.read(myMessage2.length());
@@ -178,9 +167,7 @@ public class CharacterStreamReaderTest {
     byte[] bytes = (myMessage + myMessage2).getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
-
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() * 10);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() * 10);
 
     String msg1 = r.read(myMessage.length());
     String msg2 = r.read(myMessage2.length());
@@ -191,12 +178,12 @@ public class CharacterStreamReaderTest {
 
   @Test
   public void testEmptyRead() throws Exception {
-    Reader reader = mock(Reader.class);
+    InputStream stream = mock(InputStream.class);
 
-    when(reader.read(any(char[].class), anyInt(), anyInt()))
+    when(stream.read(any(byte[].class), anyInt(), anyInt()))
             .thenReturn(-1);
 
-    CharacterStreamReader r = new CharacterStreamReader(reader, 10);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, 10);
     try {
       r.read(10);
       fail();
@@ -207,16 +194,14 @@ public class CharacterStreamReaderTest {
 
   @Test
   public void testReadRemainder() throws Exception {
-    String myMessage = "{this is my message}";
+    String myMessage = "{this is my message}\n";
     byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() / 3);
 
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length() / 3);
 
-    String partial = r.read(myMessage.length()/2);
-    assertEquals(partial, myMessage.substring(0, myMessage.length()/2));
+    assertTrue(stream.read(new byte[myMessage.length()/2], 0, myMessage.length()/2) > 0);
 
     String remainder = r.read(myMessage.length() - myMessage.length()/2);
     assertEquals(remainder, myMessage.substring(myMessage.length()/2, myMessage.length()));
@@ -228,8 +213,7 @@ public class CharacterStreamReaderTest {
     byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
-    InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
-    CharacterStreamReader r = new CharacterStreamReader(reader, myMessage.length());
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length());
 
     try {
       r.read(myMessage.length() * 2);
@@ -237,5 +221,48 @@ public class CharacterStreamReaderTest {
     } catch (IOException e) {
       // expected
     }
+  }
+
+  @Test
+  public void testLenientRead() throws Exception {
+    String myMessage = "{this is my message}\n";
+    byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
+
+    InputStream stream = new ByteArrayInputStream(bytes);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() / 3);
+
+
+    // read less bytes than the actual message, but we're lenient so we'll read up to the newline
+    String msg = r.read(myMessage.length()/2);
+
+    assertEquals(msg, myMessage);
+  }
+
+  @Test
+  public void testCombo() throws Exception {
+    String myMessage = "{this is my message}\n";
+    int length = myMessage.length();
+    byte[] bytes = (length + "\n" + myMessage).getBytes(Charsets.UTF_8);
+
+    InputStream stream = new ByteArrayInputStream(bytes);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() / 3);
+
+    // read less bytes than the actual message, but we're lenient so we'll read up to the newline
+    String line = r.readLine();
+    String msg = r.read(Integer.parseInt(line));
+    assertEquals(msg, myMessage);
+  }
+
+  @Test
+  public void testMultibyteCharacters() throws Exception {
+    String myMessage = "{this is my message: héÿ}\n";
+    byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
+
+    InputStream stream = new ByteArrayInputStream(bytes);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() / 3);
+
+    // read less bytes than the actual message, but we're lenient so we'll read up to the newline
+    String msg = r.read(myMessage.length());
+    assertEquals(msg, myMessage);
   }
 }
