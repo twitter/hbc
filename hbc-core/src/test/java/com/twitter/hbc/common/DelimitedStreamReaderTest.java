@@ -14,17 +14,17 @@
 package com.twitter.hbc.common;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class DelimitedStreamReaderTest {
 
@@ -259,6 +259,27 @@ public class DelimitedStreamReaderTest {
     byte[] bytes = myMessage.getBytes(Charsets.UTF_8);
 
     InputStream stream = new ByteArrayInputStream(bytes);
+    DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() / 3);
+
+    // read less bytes than the actual message, but we're lenient so we'll read up to the newline
+    String msg = r.read(myMessage.length());
+    assertEquals(msg, myMessage);
+  }
+
+  /**
+   * This tests the case where we have to call multiple Inputstream.read()s to consume the entire message, as we might
+   * have to in real life
+   */
+  @Test
+  public void testMultipleStreamReads() throws Exception {
+    String myMessage = "{this is my message: héÿ}\n";
+    byte[] bytes = myMessage.substring(0, myMessage.length()/2).getBytes(Charsets.UTF_8);
+    byte[] bytes2 = myMessage.substring(myMessage.length()/2, myMessage.length()).getBytes(Charsets.UTF_8);
+
+    InputStream miniStream = new ByteArrayInputStream(bytes);
+    InputStream miniStream2 = new ByteArrayInputStream(bytes2);
+
+    InputStream stream = new SplitInputStream(Lists.newArrayList(miniStream, miniStream2));
     DelimitedStreamReader r = new DelimitedStreamReader(stream, Charsets.UTF_8, myMessage.length() / 3);
 
     // read less bytes than the actual message, but we're lenient so we'll read up to the newline
