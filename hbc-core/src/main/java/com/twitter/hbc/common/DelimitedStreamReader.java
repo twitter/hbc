@@ -192,7 +192,6 @@ public class DelimitedStreamReader {
       throw new IOException("Reached end of stream.");
     }
     strBufferIndex += bytesRead;
-    System.out.println(bytesRead);
     return bytesRead;
   }
 

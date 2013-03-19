@@ -266,9 +266,12 @@ public class DelimitedStreamReaderTest {
     assertEquals(msg, myMessage);
   }
 
+  /**
+   * This tests the case where we have to call multiple Inputstream.read()s to consume the entire message, as we might
+   * have to in real life
+   */
   @Test
   public void testMultipleStreamReads() throws Exception {
-    System.out.println("go time");
     String myMessage = "{this is my message: héÿ}\n";
     byte[] bytes = myMessage.substring(0, myMessage.length()/2).getBytes(Charsets.UTF_8);
     byte[] bytes2 = myMessage.substring(myMessage.length()/2, myMessage.length()).getBytes(Charsets.UTF_8);

@@ -22,14 +22,12 @@ public class SplitInputStream extends InputStream {
 
   @Override
   public int read() throws IOException {
-    // not supported
-    return 0;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public int read(byte[] bytes) {
-    // not supported
-    return 0;
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -49,7 +47,7 @@ public class SplitInputStream extends InputStream {
   }
 
   private boolean getNextStream() {
-    if (streams.hasNext()){
+    if (streams.hasNext()) {
       currentStream = streams.next();
       return true;
     } else {
