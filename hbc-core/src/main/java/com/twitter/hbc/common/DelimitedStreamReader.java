@@ -176,24 +176,23 @@ public class DelimitedStreamReader {
   }
 
   private void readAmountToStrBuffer(int length) throws IOException {
-    int actualOffset = strBufferIndex;
     int remainingBytes = length;
     while (remainingBytes > 0) {
-      int bytesRead = readStreamToStrBuffer(actualOffset, remainingBytes);
+      int bytesRead = readStreamToStrBuffer(remainingBytes);
       remainingBytes -= bytesRead;
-      actualOffset += bytesRead;
     }
-    strBufferIndex = actualOffset;
   }
 
-  private int readStreamToStrBuffer(int offset, int length) throws IOException {
-    if (length > strBuffer.length - offset) {
-      expandStrBuffer(strBuffer.length - offset);
+  private int readStreamToStrBuffer(int length) throws IOException {
+    if (length > strBuffer.length - strBufferIndex) {
+      expandStrBuffer(length);
     }
-    int bytesRead = inputStream.read(strBuffer, strBufferIndex, Math.min(length, strBuffer.length - offset));
+    int bytesRead = inputStream.read(strBuffer, strBufferIndex, Math.min(length, strBuffer.length - strBufferIndex));
     if (bytesRead < 0) {
       throw new IOException("Reached end of stream.");
     }
+    strBufferIndex += bytesRead;
+    System.out.println(bytesRead);
     return bytesRead;
   }
 
