@@ -58,7 +58,7 @@ public class SitestreamController {
     endpoint.addPostParameter(Constants.USER_ID_PARAM, Long.toString(userId));
 
     HttpUriRequest request = HttpConstants.constructRequest(hosts.nextHost(), endpoint, auth);
-    makeControlStreamRequest(request);
+    consumeHttpEntityContent(makeControlStreamRequest(request));
   }
 
   public void removeUser(String streamId, long userId) throws IOException, ControlStreamException {
@@ -66,7 +66,7 @@ public class SitestreamController {
     endpoint.addPostParameter(Constants.USER_ID_PARAM, Long.toString(userId));
 
     HttpUriRequest request = HttpConstants.constructRequest(hosts.nextHost(), endpoint, auth);
-    makeControlStreamRequest(request);
+    consumeHttpEntityContent(makeControlStreamRequest(request));
   }
 
   public String getFriends(String streamId, long userId) throws IOException, ControlStreamException {
