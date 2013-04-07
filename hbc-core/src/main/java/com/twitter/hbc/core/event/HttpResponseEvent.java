@@ -21,8 +21,8 @@ public class HttpResponseEvent extends Event {
   private final StatusLine statusLine;
 
   public HttpResponseEvent(EventType eventType, StatusLine statusLine) {
-    super(eventType, statusLine.toString());
-    this.statusLine = Preconditions.checkNotNull(statusLine);
+    super(eventType, Preconditions.checkNotNull(statusLine).toString());
+    this.statusLine = statusLine;
   }
 
   public StatusLine getStatusLine() {
