@@ -1,0 +1,55 @@
+{
+  "user": {
+    "statuses_count": 3080,
+    "favourites_count": 22,
+    "protected": false,
+    "profile_text_color": "437792",
+    "profile_image_url": "...",
+    "name": "Twitter API",
+    "profile_sidebar_fill_color": "a9d9f1",
+    "listed_count": 9252,
+    "following": true,
+    "profile_background_tile": false,
+    "utc_offset": -28800,
+    "description": "The Real Twitter API. I tweet about API changes, service issues and happily answer questions about Twitter and our API. Don't get an answer? It's on my website.",
+    "location": "San Francisco, CA",
+    "contributors_enabled": true,
+    "verified": true,
+    "profile_link_color": "0094C2",
+    "followers_count": 665829,
+    "url": "http:\/\/dev.twitter.com",
+    "default_profile": false,
+    "profile_sidebar_border_color": "0094C2",
+    "screen_name": "twitterapi",
+    "default_profile_image": false,
+    "notifications": false,
+    "display_url": null,
+    "show_all_inline_media": false,
+    "geo_enabled": true,
+    "profile_use_background_image": true,
+    "friends_count": 32,
+    "id_str": "6253282",
+    "entities": {
+      "hashtags": [
+        
+      ],
+      "urls": [
+        
+      ],
+      "user_mentions": [
+        
+      ]
+    },
+    "expanded_url": null,
+    "is_translator": false,
+    "lang": "en",
+    "time_zone": "Pacific Time (US &amp; Canada)",
+    "created_at": "Wed May 23 06:01:13 +0000 2007",
+    "profile_background_color": "e8f2f7",
+    "id": 6253282,
+    "follow_request_sent": false,
+    "profile_background_image_url_https": "...",
+    "profile_background_image_url": "...",
+    "profile_image_url_https": "..."
+  }
+}
