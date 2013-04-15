@@ -11,10 +11,10 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j;
+package com.twitter.hbc.twitter4j.v3;
 
 import com.twitter.hbc.httpclient.BasicClient;
-import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
 import org.junit.Before;
 import org.junit.Test;
 import twitter4j.*;
@@ -26,7 +26,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static com.twitter.hbc.twitter4j.CreateEvent.createEvent;
+import static com.twitter.hbc.twitter4j.v3.CreateEvent.createEvent;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 

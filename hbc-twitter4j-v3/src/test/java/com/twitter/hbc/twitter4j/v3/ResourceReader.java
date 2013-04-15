@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j;
+package com.twitter.hbc.twitter4j.v3;
 
 import com.google.common.io.CharStreams;
 

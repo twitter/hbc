@@ -96,8 +96,11 @@ public class JSONObjectParser {
     return message.has("disconnect");
   }
 
-  public static boolean isRetweetMessage(JSONObject message) {
-    return message.has("retweet");
+  public static boolean isRetweetMessage(JSONObject message) throws JSONException {
+    Object event = message.opt("event");
+    if (!(event instanceof String))
+      return false;
+    return "retweet".equals(event);
   }
 
   public static DisconnectMessage parseDisconnectMessage(JSONObject message) throws JSONException {
