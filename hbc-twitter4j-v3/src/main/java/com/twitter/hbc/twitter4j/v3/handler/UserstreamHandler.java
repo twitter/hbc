@@ -32,7 +32,9 @@ public interface UserstreamHandler extends UserStreamListener {
   public void onUnknownMessageType(String msg);
 
   /**
-   * Twitter4J v3 seems to have removed this event.
+   * Called for all retweet events.
+   *
+   * Twitter4J v3 seems to have removed this event from UserStreamListener.
    */
   public void onRetweet(User source, User target, Status retweetedStatus);
 }
