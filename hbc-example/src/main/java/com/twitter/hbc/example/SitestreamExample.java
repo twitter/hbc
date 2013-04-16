@@ -23,7 +23,7 @@ import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.ControlStreamException;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
-import com.twitter.hbc.twitter4j.Twitter4jSitestreamClient;
+import com.twitter.hbc.twitter4j.v3.Twitter4jSitestreamClient;
 
 import twitter4j.*;
 
@@ -37,6 +37,9 @@ public class SitestreamExample {
 
   // A bare-bones SiteStreamsListener
   private SiteStreamsListener listener = new SiteStreamsListener() {
+    @Override
+    public void onDisconnectionNotice(String line) {}
+
     @Override
     public void onStatus(long forUser, Status status) {}
 
