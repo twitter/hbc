@@ -20,6 +20,7 @@ import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.StatsReporter;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
 import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
 import com.twitter.hbc.twitter4j.v3.parser.JSONObjectParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,6 +170,7 @@ class BaseTwitter4jClient implements Twitter4jClient {
         processScrubGeo(sitestreamUser, json);
         break;
       case DIRECT_MESSAGE:
+      case SENDER:
         processDirectMessage(sitestreamUser, json);
         break;
       case FRIENDS:
@@ -216,13 +218,18 @@ class BaseTwitter4jClient implements Twitter4jClient {
       case USER_UPDATE:
         processUserUpdate(sitestreamUser, json);
         break;
+      case DISCONNECTION:
+        processDisconnectMessage(json);
+        break;
+      case STALL_WARNING:
+        processStallWarning(json);
+        break;
+      case UNKNOWN:
       default:
         if (JSONObjectParser.isRetweetMessage(json)) {
           processRetweet(sitestreamUser, json);
         } else if (JSONObjectParser.isControlStreamMessage(json)) {
           processControlStream(json);
-        } else if (JSONObjectParser.isDisconnectMessage(json)) {
-          processDisconnectMessage(json);
         } else {
           onUnknownMessageType(json.toString());
         }
@@ -248,6 +255,15 @@ class BaseTwitter4jClient implements Twitter4jClient {
       final long userId = dm.getLong("user_id");
       onDeleteDirectMessage(sitestreamUser, statusId, userId);
     }
+  }
+
+  private void processStallWarning(JSONObject json) throws JSONException {
+    JSONObject warning = json.getJSONObject("warning");
+    String code = ((String) warning.opt("code"));
+    String message = ((String) warning.opt("message"));
+    int percentFull = warning.getInt("percent_full");
+
+    onStallWarning(new StallWarningMessage(code, message, percentFull));
   }
 
   private void processLimit(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {
@@ -466,6 +482,10 @@ class BaseTwitter4jClient implements Twitter4jClient {
 
   protected void onException(Exception e) {
     logger.info("Exception caught", e);
+  }
+
+  protected void onStallWarning(StallWarningMessage stallWarning) {
+    logger.info("Unhandled event: onStallWarning - {}", stallWarning);
   }
 
   protected void onUnknownMessageType(String msg) {

@@ -14,6 +14,7 @@
 package com.twitter.hbc.twitter4j.v3.handler;
 
 import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
 import twitter4j.Status;
 import twitter4j.User;
 import twitter4j.UserStreamListener;
@@ -25,6 +26,14 @@ public interface UserstreamHandler extends UserStreamListener {
   public void onDisconnectMessage(DisconnectMessage disconnectMessage);
 
   public void onUnfollow(User source, User target);
+
+  /**
+   * See documentation on stall warnings here:
+   * See https://dev.twitter.com/docs/streaming-apis/parameters#stall_warnings
+   *
+   * Ideally, twitter4j would make it's StallWarning's constructor public and we could remove this.
+   */
+  public void onStallWarningMessage(StallWarningMessage warning);
 
   /**
    * Any message we receive that isn't handled by the other methods

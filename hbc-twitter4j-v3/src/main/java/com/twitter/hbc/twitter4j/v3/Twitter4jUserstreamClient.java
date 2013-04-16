@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.twitter4j.v3.handler.UserstreamHandler;
 import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
 import twitter4j.*;
 
 import java.util.List;
@@ -206,6 +207,15 @@ public class Twitter4jUserstreamClient extends BaseTwitter4jClient {
     for (UserStreamListener listener : userstreamListeners) {
       if (listener instanceof UserstreamHandler) {
         ((UserstreamHandler) listener).onDisconnectMessage(disconnect);
+      }
+    }
+  }
+
+  @Override
+  protected void onStallWarning(StallWarningMessage stallWarning) {
+    for (UserStreamListener listener : userstreamListeners) {
+      if (listener instanceof UserstreamHandler) {
+        ((UserstreamHandler) listener).onStallWarningMessage(stallWarning);
       }
     }
   }

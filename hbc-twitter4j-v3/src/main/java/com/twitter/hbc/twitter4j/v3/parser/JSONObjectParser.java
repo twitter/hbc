@@ -19,6 +19,7 @@ import twitter4j.StatusDeletionNotice;
 import twitter4j.internal.org.json.JSONArray;
 import twitter4j.internal.org.json.JSONException;
 import twitter4j.internal.org.json.JSONObject;
+import twitter4j.json.JSONObjectType;
 
 public class JSONObjectParser {
 
@@ -92,8 +93,9 @@ public class JSONObjectParser {
     return split[split.length - 1];
   }
 
+  @Deprecated
   public static boolean isDisconnectMessage(JSONObject message) {
-    return message.has("disconnect");
+    return JSONObjectType.determine(message) == JSONObjectType.Type.DISCONNECTION;
   }
 
   public static boolean isRetweetMessage(JSONObject message) throws JSONException {

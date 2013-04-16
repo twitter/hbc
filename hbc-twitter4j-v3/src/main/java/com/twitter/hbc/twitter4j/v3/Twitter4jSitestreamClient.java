@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableList;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.twitter4j.v3.handler.SitestreamHandler;
 import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
 import com.twitter.hbc.twitter4j.v3.parser.JSONObjectParser;
 import twitter4j.*;
 import twitter4j.internal.org.json.JSONException;
@@ -213,6 +214,14 @@ public class Twitter4jSitestreamClient extends BaseTwitter4jClient {
     }
   }
 
+  @Override
+  protected void onStallWarning(StallWarningMessage stallWarning) {
+    for (SiteStreamsListener listener : sitestreamListeners) {
+      if (listener instanceof SitestreamHandler) {
+        ((SitestreamHandler) listener).onStallWarningMessage(stallWarning);
+      }
+    }
+  }
 
   @Override
   protected void onUnknownMessageType(String msg) {
