@@ -205,6 +205,11 @@ UserstreamListener listener = new UserstreamHandler() {
   }
 
   @Override
+  public void onRetweet(User source, User target, Status retweetedStatus) {
+    // do your thing
+  }
+
+  @Override
   public void onUnknownMessageType(String msg) {
     // msg is any message that isn't handled by any of our other callbacks
   }
