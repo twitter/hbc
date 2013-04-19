@@ -351,4 +351,8 @@ class ClientBase implements Runnable {
   public StatsReporter.StatsTracker getStatsTracker() {
     return statsReporter.getStatsTracker();
   }
+
+  public double getCurrentRateSeconds() {
+    return rateTracker.getCurrentRateSeconds();
+  }
 }
