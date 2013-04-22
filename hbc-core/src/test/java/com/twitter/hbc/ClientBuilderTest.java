@@ -16,10 +16,12 @@ package com.twitter.hbc;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpHosts;
 import com.twitter.hbc.core.endpoint.StatusesSampleEndpoint;
+import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.BasicAuth;
 import com.twitter.hbc.processor.NullProcessor;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class ClientBuilderTest {
@@ -121,5 +123,48 @@ public class ClientBuilderTest {
             .authentication(new BasicAuth("username", "password"))
             .build();
 
+  }
+
+  @Test
+  public void testCustomRateTracker() {
+    RateTracker rateTracker = new RateTracker() {
+
+      @Override
+      public void eventObserved() {
+      }
+
+      @Override
+      public void pause() {
+      }
+
+      @Override
+      public void resume() {
+      }
+
+      @Override
+      public void start() {
+      }
+
+      @Override
+      public void stop() {
+      }
+
+      @Override
+      public void shutdown() {
+      }
+
+      @Override
+      public double getCurrentRateSeconds() {
+        return 42.0;
+      }
+    };
+    BasicClient client = new ClientBuilder()
+            .hosts(new HttpHosts(Constants.STREAM_HOST))
+            .endpoint(new StatusesSampleEndpoint())
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .rateTracker(rateTracker)
+            .build();
+    assertEquals(42.0, client.getCurrentRateSeconds(), 0.0);
   }
 }

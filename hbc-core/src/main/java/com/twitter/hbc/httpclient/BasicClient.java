@@ -97,6 +97,10 @@ public class BasicClient implements Client {
     this.executorService = executorService;
   }
 
+  public double getCurrentRateSeconds() {
+    return clientBase.getCurrentRateSeconds();
+  }
+
   /**
    * Forks a new thread to do the IO in.
    * Should handle unexpected disconnects by reconnecting with appropriate backoffs/backfill param
