@@ -88,7 +88,7 @@ public class ClientBuilder {
             .build();
 
     ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1, rateTrackerThreadFactory);
-    rateTracker = new RateTracker(30000, 100, true, scheduledExecutor);
+    rateTracker = new BasicRateTracker(30000, 100, true, scheduledExecutor);
     reconnectionManager = new ReconnectionManager(5);
 
     socketTimeoutMillis = 60000;
@@ -169,6 +169,12 @@ public class ClientBuilder {
     Preconditions.checkNotNull(uri);
     this.endpoint = new RawEndpoint(uri, httpMethod);
     return this;
+  }
+
+  public ClientBuilder rateTracker(RateTracker rateTracker) {
+      Preconditions.checkNotNull(rateTracker);
+      this.rateTracker = rateTracker;
+      return this;
   }
 
   public BasicClient build() {
