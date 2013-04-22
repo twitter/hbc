@@ -36,7 +36,7 @@ public class RateTrackerTest {
   public void testRateTracking() {
     int millis = 100;
     int buckets = 10;
-    RateTracker rateTracker = new RateTracker(millis, buckets, false, scheduler);
+    BasicRateTracker rateTracker = new BasicRateTracker(millis, buckets, false, scheduler);
     assertTrue(Double.isNaN(rateTracker.getCurrentRateSeconds()));
 
     // 10 buckets, each bucket represents 10 millis, so 100 events / s
@@ -52,7 +52,7 @@ public class RateTrackerTest {
   public void testRateConsistency() {
     int millis = 100;
     int buckets = 10;
-    RateTracker rateTracker = new RateTracker(millis, buckets, false, scheduler);
+    BasicRateTracker rateTracker = new BasicRateTracker(millis, buckets, false, scheduler);
     assertTrue(Double.isNaN(rateTracker.getCurrentRateSeconds()));
 
     // 10 buckets, each bucket represents 10 millis, so 100 events / s
@@ -76,7 +76,7 @@ public class RateTrackerTest {
   public void testSlidingWindow() {
     int millis = 100;
     int buckets = 2;
-    RateTracker rateTracker = new RateTracker(millis, buckets, false, scheduler);
+    BasicRateTracker rateTracker = new BasicRateTracker(millis, buckets, false, scheduler);
     assertTrue(Double.isNaN(rateTracker.getCurrentRateSeconds()));
 
     // 2 buckets, each bucket represents 10 millis, so 20 events / s
@@ -109,7 +109,7 @@ public class RateTrackerTest {
   public void testPausing() {
     int millis = 100;
     int buckets = 10;
-    RateTracker rateTracker = new RateTracker(millis, buckets, false, scheduler);
+    BasicRateTracker rateTracker = new BasicRateTracker(millis, buckets, false, scheduler);
     assertTrue(Double.isNaN(rateTracker.getCurrentRateSeconds()));
 
     // 10 buckets, each bucket represents 10 millis, so 100 events / s
