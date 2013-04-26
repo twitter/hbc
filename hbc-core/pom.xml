@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.twitter</groupId>
   <artifactId>hbc-core</artifactId>
-  <version>1.4.0-SNAPSHOT</version>
+  <version>1.4.0</version>
   <packaging>jar</packaging>
   <name>Hosebird Client Core</name>
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>hbc</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.0</version>
   </parent>
   <properties>
     <git.dir>${project.basedir}/../.git</git.dir>
