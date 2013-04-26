@@ -81,6 +81,7 @@ class BaseTwitter4jClient implements Twitter4jClient {
             try {
               parseMessage(msg);
             } catch (Exception e) {
+              logger.warn("Exception thrown during parsing msg " + msg, e);
               onException(e);
             }
           }
