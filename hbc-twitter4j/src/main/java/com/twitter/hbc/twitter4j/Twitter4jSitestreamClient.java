@@ -15,6 +15,7 @@ package com.twitter.hbc.twitter4j;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.twitter.hbc.core.Client;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.twitter4j.handler.SitestreamHandler;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
@@ -34,7 +35,7 @@ public class Twitter4jSitestreamClient extends BaseTwitter4jClient {
   private final List<SiteStreamsListener> sitestreamListeners;
   private final AtomicReference<String> streamId;
 
-  public Twitter4jSitestreamClient(BasicClient client, BlockingQueue<String> blockingQueue, List<SiteStreamsListener> listeners, ExecutorService executorService) {
+  public Twitter4jSitestreamClient(Client client, BlockingQueue<String> blockingQueue, List<SiteStreamsListener> listeners, ExecutorService executorService) {
     super(client, blockingQueue, executorService);
     Preconditions.checkNotNull(listeners);
     this.sitestreamListeners = ImmutableList.copyOf(listeners);
