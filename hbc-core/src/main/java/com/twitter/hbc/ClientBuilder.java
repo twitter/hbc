@@ -23,9 +23,12 @@ import com.twitter.hbc.core.event.Event;
 import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
+import org.apache.http.HttpVersion;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -179,10 +182,12 @@ public class ClientBuilder {
 
   public BasicClient build() {
     HttpParams params = new BasicHttpParams();
+    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+    HttpProtocolParams.setUserAgent(params, USER_AGENT);
     HttpConnectionParams.setSoTimeout(params, socketTimeoutMillis);
     HttpConnectionParams.setConnectionTimeout(params, connectionTimeoutMillis);
     return new BasicClient(name, hosts, endpoint, auth, enableGZip, processor, reconnectionManager,
-            rateTracker, executorService, eventQueue, USER_AGENT, params);
+            rateTracker, executorService, eventQueue, params);
   }
 }
 

@@ -37,15 +37,13 @@ import java.util.concurrent.atomic.AtomicReference;
 public class RestartableHttpClient implements HttpClient {
 
   private final AtomicReference<HttpClient> underlying;
-  private final String userAgent;
   private final Authentication auth;
   private final HttpParams params;
   private final boolean enableGZip;
 
-  public RestartableHttpClient(Authentication auth, boolean enableGZip, String userAgent, HttpParams params) {
+  public RestartableHttpClient(Authentication auth, boolean enableGZip, HttpParams params) {
     this.auth = Preconditions.checkNotNull(auth);
     this.enableGZip = enableGZip;
-    this.userAgent = Preconditions.checkNotNull(userAgent);
     this.params = Preconditions.checkNotNull(params);
 
     this.underlying = new AtomicReference<HttpClient>();
@@ -53,13 +51,6 @@ public class RestartableHttpClient implements HttpClient {
 
   public void setup() {
     DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager(), params);
-
-    defaultClient.addRequestInterceptor(new HttpRequestInterceptor() {
-      @Override
-      public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
-        httpRequest.addHeader(HttpHeaders.USER_AGENT, userAgent);
-      }
-    });
 
     auth.setupConnection(defaultClient);
 
