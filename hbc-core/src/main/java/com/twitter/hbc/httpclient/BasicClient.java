@@ -98,10 +98,9 @@ public class BasicClient implements Client {
   }
 
   /**
+   * {@inheritDoc}
    * Forks a new thread to do the IO in.
-   * Should handle unexpected disconnects by reconnecting with appropriate backoffs/backfill param
-   * Should only be called once.
-   **/
+   */
   @Override
   public void connect() {
     if (!canRun.compareAndSet(true, false) || clientBase.isDone()) {
@@ -132,18 +131,11 @@ public class BasicClient implements Client {
     return clientBase.getExitEvent();
   }
 
-  /**
-   * Stops the current connection. No reconnecting will occur. Kills thread + cleanup.
-   * Waits for the thread to end
-   **/
   @Override
   public void stop() {
     stop(DEFAULT_STOP_TIMEOUT_MILLIS);
   }
 
-  /**
-   * @param waitMillis milliseconds to wait for the client to stop
-   */
   @Override
   public void stop(int waitMillis) {
     logger.info("Stopping the client: " + this.clientBase);
