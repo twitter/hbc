@@ -60,27 +60,18 @@ public class BasicClient implements Client {
 
   public BasicClient(String name, Hosts hosts, StreamingEndpoint endpoint, Authentication auth, boolean enableGZip, HosebirdMessageProcessor processor,
                      ReconnectionManager reconnectionManager, RateTracker rateTracker, ExecutorService executorService,
-                     @Nullable BlockingQueue<Event> eventsQueue, final String userAgent, HttpParams params) {
+                     @Nullable BlockingQueue<Event> eventsQueue, HttpParams params) {
     Preconditions.checkNotNull(auth);
     HttpClient client;
     if (enableGZip) {
-      client = new RestartableHttpClient(auth, enableGZip, userAgent, params);
+      client = new RestartableHttpClient(auth, enableGZip, params);
     } else {
       DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager(), params);
-
-      /** User-Agent processor */
-      defaultClient.addRequestInterceptor(new HttpRequestInterceptor() {
-        @Override
-        public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
-          httpRequest.addHeader(HttpHeaders.USER_AGENT, userAgent);
-        }
-      });
 
       /** Set auth **/
       auth.setupConnection(defaultClient);
       client = defaultClient;
     }
-
 
     this.canRun = new AtomicBoolean(true);
     this.executorService = executorService;
