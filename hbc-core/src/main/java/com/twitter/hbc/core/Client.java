@@ -17,13 +17,44 @@ import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
 
 public interface Client {
+  /**
+   * Connects to the endpoint and begins streaming.
+   *
+   * Should handle unexpected disconnects by reconnecting with appropriate backoffs/backfill param
+   * Should only be called once.
+   */
   public void connect();
+
   public void reconnect();
+
+  /**
+   * Permanently stops the current connection and does any necessary cleanup.
+   * Waits until the connection {@link #isDone()}.
+   *
+   * Note: after being called, neither {@link #connect()} nor {@link #reconnect()} is possible.
+   */
   public void stop();
-  public void stop(int millis);
+
+  /**
+   * Permanently stops the current connection and does any necessary cleanup.
+   * Waits up to waitMillis milliseconds for the connection to be {@link #isDone()}.
+   *
+   * Note: after being called, neither {@link #connect()} nor {@link #reconnect()} is permitted.
+   *
+   * @param waitMillis milliseconds to wait for the client to stop
+   */
+  public void stop(int waitMillis);
+
   public boolean isDone();
+
+  /**
+   * Name of the client used for logging and other diagnostic purposes.
+   */
   public String getName();
+
   public StreamingEndpoint getEndpoint();
+
   public SitestreamController createSitestreamController();
+
   public StatsReporter.StatsTracker getStatsTracker();
 }
