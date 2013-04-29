@@ -73,7 +73,6 @@ public class BasicClient implements Client {
       client = defaultClient;
     }
 
-
     this.canRun = new AtomicBoolean(true);
     this.executorService = executorService;
     this.clientBase = new ClientBase(name, client, hosts, endpoint, auth, processor, reconnectionManager, rateTracker, eventsQueue);
