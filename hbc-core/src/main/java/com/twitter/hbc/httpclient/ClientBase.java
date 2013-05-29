@@ -245,6 +245,7 @@ class ClientBase implements Runnable {
         } else {
           statsReporter.incrNumMessagesDropped();
         }
+        rateTracker.eventObserved();
       }
     } catch (RuntimeException e) {
       logger.warn(name + " Unknown error processing connection: ", e);
