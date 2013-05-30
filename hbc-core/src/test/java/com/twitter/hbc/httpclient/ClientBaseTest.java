@@ -13,6 +13,7 @@
 
 package com.twitter.hbc.httpclient;
 
+import com.twitter.hbc.BasicReconnectionManager;
 import com.twitter.hbc.RateTracker;
 import com.twitter.hbc.ReconnectionManager;
 import com.twitter.hbc.core.HttpConstants;
@@ -55,7 +56,7 @@ public class ClientBaseTest {
     mockStatusLine = mock(StatusLine.class);
 
     mockConnection = mock(Connection.class);
-    mockReconnectionManager = mock(ReconnectionManager.class);
+    mockReconnectionManager = mock(BasicReconnectionManager.class);
     mockRateTracker = mock(RateTracker.class);
 
     mockInputStream = mock(InputStream.class);
