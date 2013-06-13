@@ -196,6 +196,7 @@ class ClientBase implements Runnable {
    */
   @VisibleForTesting
   boolean handleConnectionResult(@Nullable StatusLine statusLine) {
+    statsReporter.incrNumConnects();
     if (statusLine == null) {
       logger.warn("{} failed to establish connection properly", name);
       addEvent(new Event(EventType.CONNECTION_ERROR, "Failed to establish connection properly"));
