@@ -83,9 +83,8 @@ public class SitestreamController {
     return consumeHttpEntityContent(response);
   }
 
-  public String getInfo(String streamId, long userId) throws IOException, ControlStreamException {
+  public String getInfo(String streamId) throws IOException, ControlStreamException {
     Endpoint endpoint = SitestreamEndpoint.streamInfoEndpoint(streamId);
-    endpoint.addPostParameter(Constants.USER_ID_PARAM, Long.toString(userId));
 
     HttpUriRequest request = HttpConstants.constructRequest(hosts.nextHost(), endpoint, auth);
     HttpResponse response = makeControlStreamRequest(request);
