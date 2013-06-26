@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 
 import static com.twitter.hbc.core.Constants.DEFAULT_CHARSET;
 
@@ -59,7 +60,8 @@ public class SitestreamController {
     addUsers(streamId, Lists.newArrayList(userId));
   }
 
-  public void addUsers(String streamId, Iterable<Long> userIds) throws IOException, ControlStreamException {
+  public void addUsers(String streamId, Collection<Long> userIds) throws IOException, ControlStreamException {
+    Preconditions.checkArgument(userIds.size() <= 100, "The userId parameter can be supplied with up to 100 user IDs.");
     Endpoint endpoint = SitestreamEndpoint.addUserEndpoint(streamId);
     endpoint.addPostParameter(Constants.USER_ID_PARAM, Joiner.on(',').join(userIds));
 
@@ -71,7 +73,8 @@ public class SitestreamController {
     removeUsers(streamId, Lists.newArrayList(userId));
   }
 
-  public void removeUsers(String streamId, Iterable<Long> userIds) throws IOException, ControlStreamException {
+  public void removeUsers(String streamId, Collection<Long> userIds) throws IOException, ControlStreamException {
+    Preconditions.checkArgument(userIds.size() <= 100, "The userId parameter can be supplied with up to 100 user IDs.");
     Endpoint endpoint = SitestreamEndpoint.removeUserEndpoint(streamId);
     endpoint.addPostParameter(Constants.USER_ID_PARAM, Joiner.on(',').join(userIds));
 
