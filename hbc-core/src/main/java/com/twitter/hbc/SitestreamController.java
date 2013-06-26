@@ -18,6 +18,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.io.CharStreams;
+import com.google.common.primitives.Longs;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.Hosts;
 import com.twitter.hbc.core.HttpConstants;
@@ -57,7 +58,7 @@ public class SitestreamController {
    * TODO: This must be limited to 25 adds per seconds
    */
   public void addUser(String streamId, long userId) throws IOException, ControlStreamException {
-    addUsers(streamId, Lists.newArrayList(userId));
+    addUsers(streamId, Longs.asList(userId));
   }
 
   public void addUsers(String streamId, Collection<Long> userIds) throws IOException, ControlStreamException {
@@ -70,7 +71,7 @@ public class SitestreamController {
   }
 
   public void removeUser(String streamId, long userId) throws IOException, ControlStreamException {
-    removeUsers(streamId, Lists.newArrayList(userId));
+    removeUsers(streamId, Longs.asList(userId));
   }
 
   public void removeUsers(String streamId, Collection<Long> userIds) throws IOException, ControlStreamException {
