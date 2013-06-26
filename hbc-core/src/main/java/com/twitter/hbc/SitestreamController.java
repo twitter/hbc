@@ -14,7 +14,9 @@
 package com.twitter.hbc;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.io.CharStreams;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.Hosts;
@@ -54,16 +56,24 @@ public class SitestreamController {
    * TODO: This must be limited to 25 adds per seconds
    */
   public void addUser(String streamId, long userId) throws IOException, ControlStreamException {
+    addUsers(streamId, Lists.newArrayList(userId));
+  }
+
+  public void addUsers(String streamId, Iterable<Long> userIds) throws IOException, ControlStreamException {
     Endpoint endpoint = SitestreamEndpoint.addUserEndpoint(streamId);
-    endpoint.addPostParameter(Constants.USER_ID_PARAM, Long.toString(userId));
+    endpoint.addPostParameter(Constants.USER_ID_PARAM, Joiner.on(',').join(userIds));
 
     HttpUriRequest request = HttpConstants.constructRequest(hosts.nextHost(), endpoint, auth);
     consumeHttpEntityContent(makeControlStreamRequest(request));
   }
 
   public void removeUser(String streamId, long userId) throws IOException, ControlStreamException {
+    removeUsers(streamId, Lists.newArrayList(userId));
+  }
+
+  public void removeUsers(String streamId, Iterable<Long> userIds) throws IOException, ControlStreamException {
     Endpoint endpoint = SitestreamEndpoint.removeUserEndpoint(streamId);
-    endpoint.addPostParameter(Constants.USER_ID_PARAM, Long.toString(userId));
+    endpoint.addPostParameter(Constants.USER_ID_PARAM, Joiner.on(',').join(userIds));
 
     HttpUriRequest request = HttpConstants.constructRequest(hosts.nextHost(), endpoint, auth);
     consumeHttpEntityContent(makeControlStreamRequest(request));
