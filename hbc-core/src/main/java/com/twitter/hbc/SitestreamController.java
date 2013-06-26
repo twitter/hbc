@@ -83,6 +83,14 @@ public class SitestreamController {
     return consumeHttpEntityContent(response);
   }
 
+  /**
+   * @deprecated info.json does not take a user_id param (@see https://dev.twitter.com/docs/streaming-apis/streams/site/control#info)
+   */
+  @Deprecated
+  public String getInfo(String streamId, long userId) throws IOException, ControlStreamException {
+    return getInfo(streamId);
+  }
+
   public String getInfo(String streamId) throws IOException, ControlStreamException {
     Endpoint endpoint = SitestreamEndpoint.streamInfoEndpoint(streamId);
 
