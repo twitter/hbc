@@ -61,7 +61,7 @@ public class SitestreamController {
   }
 
   public void addUsers(String streamId, Collection<Long> userIds) throws IOException, ControlStreamException {
-    Preconditions.checkArgument(userIds.size() <= 100, "The userId parameter can be supplied with up to 100 user IDs.");
+    Preconditions.checkArgument(userIds.size() >= 1 && userIds.size() <= 100, "The userId parameter can be supplied with up to 100 user IDs.");
     Endpoint endpoint = SitestreamEndpoint.addUserEndpoint(streamId);
     endpoint.addPostParameter(Constants.USER_ID_PARAM, Joiner.on(',').join(userIds));
 
@@ -74,7 +74,7 @@ public class SitestreamController {
   }
 
   public void removeUsers(String streamId, Collection<Long> userIds) throws IOException, ControlStreamException {
-    Preconditions.checkArgument(userIds.size() <= 100, "The userId parameter can be supplied with up to 100 user IDs.");
+    Preconditions.checkArgument(userIds.size() >= 1 && userIds.size() <= 100, "The userId parameter can be supplied with up to 100 user IDs.");
     Endpoint endpoint = SitestreamEndpoint.removeUserEndpoint(streamId);
     endpoint.addPostParameter(Constants.USER_ID_PARAM, Joiner.on(',').join(userIds));
 
