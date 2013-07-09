@@ -20,7 +20,7 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <version>4.2.3</version>
+      <version>4.2.5</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -35,7 +35,7 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>joauth</artifactId>
-      <version>3.2.3</version>
+      <version>4.0.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
