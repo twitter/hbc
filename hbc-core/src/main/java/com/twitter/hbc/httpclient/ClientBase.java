@@ -297,11 +297,15 @@ class ClientBase implements Runnable {
    * Waits for the loop to end
    **/
   public void stop(int waitMillis) throws InterruptedException {
-    if (!isDone()) {
-      setExitStatus(new Event(EventType.STOPPED_BY_USER, String.format("Stopped by user: waiting for %d ms", waitMillis)));
-    }
-    if (!waitForFinish(waitMillis)) {
-      logger.warn("{} Client thread failed to finish in {} millis", name, waitMillis);
+    try {
+      if (!isDone()) {
+        setExitStatus(new Event(EventType.STOPPED_BY_USER, String.format("Stopped by user: waiting for %d ms", waitMillis)));
+      }
+      if (!waitForFinish(waitMillis)) {
+        logger.warn("{} Client thread failed to finish in {} millis", name, waitMillis);
+      }
+    } finally {
+      rateTracker.shutdown();
     }
   }
 
@@ -311,7 +315,6 @@ class ClientBase implements Runnable {
     } catch (InterruptedException e) {
       logger.warn("Client failed to shutdown due to interruption", e);
     }
-    rateTracker.shutdown();
   }
 
   public boolean isDone() {
