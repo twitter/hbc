@@ -14,6 +14,7 @@
 package com.twitter.hbc;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.io.CharStreams;
 import com.twitter.hbc.core.Constants;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 
 import static com.twitter.hbc.core.Constants.DEFAULT_CHARSET;
 
@@ -69,6 +71,24 @@ public class SitestreamController {
     consumeHttpEntityContent(makeControlStreamRequest(request));
   }
 
+  public void addUsers(String streamId, Collection<Long> userIds) throws IOException, ControlStreamException {
+    Preconditions.checkArgument(userIds.size() >= 1 && userIds.size() <= 100, "The userId parameter can be supplied with up to 100 user IDs.");
+    Endpoint endpoint = SitestreamEndpoint.addUserEndpoint(streamId);
+    endpoint.addPostParameter(Constants.USER_ID_PARAM, Joiner.on(',').join(userIds));
+
+    HttpUriRequest request = HttpConstants.constructRequest(hosts.nextHost(), endpoint, auth);
+    consumeHttpEntityContent(makeControlStreamRequest(request));
+  }
+
+  public void removeUsers(String streamId, Collection<Long> userIds) throws IOException, ControlStreamException {
+    Preconditions.checkArgument(userIds.size() >= 1 && userIds.size() <= 100, "The userId parameter can be supplied with up to 100 user IDs.");
+    Endpoint endpoint = SitestreamEndpoint.removeUserEndpoint(streamId);
+    endpoint.addPostParameter(Constants.USER_ID_PARAM, Joiner.on(',').join(userIds));
+
+    HttpUriRequest request = HttpConstants.constructRequest(hosts.nextHost(), endpoint, auth);
+    consumeHttpEntityContent(makeControlStreamRequest(request));
+  }
+
   public String getFriends(String streamId, long userId) throws IOException, ControlStreamException {
     return getFriends(streamId, userId, 0);
   }
@@ -83,9 +103,16 @@ public class SitestreamController {
     return consumeHttpEntityContent(response);
   }
 
+  /**
+   * @deprecated info.json does not take a user_id param (@see https://dev.twitter.com/docs/streaming-apis/streams/site/control#info)
+   */
+  @Deprecated
   public String getInfo(String streamId, long userId) throws IOException, ControlStreamException {
+    return getInfo(streamId);
+  }
+
+  public String getInfo(String streamId) throws IOException, ControlStreamException {
     Endpoint endpoint = SitestreamEndpoint.streamInfoEndpoint(streamId);
-    endpoint.addPostParameter(Constants.USER_ID_PARAM, Long.toString(userId));
 
     HttpUriRequest request = HttpConstants.constructRequest(hosts.nextHost(), endpoint, auth);
     HttpResponse response = makeControlStreamRequest(request);
