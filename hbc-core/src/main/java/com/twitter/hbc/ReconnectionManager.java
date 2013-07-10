@@ -10,94 +10,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
 package com.twitter.hbc;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.twitter.hbc.core.Constants;
-
 /**
- * This manages all of the reconnection logic. Mostly just keeps a bunch of information about whether we should
- * reconnect at all, how much we should backfill, and how much to back off from connection failures.
+ * This manages all of the reconnection logic.
  */
-public class ReconnectionManager {
-
-  public static final int INITIAL_EXPONENTIAL_BACKOFF_MILLIS = 5000;
-  public static final int INITIAL_LINEAR_BACKOFF_MILLIS = 250;
-
-  public static final int MAX_LINEAR_BACKOFF_MILLIS = 16000;
-  public static final int MAX_EXPONENTIAL_BACKOFF_MILLIS = 320000;
-
-  private final int maxRetries;
-
-  private int currentRetryCount;
-  private int exponentialBackoffCount;
-  private int linearBackoffCount;
-  private int backoffMillis;
-
-  public ReconnectionManager(int maxRetries) {
-    this.maxRetries = maxRetries;
-  }
-
-  public void handleExponentialBackoff() {
-    handleBackoff(incrAndGetExponentialBackoff());
-  }
-
-  public void handleLinearBackoff() {
-    handleBackoff(incrAndGetLinearBackoff());
-  }
-
-  public boolean shouldReconnectOn400s() {
-    currentRetryCount++;
-    return currentRetryCount <= maxRetries;
-  }
+public interface ReconnectionManager {
+  void handleExponentialBackoff();
+  void handleLinearBackoff();
+  boolean shouldReconnectOn400s();
 
   /**
    * Estimates the backfill count param given the tps
    */
-  public int estimateBackfill(double tps) {
-    return Math.min(Constants.MAX_BACKOFF_COUNT, (int) tps * (backoffMillis));
-  }
+  int estimateBackfill(double tps);
 
   /**
    * Call this when we have an active connection established
    */
-  public void resetCounts() {
-    linearBackoffCount = 0;
-    exponentialBackoffCount = 0;
-    currentRetryCount = 0;
-    backoffMillis = 0;
-  }
-
-  private void handleBackoff(int millis) {
-    backoffMillis += millis;
-    try {
-      Thread.sleep(millis);
-    } catch (InterruptedException e) {
-      // TODO: log an error
-    }
-  }
-
-  @VisibleForTesting
-  int incrAndGetExponentialBackoff() {
-    linearBackoffCount = 0;
-    exponentialBackoffCount += 1;
-    return calculateExponentialBackoffMillis();
-  }
-
-  @VisibleForTesting
-  int incrAndGetLinearBackoff() {
-    exponentialBackoffCount = 0;
-    linearBackoffCount += 1;
-    return calculateLinearBackoffMillis();
-  }
-
-  private int calculateExponentialBackoffMillis() {
-    assert(exponentialBackoffCount > 0);
-    return Math.min(MAX_EXPONENTIAL_BACKOFF_MILLIS, INITIAL_EXPONENTIAL_BACKOFF_MILLIS << (exponentialBackoffCount - 1));
-  }
-
-  private int calculateLinearBackoffMillis() {
-    return Math.min(MAX_LINEAR_BACKOFF_MILLIS, INITIAL_LINEAR_BACKOFF_MILLIS * linearBackoffCount);
-  }
+  void resetCounts();
 }
