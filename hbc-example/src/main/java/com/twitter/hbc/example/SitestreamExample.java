@@ -113,7 +113,7 @@ public class SitestreamExample {
 
     // Create a new BasicClient. By default gzip is enabled.
     BasicClient client = new ClientBuilder()
-      .hosts(Constants.STREAM_HOST)
+      .hosts(Constants.SITESTREAM_HOST)
       .endpoint(endpoint)
       .authentication(auth)
       .processor(new StringDelimitedProcessor(queue))
