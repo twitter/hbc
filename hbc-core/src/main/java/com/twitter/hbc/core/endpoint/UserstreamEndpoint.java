@@ -28,9 +28,25 @@ public class UserstreamEndpoint extends DefaultStreamingEndpoint {
     super(path, HttpConstants.HTTP_GET, false);
   }
 
+  /**
+   * Corresponds to setting `with=followings` when true.
+   * See https://dev.twitter.com/docs/streaming-apis/parameters#with
+   */
   public void withFollowings(boolean followings) {
     if (followings) {
       addQueryParameter(Constants.WITH_PARAM, Constants.WITH_FOLLOWINGS);
+    } else {
+      removeQueryParameter(Constants.WITH_PARAM);
+    }
+  }
+
+  /**
+   * Corresponds to setting `with=user` when true.
+   * See https://dev.twitter.com/docs/streaming-apis/parameters#with
+   */
+  public void withUser(boolean user) {
+    if (user) {
+      addQueryParameter(Constants.WITH_PARAM, Constants.WITH_USER);
     } else {
       removeQueryParameter(Constants.WITH_PARAM);
     }

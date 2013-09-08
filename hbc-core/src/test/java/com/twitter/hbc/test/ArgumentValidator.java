@@ -10,23 +10,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package com.twitter.hbc;
 
-/**
- * This manages all of the reconnection logic.
- */
-public interface ReconnectionManager {
-  void handleExponentialBackoff();
-  void handleLinearBackoff();
-  boolean shouldReconnectOn400s();
+package com.twitter.hbc.test;
 
-  /**
-   * Estimates the backfill count param given the tps
-   */
-  int estimateBackfill(double tps);
+import org.mockito.ArgumentMatcher;
 
-  /**
-   * Call this when we have an active connection established
-   */
-  void resetCounts();
+public abstract class ArgumentValidator<T> extends ArgumentMatcher<T> {
+
+  @Override
+  public boolean matches(Object o) {
+    try {
+      validate((T) o);
+      return true;
+    } catch(Exception ex) {
+      return false;
+    }
+  }
+
+  public abstract void validate(T t) throws Exception;
+
 }

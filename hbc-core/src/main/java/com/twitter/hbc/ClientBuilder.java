@@ -24,7 +24,6 @@ import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import org.apache.http.HttpVersion;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -92,7 +91,7 @@ public class ClientBuilder {
 
     ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1, rateTrackerThreadFactory);
     rateTracker = new BasicRateTracker(30000, 100, true, scheduledExecutor);
-    reconnectionManager = new ReconnectionManager(5);
+    reconnectionManager = new BasicReconnectionManager(5);
 
     socketTimeoutMillis = 60000;
     connectionTimeoutMillis = 4000;
@@ -164,8 +163,13 @@ public class ClientBuilder {
    * @param retries Number of retries to attempt when we experience retryable connection errors
    */
   public ClientBuilder retries(int retries) {
-    this.reconnectionManager = new ReconnectionManager(retries);
+    this.reconnectionManager = new BasicReconnectionManager(retries);
     return this;
+  }
+
+  public ClientBuilder reconnectionManager(ReconnectionManager manager) {
+      this.reconnectionManager = Preconditions.checkNotNull(manager);
+      return this;
   }
 
   public ClientBuilder endpoint(String uri, String httpMethod) {
@@ -175,8 +179,7 @@ public class ClientBuilder {
   }
 
   public ClientBuilder rateTracker(RateTracker rateTracker) {
-      Preconditions.checkNotNull(rateTracker);
-      this.rateTracker = rateTracker;
+      this.rateTracker = Preconditions.checkNotNull(rateTracker);
       return this;
   }
 

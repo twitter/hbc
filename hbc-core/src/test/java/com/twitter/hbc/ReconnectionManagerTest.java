@@ -25,17 +25,17 @@ public class ReconnectionManagerTest {
    */
   @Test
   public void testLinearBackoff() {
-    ReconnectionManager b = new ReconnectionManager(10);
+    BasicReconnectionManager b = new BasicReconnectionManager(10);
 
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 3, b.incrAndGetLinearBackoff());
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 4, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 3, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 4, b.incrAndGetLinearBackoff());
 
     b.resetCounts();
 
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
   }
 
   /**
@@ -43,17 +43,17 @@ public class ReconnectionManagerTest {
    */
   @Test
   public void testExponentialBackoff() {
-    ReconnectionManager b = new ReconnectionManager(10);
+    BasicReconnectionManager b = new BasicReconnectionManager(10);
 
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS, b.incrAndGetExponentialBackoff());
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 2, b.incrAndGetExponentialBackoff());
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 4, b.incrAndGetExponentialBackoff());
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 8, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 2, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 4, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 8, b.incrAndGetExponentialBackoff());
 
     b.resetCounts();
 
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS, b.incrAndGetExponentialBackoff());
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 2, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 2, b.incrAndGetExponentialBackoff());
   }
 
   /**
@@ -61,27 +61,27 @@ public class ReconnectionManagerTest {
    */
   @Test
   public void testBackoffSwitching() {
-    ReconnectionManager b = new ReconnectionManager(10);
+    BasicReconnectionManager b = new BasicReconnectionManager(10);
 
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 3, b.incrAndGetLinearBackoff());
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 4, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 3, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 4, b.incrAndGetLinearBackoff());
 
     // should automatically restart counts
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS, b.incrAndGetExponentialBackoff());
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 2, b.incrAndGetExponentialBackoff());
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 4, b.incrAndGetExponentialBackoff());
-    assertEquals(ReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 8, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 2, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 4, b.incrAndGetExponentialBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_EXPONENTIAL_BACKOFF_MILLIS * 8, b.incrAndGetExponentialBackoff());
 
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
-    assertEquals(ReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
+    assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
   }
 
   @Test
   public void testRetries() {
     int retries = 10;
-    ReconnectionManager b = new ReconnectionManager(retries);
+    ReconnectionManager b = new BasicReconnectionManager(retries);
 
     for (int i = 0; i < retries; i++) {
       assertTrue(b.shouldReconnectOn400s());

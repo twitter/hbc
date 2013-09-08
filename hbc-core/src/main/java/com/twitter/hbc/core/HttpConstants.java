@@ -70,13 +70,17 @@ public class HttpConstants {
   public static HttpUriRequest constructRequest(String host, Endpoint endpoint, Authentication auth) {
     String url = host + endpoint.getURI();
     if (endpoint.getHttpMethod().equalsIgnoreCase(HttpGet.METHOD_NAME)) {
-      return new HttpGet(url);
+      HttpGet get = new HttpGet(url);
+      if (auth != null)
+        auth.signRequest(get, null);
+      return get;
     } else if (endpoint.getHttpMethod().equalsIgnoreCase(HttpPost.METHOD_NAME) ) {
       HttpPost post = new HttpPost(url);
 
       post.setEntity(new StringEntity(endpoint.getPostParamString(), Constants.DEFAULT_CHARSET));
       post.setHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
-      auth.signRequest(post, endpoint.getPostParamString());
+      if (auth != null)
+        auth.signRequest(post, endpoint.getPostParamString());
 
       return post;
     } else {
