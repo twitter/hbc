@@ -42,12 +42,10 @@ public abstract class AbstractProcessor<T> implements HosebirdMessageProcessor {
   @Override
   public boolean process() throws IOException, InterruptedException {
     T msg = processNextMessage();
-    if (msg != null) {
-      return queue.offer(msg, offerTimeoutMillis, TimeUnit.MILLISECONDS);
-    } else {
-      // if its null, just try again
-      return process();
+    while (msg == null) {
+      msg = processNextMessage();
     }
+    return queue.offer(msg, offerTimeoutMillis, TimeUnit.MILLISECONDS);
   }
 
   @Nullable
