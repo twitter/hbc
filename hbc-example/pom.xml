@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.twitter</groupId>
   <artifactId>hbc-example</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.4.1</version>
   <packaging>jar</packaging>
   <name>Hosebird Client Examples</name>
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>hbc</artifactId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.1</version>
   </parent>
   <properties>
     <git.dir>${project.basedir}/../.git</git.dir>
@@ -26,7 +25,7 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>hbc-twitter4j-v3</artifactId>
-      <version>1.4.1-SNAPSHOT</version>
+      <version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

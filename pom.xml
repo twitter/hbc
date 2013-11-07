@@ -5,7 +5,7 @@
   <groupId>com.twitter</groupId>
   <artifactId>hbc</artifactId>
   <packaging>pom</packaging>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.4.1</version>
   <url>http://github.com/twitter/hbc</url>
   <description>A Java HTTP client for consuming Twitter's Streaming API</description>
   <modules>
@@ -14,7 +14,6 @@
     <module>hbc-example</module>
     <module>hbc-twitter4j-v3</module>
   </modules>
-
   <dependencies>
     <!-- Testing -->
     <dependency>
@@ -30,20 +29,17 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
   <scm>
     <connection>scm:git:git@github.com:twitter/hbc.git</connection>
     <url>scm:git:git@github.com:twitter/hbc.git</url>
     <developerConnection>scm:git:git@github.com:twitter/hbc.git</developerConnection>
   </scm>
-
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
-
   <developers>
     <developer>
       <name>Steven Liu</name>
@@ -54,13 +50,11 @@
       <email>koliver@twitter.com</email>
     </developer>
   </developers>
-
   <properties>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
     <encoding>UTF-8</encoding>
   </properties>
-
   <distributionManagement>
     <snapshotRepository>
       <id>sonatype-nexus-snapshots</id>
@@ -73,7 +67,6 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
-
   <repositories>
     <repository>
       <id>sonatype-nexus-snapshots</id>
@@ -84,21 +77,20 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-     </repository>
+    </repository>
   </repositories>
-
   <build>
     <pluginManagement>
       <plugins>
         <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-release-plugin</artifactId>
-         <version>2.1</version>
-         <configuration>
-          <mavenExecutorId>forked-path</mavenExecutorId>
-          <useReleaseProfile>false</useReleaseProfile>
-          <arguments>-Psonatype-oss-release</arguments>
-         </configuration>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.1</version>
+          <configuration>
+            <mavenExecutorId>forked-path</mavenExecutorId>
+            <useReleaseProfile>false</useReleaseProfile>
+            <arguments>-Psonatype-oss-release</arguments>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
