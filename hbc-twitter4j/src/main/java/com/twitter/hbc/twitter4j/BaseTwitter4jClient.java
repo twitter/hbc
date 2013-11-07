@@ -306,19 +306,19 @@ class BaseTwitter4jClient implements Twitter4jClient {
 
   private void processUserListCreation(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {
     User source = factory.createUser(JSONObjectParser.parseEventSource(json));
-    UserList userList = factory.createAUserList(JSONObjectParser.parseEventTarget(json));
+    UserList userList = factory.createAUserList(JSONObjectParser.parseEventTargetObject(json));
     onUserListCreation(sitestreamUser, source, userList);
   }
 
   private void processUserListUpdated(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {
     User source = factory.createUser(JSONObjectParser.parseEventSource(json));
-    UserList userList = factory.createAUserList(JSONObjectParser.parseEventTarget(json));
+    UserList userList = factory.createAUserList(JSONObjectParser.parseEventTargetObject(json));
     onUserListUpdate(sitestreamUser, source, userList);
   }
 
   private void processUserListDestroyed(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {
     User source = factory.createUser(JSONObjectParser.parseEventSource(json));
-    UserList userList = factory.createAUserList(JSONObjectParser.parseEventTarget(json));
+    UserList userList = factory.createAUserList(JSONObjectParser.parseEventTargetObject(json));
     onUserListDeletion(sitestreamUser, source, userList);
   }
 
