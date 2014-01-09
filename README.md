@@ -36,7 +36,7 @@ BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(100000);
 BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>(1000);
 
 /** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
-Hosts hosebirdHosts = new BasicHost(Constants.STREAM_HOST);
+Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
 StreamingEndpoint endpoint = new StatusesFilterEndpoint();
 // Optional: set up some followings and track terms
 List<Long> followings = Lists.newArrayList(1234L, 566788L);
