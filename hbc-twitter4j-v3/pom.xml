@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>hbc</artifactId>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.twitter</groupId>
@@ -18,7 +18,7 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>hbc-core</artifactId>
-      <version>1.4.3-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

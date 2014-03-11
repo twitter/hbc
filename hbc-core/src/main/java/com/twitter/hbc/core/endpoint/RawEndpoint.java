@@ -17,7 +17,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.twitter.hbc.core.HttpConstants;
-import com.twitter.joauth.UrlEncoder;
+import com.twitter.joauth.UrlCodec;
 
 import java.util.Collections;
 import java.util.Map;
@@ -80,11 +80,11 @@ public class RawEndpoint implements StreamingEndpoint {
 
   @Override
   public void addPostParameter(String param, String value) {
-    postParams.put(UrlEncoder.apply(param), UrlEncoder.apply(value));
+    postParams.put(UrlCodec.encode(param), UrlCodec.encode(value));
   }
 
   @Override
   public void removePostParameter(String param) {
-    postParams.remove(UrlEncoder.apply(param));
+    postParams.remove(UrlCodec.encode(param));
   }
 }

@@ -3,13 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.twitter</groupId>
   <artifactId>hbc-twitter4j</artifactId>
-  <version>1.4.3-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Hosebird Client Twitter4J</name>
   <properties>
     <git.dir>${project.basedir}/../.git</git.dir>
-    <!-- this makes maven-tools not bump us to snapshot versions -->
-    <stabilized>true</stabilized>
   </properties>
   <parent>
     <groupId>com.twitter</groupId>
@@ -20,7 +18,7 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>hbc-core</artifactId>
-      <version>1.4.3-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

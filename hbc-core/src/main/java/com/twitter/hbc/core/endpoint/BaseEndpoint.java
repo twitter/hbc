@@ -17,7 +17,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpConstants;
-import com.twitter.joauth.UrlEncoder;
+import com.twitter.joauth.UrlCodec;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -86,20 +86,20 @@ public class BaseEndpoint implements Endpoint {
 
   @Override
   public void addPostParameter(String param, String value) {
-    postParameters.put(UrlEncoder.apply(param), UrlEncoder.apply(value));
+    postParameters.put(UrlCodec.encode(param), UrlCodec.encode(value));
   }
 
   @Override
   public void removePostParameter(String param) {
-    postParameters.remove(UrlEncoder.apply(param));
+    postParameters.remove(UrlCodec.encode(param));
   }
 
   public void addQueryParameter(String param, String value) {
-    queryParameters.put(UrlEncoder.apply(param), UrlEncoder.apply(value));
+    queryParameters.put(UrlCodec.encode(param), UrlCodec.encode(value));
   }
 
   public void removeQueryParameter(String param) {
-    queryParameters.remove(UrlEncoder.apply(param));
+    queryParameters.remove(UrlCodec.encode(param));
   }
 
   public void setApiVersion(String apiVersion) {
