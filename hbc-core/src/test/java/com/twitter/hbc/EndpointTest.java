@@ -20,7 +20,7 @@ import com.twitter.hbc.core.endpoint.DefaultStreamingEndpoint;
 import com.twitter.hbc.core.endpoint.Location;
 import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
-import com.twitter.joauth.UrlEncoder;
+import com.twitter.joauth.UrlCodec;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
@@ -70,19 +70,19 @@ public class EndpointTest {
     StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
     endpoint.locations(Lists.newArrayList(
         new Location(new Location.Coordinate(-122.75, 36.8), new Location.Coordinate(-121.75, 37.8))));
-    assertEquals(endpoint.getPostParamString(), "locations=" + UrlEncoder.apply("-122.75,36.8,-121.75,37.8"));
+    assertEquals(endpoint.getPostParamString(), "locations=" + UrlCodec.encode("-122.75,36.8,-121.75,37.8"));
 
     StatusesFilterEndpoint endpoint2 = new StatusesFilterEndpoint();
     endpoint2.trackTerms(Lists.newArrayList(
             "twitterapi", "#!@?"));
-    assertEquals(endpoint2.getPostParamString(), "track=" + UrlEncoder.apply("twitterapi,#!@?"));
+    assertEquals(endpoint2.getPostParamString(), "track=" + UrlCodec.encode("twitterapi,#!@?"));
   }
 
   @Test
   public void testLanguages() {
     DefaultStreamingEndpoint endpoint = new StatusesFilterEndpoint();
     endpoint.languages(Lists.newArrayList("en", "de"));
-    assertEquals(endpoint.getPostParamString(), "language=" + UrlEncoder.apply("en,de"));
+    assertEquals(endpoint.getPostParamString(), "language=" + UrlCodec.encode("en,de"));
   }
 
   @Test
