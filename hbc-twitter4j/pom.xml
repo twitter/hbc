@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.twitter</groupId>
   <artifactId>hbc-twitter4j</artifactId>
-  <version>1.5.0-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Hosebird Client Twitter4J</name>
   <properties>
@@ -12,13 +12,13 @@
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>hbc</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
   <dependencies>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>hbc-core</artifactId>
-      <version>1.5.0-SNAPSHOT</version>
+      <version>2.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
