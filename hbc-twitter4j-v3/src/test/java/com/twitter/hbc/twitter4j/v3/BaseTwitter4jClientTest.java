@@ -18,8 +18,6 @@ import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
 import org.junit.Before;
 import org.junit.Test;
 import twitter4j.*;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;

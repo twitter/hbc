@@ -26,11 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.internal.json.z_T4JInternalJSONImplFactory;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
-import twitter4j.json.JSONObjectType;
-
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -44,13 +39,13 @@ class BaseTwitter4jClient implements Twitter4jClient {
   protected final Client client;
   private final BlockingQueue<String> messageQueue;
   private final ExecutorService executorService;
-  private final z_T4JInternalJSONImplFactory factory;
+  private final PublicObjectFactory factory;
 
   protected BaseTwitter4jClient(Client client, BlockingQueue<String> blockingQueue, ExecutorService executorService) {
     this.client = Preconditions.checkNotNull(client);
     this.messageQueue = Preconditions.checkNotNull(blockingQueue);
     this.executorService = Preconditions.checkNotNull(executorService);
-    this.factory = new z_T4JInternalJSONImplFactory(new ConfigurationBuilder().build());
+    this.factory = new PublicObjectFactory(new ConfigurationBuilder().build());
   }
 
   @Override
@@ -243,7 +238,8 @@ class BaseTwitter4jClient implements Twitter4jClient {
   }
 
   private void processDirectMessage(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {
-    onDirectMessage(sitestreamUser, factory.createDirectMessage(json.getJSONObject("direct_message")));
+    DirectMessage dm = factory.newDirectMessage(json.getJSONObject("direct_message"));
+    onDirectMessage(sitestreamUser, dm);
   }
 
   private void processDelete(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {

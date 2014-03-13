@@ -28,12 +28,12 @@
     <dependency>
       <groupId>org.twitter4j</groupId>
       <artifactId>twitter4j-core</artifactId>
-      <version>[3.0,)</version>
+      <version>4.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.twitter4j</groupId>
       <artifactId>twitter4j-stream</artifactId>
-      <version>[3.0,)</version>
+      <version>4.0.0</version>
     </dependency>
   </dependencies>
   <build>
