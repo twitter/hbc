@@ -16,10 +16,10 @@ package com.twitter.hbc.twitter4j.v3.parser;
 import com.google.common.primitives.Longs;
 import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
 import twitter4j.StatusDeletionNotice;
-import twitter4j.internal.org.json.JSONArray;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
-import twitter4j.json.JSONObjectType;
+import twitter4j.JSONArray;
+import twitter4j.JSONException;
+import twitter4j.JSONObject;
+import twitter4j.JSONObjectType;
 
 public class JSONObjectParser {
 

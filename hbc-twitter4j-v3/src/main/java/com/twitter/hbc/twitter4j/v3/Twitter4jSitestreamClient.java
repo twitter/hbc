@@ -16,14 +16,11 @@ package com.twitter.hbc.twitter4j.v3;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.twitter.hbc.core.Client;
-import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.twitter4j.v3.handler.SitestreamHandler;
 import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
 import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
 import com.twitter.hbc.twitter4j.v3.parser.JSONObjectParser;
 import twitter4j.*;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
 
 import javax.annotation.Nullable;
 import java.util.List;

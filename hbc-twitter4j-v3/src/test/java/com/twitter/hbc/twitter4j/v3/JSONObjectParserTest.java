@@ -19,8 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.TwitterException;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
+import twitter4j.JSONException;
+import twitter4j.JSONObject;
 
 import java.io.IOException;
 
