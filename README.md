@@ -22,7 +22,7 @@ The latest hbc artifacts are published to maven central. Bringing hbc into your 
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>hbc-core</artifactId> <!-- or hbc-twitter4j -->
-      <version>1.4.2</version> <!-- or whatever the latest version is -->
+      <version>2.0.0</version> <!-- or whatever the latest version is -->
     </dependency>
   </dependencies>
 ```
