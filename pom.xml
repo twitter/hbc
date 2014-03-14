@@ -10,7 +10,7 @@
   <description>A Java HTTP client for consuming Twitter's Streaming API</description>
   <modules>
     <module>hbc-core</module>
-    <module>hbc-twitter4j-v3</module>
+    <module>hbc-twitter4j</module>
     <module>hbc-example</module>
   </modules>
   <dependencies>
