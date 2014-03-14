@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j.v3;
+package com.twitter.hbc.twitter4j;
 
 import com.google.common.base.Preconditions;
 import twitter4j.JSONException;

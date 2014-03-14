@@ -11,10 +11,10 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j.v3.handler;
+package com.twitter.hbc.twitter4j.handler;
 
-import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
-import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
+import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
 import twitter4j.Status;
 import twitter4j.User;
 import twitter4j.UserStreamListener;

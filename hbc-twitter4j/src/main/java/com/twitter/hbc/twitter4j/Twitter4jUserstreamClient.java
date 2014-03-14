@@ -11,16 +11,15 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j.v3;
+package com.twitter.hbc.twitter4j;
 
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.twitter.hbc.core.Client;
-import com.twitter.hbc.httpclient.BasicClient;
-import com.twitter.hbc.twitter4j.v3.handler.UserstreamHandler;
-import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
-import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
+import com.twitter.hbc.twitter4j.handler.UserstreamHandler;
+import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
 import twitter4j.*;
 
 import java.util.List;

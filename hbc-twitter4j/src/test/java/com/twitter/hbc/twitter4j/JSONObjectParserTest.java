@@ -11,10 +11,10 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j.v3;
+package com.twitter.hbc.twitter4j;
 
-import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
-import com.twitter.hbc.twitter4j.v3.parser.JSONObjectParser;
+import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.parser.JSONObjectParser;
 import org.junit.Before;
 import org.junit.Test;
 import twitter4j.StatusDeletionNotice;

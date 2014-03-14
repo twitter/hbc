@@ -23,7 +23,7 @@ import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.ControlStreamException;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
-import com.twitter.hbc.twitter4j.v3.Twitter4jSitestreamClient;
+import com.twitter.hbc.twitter4j.Twitter4jSitestreamClient;
 
 import twitter4j.*;
 

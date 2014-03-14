@@ -11,12 +11,21 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j.v3;
+package com.twitter.hbc.twitter4j;
 
+import com.google.common.io.CharStreams;
 
-import com.twitter.hbc.core.Client;
-import com.twitter.hbc.core.Client;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
-interface Twitter4jClient extends Client {
-  public void process();
+class ResourceReader {
+  final String readFile(String filename) throws IOException {
+    InputStream stream = getClass().getClassLoader().getResourceAsStream(filename);
+    try {
+      return CharStreams.toString(new InputStreamReader(stream));
+    } finally {
+      stream.close();
+    }
+  }
 }

@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j.v3.message;
+package com.twitter.hbc.twitter4j.message;
 
 import com.google.common.base.Preconditions;
 

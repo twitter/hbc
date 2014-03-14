@@ -11,10 +11,10 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j.v3.parser;
+package com.twitter.hbc.twitter4j.parser;
 
 import com.google.common.primitives.Longs;
-import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.DisconnectMessage;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.JSONArray;
 import twitter4j.JSONException;

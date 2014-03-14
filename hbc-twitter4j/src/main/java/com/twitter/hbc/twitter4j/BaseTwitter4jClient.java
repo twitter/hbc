@@ -11,7 +11,7 @@
  * limitations under the License.
  **/
 
-package com.twitter.hbc.twitter4j.v3;
+package com.twitter.hbc.twitter4j;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -19,9 +19,9 @@ import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.StatsReporter;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
-import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
-import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
-import com.twitter.hbc.twitter4j.v3.parser.JSONObjectParser;
+import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
+import com.twitter.hbc.twitter4j.parser.JSONObjectParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.*;
@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 
-import static com.twitter.hbc.twitter4j.v3.parser.JSONObjectParser.parseFriendList;
+import static com.twitter.hbc.twitter4j.parser.JSONObjectParser.parseFriendList;
 
 class BaseTwitter4jClient implements Twitter4jClient {
 
