@@ -156,9 +156,10 @@ class ClientBase implements Runnable {
           );
         }
       }
-    } catch (Exception e) {
+    } catch (Throwable e) {
       logger.warn(name + " Uncaught exception", e);
-      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, e));
+      Exception laundered = (e instanceof Exception) ? (Exception) e : new RuntimeException(e);
+      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, laundered));
     } finally {
       rateTracker.stop();
       logger.info("{} Shutting down httpclient connection manager", name);
