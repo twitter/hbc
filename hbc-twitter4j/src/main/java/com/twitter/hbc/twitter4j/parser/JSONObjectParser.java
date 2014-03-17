@@ -16,9 +16,10 @@ package com.twitter.hbc.twitter4j.parser;
 import com.google.common.primitives.Longs;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
 import twitter4j.StatusDeletionNotice;
-import twitter4j.internal.org.json.JSONArray;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
+import twitter4j.JSONArray;
+import twitter4j.JSONException;
+import twitter4j.JSONObject;
+import twitter4j.JSONObjectType;
 
 public class JSONObjectParser {
 
@@ -37,12 +38,9 @@ public class JSONObjectParser {
         return userId;
       }
 
-      // lol java 7's javac fails to compile if we use the generic type:
-      // [ERROR] /hosebird-client/client-twitter4j/src/main/java/com/twitter/hbc/twitter4j/parser/JSONObjectParser.java:[16,38]
-      // error: <anonymous com.twitter.hbc.twitter4j.parser.JSONObjectParser$1> is not abstract and does not override
-      // abstract method compareTo(Object) in Comparable
-      public int compareTo(Object o) {
-        return Longs.compare(getStatusId(), ((StatusDeletionNotice)o).getStatusId());
+      @Override
+      public int compareTo(StatusDeletionNotice o) {
+        return Longs.compare(getStatusId(), o.getStatusId());
       }
     };
   }
@@ -95,8 +93,16 @@ public class JSONObjectParser {
     return split[split.length - 1];
   }
 
+  @Deprecated
   public static boolean isDisconnectMessage(JSONObject message) {
-    return message.has("disconnect");
+    return JSONObjectType.determine(message) == JSONObjectType.Type.DISCONNECTION;
+  }
+
+  public static boolean isRetweetMessage(JSONObject message) throws JSONException {
+    Object event = message.opt("event");
+    if (!(event instanceof String))
+      return false;
+    return "retweet".equals(event);
   }
 
   public static DisconnectMessage parseDisconnectMessage(JSONObject message) throws JSONException {

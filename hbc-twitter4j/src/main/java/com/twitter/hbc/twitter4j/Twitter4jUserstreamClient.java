@@ -17,9 +17,9 @@ package com.twitter.hbc.twitter4j;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.twitter.hbc.core.Client;
-import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.twitter4j.handler.UserstreamHandler;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
 import twitter4j.*;
 
 import java.util.List;
@@ -124,7 +124,9 @@ public class Twitter4jUserstreamClient extends BaseTwitter4jClient {
   @Override
   protected void onRetweet(long sitestreamUser, final User user, final User target, final Status status) {
     for (UserStreamListener listener : userstreamListeners) {
-      listener.onRetweet(user, target, status);
+      if (listener instanceof UserstreamHandler) {
+        ((UserstreamHandler) listener).onRetweet(user, target, status);
+      }
     }
   }
 
@@ -205,6 +207,15 @@ public class Twitter4jUserstreamClient extends BaseTwitter4jClient {
     for (UserStreamListener listener : userstreamListeners) {
       if (listener instanceof UserstreamHandler) {
         ((UserstreamHandler) listener).onDisconnectMessage(disconnect);
+      }
+    }
+  }
+
+  @Override
+  protected void onStallWarning(StallWarningMessage stallWarning) {
+    for (UserStreamListener listener : userstreamListeners) {
+      if (listener instanceof UserstreamHandler) {
+        ((UserstreamHandler) listener).onStallWarningMessage(stallWarning);
       }
     }
   }

@@ -12,7 +12,6 @@
     <module>hbc-core</module>
     <module>hbc-twitter4j</module>
     <module>hbc-example</module>
-    <module>hbc-twitter4j-v3</module>
   </modules>
   <dependencies>
     <!-- Testing -->

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package com.twitter.hbc.twitter4j.v3.message;
+package com.twitter.hbc.twitter4j.message;
 
 /**
  * Struct representing a stall warning message.

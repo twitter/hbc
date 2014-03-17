@@ -21,11 +21,11 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
-import com.twitter.hbc.twitter4j.v3.Twitter4jStatusClient;
-import com.twitter.hbc.twitter4j.v3.handler.StatusStreamHandler;
-import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.Twitter4jStatusClient;
+import com.twitter.hbc.twitter4j.handler.StatusStreamHandler;
+import com.twitter.hbc.twitter4j.message.DisconnectMessage;
 
-import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;

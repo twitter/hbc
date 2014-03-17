@@ -14,9 +14,8 @@
 package com.twitter.hbc.twitter4j;
 
 import com.google.common.base.Preconditions;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
-
+import twitter4j.JSONException;
+import twitter4j.JSONObject;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;

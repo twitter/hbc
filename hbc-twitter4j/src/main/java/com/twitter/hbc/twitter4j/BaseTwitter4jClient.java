@@ -20,16 +20,12 @@ import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.StatsReporter;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
 import com.twitter.hbc.twitter4j.parser.JSONObjectParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.internal.json.z_T4JInternalJSONImplFactory;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
-import twitter4j.json.JSONObjectType;
-
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -43,13 +39,13 @@ class BaseTwitter4jClient implements Twitter4jClient {
   protected final Client client;
   private final BlockingQueue<String> messageQueue;
   private final ExecutorService executorService;
-  private final z_T4JInternalJSONImplFactory factory;
+  private final PublicObjectFactory factory;
 
   protected BaseTwitter4jClient(Client client, BlockingQueue<String> blockingQueue, ExecutorService executorService) {
     this.client = Preconditions.checkNotNull(client);
     this.messageQueue = Preconditions.checkNotNull(blockingQueue);
     this.executorService = Preconditions.checkNotNull(executorService);
-    this.factory = new z_T4JInternalJSONImplFactory(new ConfigurationBuilder().build());
+    this.factory = new PublicObjectFactory(new ConfigurationBuilder().build());
   }
 
   @Override
@@ -155,55 +151,84 @@ class BaseTwitter4jClient implements Twitter4jClient {
 
   @VisibleForTesting
   void processMessage(long sitestreamUser, JSONObject json) throws JSONException, TwitterException, IOException {
-    JSONObjectType type = JSONObjectType.determine(json);
-    if (type == JSONObjectType.STATUS) {
-      processStatus(sitestreamUser, json);
-    } else if (type == JSONObjectType.LIMIT) {
-      processLimit(sitestreamUser, json);
-    } else if (type == JSONObjectType.DELETE) {
-      processDelete(sitestreamUser, json);
-    } else if (type == JSONObjectType.SCRUB_GEO) {
-      processScrubGeo(sitestreamUser, json);
-    } else if (type == JSONObjectType.DIRECT_MESSAGE) {
-      processDirectMessage(sitestreamUser, json);
-    } else if (type == JSONObjectType.FRIENDS) {
-      processFriends(sitestreamUser, json);
-    } else if (type == JSONObjectType.FAVORITE) {
-      processFavorite(sitestreamUser, json);
-    } else if (type == JSONObjectType.UNFAVORITE) {
-      processUnfavorite(sitestreamUser, json);
-    } else if (type == JSONObjectType.RETWEET) {
-      processRetweet(sitestreamUser, json);
-    } else if (type == JSONObjectType.FOLLOW) {
-      processFollow(sitestreamUser, json);
-    } else if (type == JSONObjectType.UNFOLLOW) {
-      processUnfollow(sitestreamUser, json);
-    } else if (type == JSONObjectType.USER_LIST_MEMBER_ADDED) {
-      processUserListMemberAddition(sitestreamUser, json);
-    } else if (type == JSONObjectType.USER_LIST_MEMBER_DELETED) {
-      processUserListMemberDeletion(sitestreamUser, json);
-    } else if (type == JSONObjectType.USER_LIST_SUBSCRIBED) {
-      processUserListSubscription(sitestreamUser, json);
-    } else if (type == JSONObjectType.USER_LIST_UNSUBSCRIBED) {
-      processUserListUnsubscription(sitestreamUser, json);
-    } else if (type == JSONObjectType.USER_LIST_CREATED) {
-      processUserListCreation(sitestreamUser, json);
-    } else if (type == JSONObjectType.USER_LIST_UPDATED) {
-      processUserListUpdated(sitestreamUser, json);
-    } else if (type == JSONObjectType.USER_LIST_DESTROYED) {
-      processUserListDestroyed(sitestreamUser, json);
-    } else if (type == JSONObjectType.BLOCK) {
-      processBlock(sitestreamUser, json);
-    } else if (type == JSONObjectType.UNBLOCK) {
-      processUnblock(sitestreamUser, json);
-    } else if (type == JSONObjectType.USER_UPDATE) {
-      processUserUpdate(sitestreamUser, json);
-    } else if (JSONObjectParser.isControlStreamMessage(json)) {
-      processControlStream(json);
-    } else if (JSONObjectParser.isDisconnectMessage(json)) {
-      processDisconnectMessage(json);
-    } else {
-      onUnknownMessageType(json.toString());
+    JSONObjectType.Type type = JSONObjectType.determine(json);
+    switch (type) {
+      case STATUS:
+        processStatus(sitestreamUser, json);
+        break;
+      case LIMIT:
+        processLimit(sitestreamUser, json);
+        break;
+      case DELETE:
+        processDelete(sitestreamUser, json);
+        break;
+      case SCRUB_GEO:
+        processScrubGeo(sitestreamUser, json);
+        break;
+      case DIRECT_MESSAGE:
+      case SENDER:
+        processDirectMessage(sitestreamUser, json);
+        break;
+      case FRIENDS:
+        processFriends(sitestreamUser, json);
+        break;
+      case FAVORITE:
+        processFavorite(sitestreamUser, json);
+        break;
+      case UNFAVORITE:
+        processUnfavorite(sitestreamUser, json);
+        break;
+      case FOLLOW:
+        processFollow(sitestreamUser, json);
+        break;
+      case UNFOLLOW:
+        processUnfollow(sitestreamUser, json);
+        break;
+      case USER_LIST_MEMBER_ADDED:
+        processUserListMemberAddition(sitestreamUser, json);
+        break;
+      case USER_LIST_MEMBER_DELETED:
+        processUserListMemberDeletion(sitestreamUser, json);
+        break;
+      case USER_LIST_SUBSCRIBED:
+        processUserListSubscription(sitestreamUser, json);
+        break;
+      case USER_LIST_UNSUBSCRIBED:
+        processUserListUnsubscription(sitestreamUser, json);
+        break;
+      case USER_LIST_CREATED:
+        processUserListCreation(sitestreamUser, json);
+        break;
+      case USER_LIST_UPDATED:
+        processUserListUpdated(sitestreamUser, json);
+        break;
+      case USER_LIST_DESTROYED:
+        processUserListDestroyed(sitestreamUser, json);
+        break;
+      case BLOCK:
+        processBlock(sitestreamUser, json);
+        break;
+      case UNBLOCK:
+        processUnblock(sitestreamUser, json);
+        break;
+      case USER_UPDATE:
+        processUserUpdate(sitestreamUser, json);
+        break;
+      case DISCONNECTION:
+        processDisconnectMessage(json);
+        break;
+      case STALL_WARNING:
+        processStallWarning(json);
+        break;
+      case UNKNOWN:
+      default:
+        if (JSONObjectParser.isRetweetMessage(json)) {
+          processRetweet(sitestreamUser, json);
+        } else if (JSONObjectParser.isControlStreamMessage(json)) {
+          processControlStream(json);
+        } else {
+          onUnknownMessageType(json.toString());
+        }
     }
   }
 
@@ -213,7 +238,8 @@ class BaseTwitter4jClient implements Twitter4jClient {
   }
 
   private void processDirectMessage(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {
-    onDirectMessage(sitestreamUser, factory.createDirectMessage(json.getJSONObject("direct_message")));
+    DirectMessage dm = factory.newDirectMessage(json.getJSONObject("direct_message"));
+    onDirectMessage(sitestreamUser, dm);
   }
 
   private void processDelete(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {
@@ -226,6 +252,15 @@ class BaseTwitter4jClient implements Twitter4jClient {
       final long userId = dm.getLong("user_id");
       onDeleteDirectMessage(sitestreamUser, statusId, userId);
     }
+  }
+
+  private void processStallWarning(JSONObject json) throws JSONException {
+    JSONObject warning = json.getJSONObject("warning");
+    String code = ((String) warning.opt("code"));
+    String message = ((String) warning.opt("message"));
+    int percentFull = warning.getInt("percent_full");
+
+    onStallWarning(new StallWarningMessage(code, message, percentFull));
   }
 
   private void processLimit(long sitestreamUser, JSONObject json) throws TwitterException, JSONException {
@@ -444,6 +479,10 @@ class BaseTwitter4jClient implements Twitter4jClient {
 
   protected void onException(Exception e) {
     logger.info("Exception caught", e);
+  }
+
+  protected void onStallWarning(StallWarningMessage stallWarning) {
+    logger.info("Unhandled event: onStallWarning - {}", stallWarning);
   }
 
   protected void onUnknownMessageType(String msg) {
