@@ -87,6 +87,9 @@ To run the sample stream example:
 mvn install && mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Daccess.token=ABC -Daccess.token.secret=ABCSECRET
 ```
 
+You can find these values on http://dev.twitter.com and navigating to one of your applications then to the API Keys tab.
+The API key and secrets values on that page correspond to hbc's `-Dconsumer.*` properties.
+
 Alternatively you can set those properties in hbc-examples/pom.xml
 
 ## The Details
