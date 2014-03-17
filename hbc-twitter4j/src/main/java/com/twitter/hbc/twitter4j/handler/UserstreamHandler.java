@@ -14,6 +14,8 @@
 package com.twitter.hbc.twitter4j.handler;
 
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
+import twitter4j.Status;
 import twitter4j.User;
 import twitter4j.UserStreamListener;
 
@@ -26,7 +28,22 @@ public interface UserstreamHandler extends UserStreamListener {
   public void onUnfollow(User source, User target);
 
   /**
+   * See documentation on stall warnings here:
+   * See https://dev.twitter.com/docs/streaming-apis/parameters#stall_warnings
+   *
+   * Ideally, twitter4j would make it's StallWarning's constructor public and we could remove this.
+   */
+  public void onStallWarningMessage(StallWarningMessage warning);
+
+  /**
    * Any message we receive that isn't handled by the other methods
    */
   public void onUnknownMessageType(String msg);
+
+  /**
+   * Called for all retweet events.
+   *
+   * Twitter4J v3 seems to have removed this event from UserStreamListener.
+   */
+  public void onRetweet(User source, User target, Status retweetedStatus);
 }

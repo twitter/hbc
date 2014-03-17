@@ -16,13 +16,11 @@ package com.twitter.hbc.twitter4j;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.twitter.hbc.core.Client;
-import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.twitter4j.handler.SitestreamHandler;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
 import com.twitter.hbc.twitter4j.parser.JSONObjectParser;
 import twitter4j.*;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -214,6 +212,14 @@ public class Twitter4jSitestreamClient extends BaseTwitter4jClient {
     }
   }
 
+  @Override
+  protected void onStallWarning(StallWarningMessage stallWarning) {
+    for (SiteStreamsListener listener : sitestreamListeners) {
+      if (listener instanceof SitestreamHandler) {
+        ((SitestreamHandler) listener).onStallWarningMessage(stallWarning);
+      }
+    }
+  }
 
   @Override
   protected void onUnknownMessageType(String msg) {

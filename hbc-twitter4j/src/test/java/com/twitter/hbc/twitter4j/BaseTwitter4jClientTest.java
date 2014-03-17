@@ -18,15 +18,12 @@ import com.twitter.hbc.twitter4j.message.DisconnectMessage;
 import org.junit.Before;
 import org.junit.Test;
 import twitter4j.*;
-import twitter4j.internal.org.json.JSONException;
-import twitter4j.internal.org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static com.twitter.hbc.twitter4j.CreateEvent.createEvent;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -137,105 +134,105 @@ public class BaseTwitter4jClientTest {
 
   @Test
   public void testFavoriteListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("favorite", user, user, status);
+    JSONObject json = CreateEvent.createEvent("favorite", user, user, status);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onFavorite(anyInt(), any(User.class), any(User.class), any(Status.class));
   }
 
   @Test
   public void testUnfavoriteListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("unfavorite", user, user, status);
+    JSONObject json = CreateEvent.createEvent("unfavorite", user, user, status);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUnfavorite(anyInt(), any(User.class), any(User.class), any(Status.class));
   }
 
   @Test
   public void testRetweetListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("retweet", user, user, status);
+    JSONObject json = CreateEvent.createEvent("retweet", user, user, status);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onRetweet(anyInt(), any(User.class), any(User.class), any(Status.class));
   }
 
   @Test
   public void testFollowListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("follow", user, user, null);
+    JSONObject json = CreateEvent.createEvent("follow", user, user, null);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onFollow(anyInt(), any(User.class), any(User.class));
   }
 
   @Test
   public void testUnfollowListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("unfollow", user, user, null);
+    JSONObject json = CreateEvent.createEvent("unfollow", user, user, null);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUnfollow(anyInt(), any(User.class), any(User.class));
   }
 
   @Test
   public void testListMemberAddedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("list_member_added", user, user, friendsList);
+    JSONObject json = CreateEvent.createEvent("list_member_added", user, user, friendsList);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUserListMemberAddition(anyInt(), any(User.class), any(User.class), any(UserList.class));
   }
 
   @Test
   public void testListMemberDeletedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("list_member_removed", user, user, friendsList);
+    JSONObject json = CreateEvent.createEvent("list_member_removed", user, user, friendsList);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUserListMemberDeletion(anyInt(), any(User.class), any(User.class), any(UserList.class));
   }
 
   @Test
   public void testListSubscribedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("list_user_subscribed", user, user, friendsList);
+    JSONObject json = CreateEvent.createEvent("list_user_subscribed", user, user, friendsList);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUserListSubscription(anyInt(), any(User.class), any(User.class), any(UserList.class));
   }
 
   @Test
   public void testListUnsubscribedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("list_user_unsubscribed", user, user, friendsList);
+    JSONObject json = CreateEvent.createEvent("list_user_unsubscribed", user, user, friendsList);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUserListUnsubscription(anyInt(), any(User.class), any(User.class), any(UserList.class));
   }
 
   @Test
   public void testListCreatedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("list_created", user, user, friendsList);
+    JSONObject json = CreateEvent.createEvent("list_created", user, user, friendsList);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUserListCreation(anyInt(), any(User.class), any(UserList.class));
   }
 
   @Test
   public void testListDestroyedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("list_destroyed", user, user, friendsList);
+    JSONObject json = CreateEvent.createEvent("list_destroyed", user, user, friendsList);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUserListDeletion(anyInt(), any(User.class), any(UserList.class));
   }
 
   @Test
   public void testListUpdatedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("list_updated", user, user, friendsList);
+    JSONObject json = CreateEvent.createEvent("list_updated", user, user, friendsList);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUserListUpdate(anyInt(), any(User.class), any(UserList.class));
   }
 
   @Test
   public void testBlockedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("block", user, user, null);
+    JSONObject json = CreateEvent.createEvent("block", user, user, null);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onBlock(anyInt(), any(User.class), any(User.class));
   }
 
   @Test
   public void testUnblockedListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("unblock", user, user, null);
+    JSONObject json = CreateEvent.createEvent("unblock", user, user, null);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUnblock(anyInt(), any(User.class), any(User.class));
   }
 
   @Test
   public void testUserUpdateListener() throws TwitterException, IOException, JSONException {
-    JSONObject json = createEvent("user_update", user, user, null);
+    JSONObject json = CreateEvent.createEvent("user_update", user, user, null);
     t4jClient.processMessage(-1, json);
     verify(t4jClient).onUserProfileUpdate(anyInt(), any(User.class));
   }
