@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ClientBuilder {
 
-  private static AtomicInteger clientNum = new AtomicInteger(0);
+  private static final AtomicInteger clientNum = new AtomicInteger(0);
   protected Authentication auth;
   protected Hosts hosts;
   protected HosebirdMessageProcessor processor;
@@ -48,7 +48,7 @@ public class ClientBuilder {
   protected boolean enableGZip;
   protected String name;
   protected RateTracker rateTracker;
-  protected ExecutorService executorService;
+  protected final ExecutorService executorService;
   protected BlockingQueue<Event> eventQueue;
   protected ReconnectionManager reconnectionManager;
   protected int socketTimeoutMillis;

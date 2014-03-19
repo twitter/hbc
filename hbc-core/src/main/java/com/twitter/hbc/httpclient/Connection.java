@@ -32,7 +32,7 @@ public class Connection {
   private HttpUriRequest request;
   private InputStream stream;
 
-  private HosebirdMessageProcessor processor;
+  private final HosebirdMessageProcessor processor;
 
   public Connection(HttpClient client, HosebirdMessageProcessor processor) {
     this.client = Preconditions.checkNotNull(client);
@@ -60,6 +60,10 @@ public class Connection {
       // restart the entire client
       ((RestartableHttpClient) client).restart();
     }
-    Closeables.closeQuietly(this.stream);
+    try {
+      Closeables.close(this.stream, true);
+    } catch (IOException e) {
+      throw new RuntimeException(e); // should never happen
+    }
   }
 }

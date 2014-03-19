@@ -32,7 +32,7 @@ public class BasicRateTracker implements RateTracker {
     private final RateUpdater rateUpdater;
 
     private ScheduledFuture<?> future;
-    private ScheduledExecutorService executor;
+    private final ScheduledExecutorService executor;
 
     public BasicRateTracker(int granularityMillis, int numBuckets, boolean startPaused, ScheduledExecutorService executor) {
         Preconditions.checkArgument(numBuckets > 0);

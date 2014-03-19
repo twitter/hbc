@@ -38,7 +38,6 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class SitestreamControllerTest {
@@ -50,7 +49,6 @@ public class SitestreamControllerTest {
   private HttpResponse mockResponse;
   private StatusLine mockStatusLine;
   private HttpEntity mockEntity;
-  private InputStream mockContent = mock(InputStream.class);
 
   @Before
   public void setup() {

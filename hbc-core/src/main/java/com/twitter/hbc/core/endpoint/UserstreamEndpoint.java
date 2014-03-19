@@ -18,7 +18,7 @@ import com.twitter.hbc.core.HttpConstants;
 
 public class UserstreamEndpoint extends DefaultStreamingEndpoint {
 
-  public static String PATH = "/user.json";
+  public static final String PATH = "/user.json";
 
   public UserstreamEndpoint() {
     this(PATH);

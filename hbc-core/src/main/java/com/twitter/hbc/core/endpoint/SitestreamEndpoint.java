@@ -17,7 +17,7 @@ import com.twitter.hbc.core.HttpConstants;
 
 public class SitestreamEndpoint extends UserstreamEndpoint {
 
-  public static String PATH = "/site.json";
+  public static final String PATH = "/site.json";
 
   public SitestreamEndpoint() {
     super(PATH);
