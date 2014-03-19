@@ -60,6 +60,10 @@ public class Connection {
       // restart the entire client
       ((RestartableHttpClient) client).restart();
     }
-    Closeables.closeQuietly(this.stream);
+    try {
+      Closeables.close(this.stream, true);
+    } catch (IOException e) {
+      throw new RuntimeException(e); // should never happen
+    }
   }
 }
