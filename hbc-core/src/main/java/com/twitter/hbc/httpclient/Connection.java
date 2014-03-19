@@ -32,7 +32,7 @@ public class Connection {
   private HttpUriRequest request;
   private InputStream stream;
 
-  private HosebirdMessageProcessor processor;
+  private final HosebirdMessageProcessor processor;
 
   public Connection(HttpClient client, HosebirdMessageProcessor processor) {
     this.client = Preconditions.checkNotNull(client);

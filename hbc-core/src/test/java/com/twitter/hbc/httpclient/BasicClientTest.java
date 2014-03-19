@@ -59,7 +59,7 @@ public class BasicClientTest {
 
   private ClientConnectionManager mockConnectionManager;
 
-  private ExecutorService executorService;
+  private final ExecutorService executorService;
 
   public BasicClientTest() {
     ThreadFactory threadFactory = new ThreadFactoryBuilder()
