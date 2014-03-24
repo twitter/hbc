@@ -1,3 +1,8 @@
+== 2.0.1
+
+* Stop using deprecated guava method `Closeables.closeQuietly` https://github.com/twitter/hbc/pull/104
+* Fix some static analysis warnings
+
 == 2.0.0
 
 * Upgrade JOAuth to 6.0.2 from 4.0.1.
