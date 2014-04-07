@@ -25,8 +25,10 @@ import com.twitter.hbc.core.endpoint.SitestreamEndpoint;
 import com.twitter.hbc.httpclient.ControlStreamException;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import org.apache.http.HttpResponse;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,10 +48,17 @@ public class SitestreamController {
   private final Hosts hosts;
   private final Authentication auth;
 
-  public SitestreamController(HttpClient client, Hosts hosts, Authentication auth) {
-    this.client = Preconditions.checkNotNull(client);
+  /**
+   * We can't use the same client to interact with the control stream, so create a new one.
+   */
+  public SitestreamController(HttpClient parentClient, Hosts hosts, Authentication auth) {
     this.hosts = Preconditions.checkNotNull(hosts);
     this.auth = Preconditions.checkNotNull(auth);
+
+    DefaultHttpClient sitestreamClient = new DefaultHttpClient(Preconditions.checkNotNull(parentClient).getConnectionManager(), new BasicHttpParams());
+
+    auth.setupConnection(sitestreamClient);
+    this.client = sitestreamClient;
   }
 
   /**
