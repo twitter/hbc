@@ -33,6 +33,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -350,8 +352,13 @@ class ClientBase implements Runnable {
     return endpoint;
   }
 
+  /**
+   * We can't re-use the same connection to work on controlstreams, so create a new one
+   */
   public SitestreamController getSitestreamController() {
-    return new SitestreamController(client, hosts, auth);
+    DefaultHttpClient sitestreamClient = new DefaultHttpClient(Preconditions.checkNotNull(client).getConnectionManager(), new BasicHttpParams());
+    auth.setupConnection(sitestreamClient);
+    return new SitestreamController(sitestreamClient, hosts, auth);
   }
 
   public StatsReporter.StatsTracker getStatsTracker() {
