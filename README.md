@@ -117,7 +117,7 @@ Declare a StreamingEndpoint to connect to. These classes reside in the package c
 #### Filter streams:
 
 ```java
-StreamingEndpoint endpoint = new StatusesFilterEndpoint();
+StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
 // Optional: set up some followings and track terms
 List<Long> followings = Lists.newArrayList(1234L, 566788L);
 List<String> terms = Lists.newArrayList("twitter", "api");
