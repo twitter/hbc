@@ -25,6 +25,7 @@ import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import org.apache.http.HttpVersion;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -97,6 +98,8 @@ public class ClientBuilder {
 
     socketTimeoutMillis = 60000;
     connectionTimeoutMillis = 4000;
+
+    connectionManager = new PoolingClientConnectionManager();
   }
 
   /**
