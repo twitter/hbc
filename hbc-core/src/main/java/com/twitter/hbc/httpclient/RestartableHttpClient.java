@@ -40,17 +40,19 @@ public class RestartableHttpClient implements HttpClient {
   private final Authentication auth;
   private final HttpParams params;
   private final boolean enableGZip;
+  private final ClientConnectionManager connectionManager;
 
-  public RestartableHttpClient(Authentication auth, boolean enableGZip, HttpParams params) {
+  public RestartableHttpClient(Authentication auth, boolean enableGZip, HttpParams params, ClientConnectionManager connectionManager) {
     this.auth = Preconditions.checkNotNull(auth);
     this.enableGZip = enableGZip;
     this.params = Preconditions.checkNotNull(params);
+    this.connectionManager = Preconditions.checkNotNull(connectionManager);
 
     this.underlying = new AtomicReference<HttpClient>();
   }
 
   public void setup() {
-    DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager(), params);
+    DefaultHttpClient defaultClient = new DefaultHttpClient(connectionManager, params);
 
     auth.setupConnection(defaultClient);
 
