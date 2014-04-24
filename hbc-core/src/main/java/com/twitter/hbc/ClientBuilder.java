@@ -24,6 +24,8 @@ import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import org.apache.http.HttpVersion;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -53,6 +55,7 @@ public class ClientBuilder {
   protected ReconnectionManager reconnectionManager;
   protected int socketTimeoutMillis;
   protected int connectionTimeoutMillis;
+  protected ClientConnectionManager connectionManager;
 
   private static String loadVersion() {
     String userAgent = "Hosebird-Client";
@@ -95,6 +98,8 @@ public class ClientBuilder {
 
     socketTimeoutMillis = 60000;
     connectionTimeoutMillis = 4000;
+
+    connectionManager = new PoolingClientConnectionManager();
   }
 
   /**
@@ -183,6 +188,11 @@ public class ClientBuilder {
       return this;
   }
 
+  public ClientBuilder connectionManager(ClientConnectionManager connectionManager) {
+      this.connectionManager = Preconditions.checkNotNull(connectionManager);
+      return this;
+  }
+
   public BasicClient build() {
     HttpParams params = new BasicHttpParams();
     HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -190,7 +200,7 @@ public class ClientBuilder {
     HttpConnectionParams.setSoTimeout(params, socketTimeoutMillis);
     HttpConnectionParams.setConnectionTimeout(params, connectionTimeoutMillis);
     return new BasicClient(name, hosts, endpoint, auth, enableGZip, processor, reconnectionManager,
-            rateTracker, executorService, eventQueue, params);
+            rateTracker, executorService, eventQueue, params, connectionManager);
   }
 }
 
