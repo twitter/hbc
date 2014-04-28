@@ -1,3 +1,8 @@
+== 2.0.2
+
+* Allow for configuration of http ConnectionManager
+* Corrected code example in README
+
 == 2.0.1
 
 * Stop using deprecated guava method `Closeables.closeQuietly` https://github.com/twitter/hbc/pull/104
