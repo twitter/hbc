@@ -17,7 +17,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.twitter.hbc.RateTracker;
 import com.twitter.hbc.ReconnectionManager;
-import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Hosts;
 import com.twitter.hbc.core.HttpConstants;
 import com.twitter.hbc.core.StatsReporter;
@@ -31,8 +30,6 @@ import com.twitter.hbc.httpclient.auth.Authentication;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

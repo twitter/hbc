@@ -13,7 +13,6 @@
 
 package com.twitter.hbc.core;
 
-import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
 
 public interface Client {

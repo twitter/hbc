@@ -17,7 +17,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.twitter.hbc.RateTracker;
 import com.twitter.hbc.ReconnectionManager;
-import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.Hosts;
 import com.twitter.hbc.core.StatsReporter;
