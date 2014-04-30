@@ -96,11 +96,6 @@ public class BasicClient implements Client {
   }
 
   @Override
-  public SitestreamController createSitestreamController() {
-    return clientBase.getSitestreamController();
-  }
-
-  @Override
   public StatsReporter.StatsTracker getStatsTracker() {
     return clientBase.getStatsTracker();
   }

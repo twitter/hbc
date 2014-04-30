@@ -13,10 +13,22 @@
 
 package com.twitter.hbc.example;
 
+import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import com.google.common.collect.Lists;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
+
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Constants;
+import com.twitter.hbc.core.HttpHosts;
 import com.twitter.hbc.core.endpoint.SitestreamEndpoint;
 import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
@@ -25,13 +37,12 @@ import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 import com.twitter.hbc.twitter4j.Twitter4jSitestreamClient;
 
-import twitter4j.*;
-
-import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import twitter4j.DirectMessage;
+import twitter4j.SiteStreamsListener;
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.User;
+import twitter4j.UserList;
 
 public class SitestreamExample {
 
@@ -137,8 +148,10 @@ public class SitestreamExample {
 
     Thread.sleep(5000);
 
-    // Miscellaneous control stream requests here:
-    SitestreamController controller = t4jClient.createSitestreamController();
+    // Create a sitestream controller to issue controlstream requests
+    HttpClient controllerHttpClient = new DefaultHttpClient(new PoolingClientConnectionManager());
+    HttpHosts sitestreamHosts = new HttpHosts(Constants.SITESTREAM_HOST);
+    SitestreamController controller = new SitestreamController(controllerHttpClient, sitestreamHosts, auth);
 
     controller.getFriends(t4jClient.getStreamId(), 12345L);
     controller.addUser(t4jClient.getStreamId(), 987765L);

@@ -54,7 +54,5 @@ public interface Client {
 
   public StreamingEndpoint getEndpoint();
 
-  public SitestreamController createSitestreamController();
-
   public StatsReporter.StatsTracker getStatsTracker();
 }

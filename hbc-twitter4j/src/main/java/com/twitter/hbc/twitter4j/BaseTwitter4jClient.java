@@ -120,11 +120,6 @@ class BaseTwitter4jClient implements Twitter4jClient {
   }
 
   @Override
-  public SitestreamController createSitestreamController() {
-    return client.createSitestreamController();
-  }
-
-  @Override
   public StatsReporter.StatsTracker getStatsTracker() {
     return client.getStatsTracker();
   }

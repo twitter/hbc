@@ -352,15 +352,6 @@ class ClientBase implements Runnable {
     return endpoint;
   }
 
-  /**
-   * We can't re-use the same connection to work on controlstreams, so create a new one
-   */
-  public SitestreamController getSitestreamController() {
-    DefaultHttpClient sitestreamClient = new DefaultHttpClient(Preconditions.checkNotNull(client).getConnectionManager(), new BasicHttpParams());
-    auth.setupConnection(sitestreamClient);
-    return new SitestreamController(sitestreamClient, hosts, auth);
-  }
-
   public StatsReporter.StatsTracker getStatsTracker() {
     return statsReporter.getStatsTracker();
   }

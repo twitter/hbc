@@ -38,6 +38,10 @@ import java.util.Collection;
 
 import static com.twitter.hbc.core.Constants.DEFAULT_CHARSET;
 
+/**
+ * SitestreamController is used to issue controlstream requests. The sitestream connection that these
+ * controlstream requests will be affecting depends on the streamId provided.
+ */
 public class SitestreamController {
 
   private static final Logger logger = LoggerFactory.getLogger(SitestreamController.class);
