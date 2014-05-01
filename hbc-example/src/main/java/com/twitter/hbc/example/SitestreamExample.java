@@ -21,14 +21,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.common.collect.Lists;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
-
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Constants;
-import com.twitter.hbc.core.HttpHosts;
 import com.twitter.hbc.core.endpoint.SitestreamEndpoint;
 import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
@@ -149,8 +144,7 @@ public class SitestreamExample {
     Thread.sleep(5000);
 
     // Create a sitestream controller to issue controlstream requests
-    HttpClient controllerHttpClient = new DefaultHttpClient(new PoolingClientConnectionManager());
-    SitestreamController controller = new SitestreamController(controllerHttpClient, auth);
+    SitestreamController controller = new SitestreamController(auth);
 
     controller.getFriends(t4jClient.getStreamId(), 12345L);
     controller.addUser(t4jClient.getStreamId(), 987765L);

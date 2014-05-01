@@ -19,8 +19,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.io.CharStreams;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.Hosts;
-import com.twitter.hbc.core.HttpHosts;
 import com.twitter.hbc.core.HttpConstants;
+import com.twitter.hbc.core.HttpHosts;
 import com.twitter.hbc.core.endpoint.Endpoint;
 import com.twitter.hbc.core.endpoint.SitestreamEndpoint;
 import com.twitter.hbc.httpclient.ControlStreamException;
@@ -28,6 +28,8 @@ import com.twitter.hbc.httpclient.auth.Authentication;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,11 +50,42 @@ public class SitestreamController {
   private static final Logger logger = LoggerFactory.getLogger(SitestreamController.class);
 
   private final HttpClient client;
-  private final Hosts hosts = new HttpHosts(Constants.SITESTREAM_HOST);
   private final Authentication auth;
+  private final Hosts hosts;
 
+  /**
+   * Construct a sitestream controller.
+   */
+  public SitestreamController(HttpClient client, Hosts hosts, Authentication auth) {
+    this.client = Preconditions.checkNotNull(client);
+    this.hosts = Preconditions.checkNotNull(hosts);
+    this.auth = Preconditions.checkNotNull(auth);
+  }
+
+  /**
+   * Construct a sitestream controller using the default host (sitestream.twitter.com)
+   */
   public SitestreamController(HttpClient client, Authentication auth) {
     this.client = Preconditions.checkNotNull(client);
+    this.hosts = new HttpHosts(Constants.SITESTREAM_HOST);
+    this.auth = Preconditions.checkNotNull(auth);
+  }
+  /**
+   * Construct a sitestream controller using a DefaultHttpClient
+   */
+  public SitestreamController(Hosts hosts, Authentication auth) {
+    this.client = new DefaultHttpClient(new PoolingClientConnectionManager());
+    this.hosts = Preconditions.checkNotNull(hosts);
+    this.auth = Preconditions.checkNotNull(auth);
+  }
+
+  /**
+   * Construct a sitestream controller using the default host (sitestream.twitter.com) and a
+   * DefaultHttpClient.
+   */
+  public SitestreamController(Authentication auth) {
+    this.client = new DefaultHttpClient(new PoolingClientConnectionManager());
+    this.hosts = new HttpHosts(Constants.SITESTREAM_HOST);
     this.auth = Preconditions.checkNotNull(auth);
   }
 
