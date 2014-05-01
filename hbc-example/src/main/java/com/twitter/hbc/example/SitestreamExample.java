@@ -150,8 +150,7 @@ public class SitestreamExample {
 
     // Create a sitestream controller to issue controlstream requests
     HttpClient controllerHttpClient = new DefaultHttpClient(new PoolingClientConnectionManager());
-    HttpHosts sitestreamHosts = new HttpHosts(Constants.SITESTREAM_HOST);
-    SitestreamController controller = new SitestreamController(controllerHttpClient, sitestreamHosts, auth);
+    SitestreamController controller = new SitestreamController(controllerHttpClient, auth);
 
     controller.getFriends(t4jClient.getStreamId(), 12345L);
     controller.addUser(t4jClient.getStreamId(), 987765L);

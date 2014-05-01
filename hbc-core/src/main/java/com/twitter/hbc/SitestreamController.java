@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.io.CharStreams;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.Hosts;
+import com.twitter.hbc.core.HttpHosts;
 import com.twitter.hbc.core.HttpConstants;
 import com.twitter.hbc.core.endpoint.Endpoint;
 import com.twitter.hbc.core.endpoint.SitestreamEndpoint;
@@ -47,12 +48,11 @@ public class SitestreamController {
   private static final Logger logger = LoggerFactory.getLogger(SitestreamController.class);
 
   private final HttpClient client;
-  private final Hosts hosts;
+  private final Hosts hosts = new HttpHosts(Constants.SITESTREAM_HOST);
   private final Authentication auth;
 
-  public SitestreamController(HttpClient client, Hosts hosts, Authentication auth) {
+  public SitestreamController(HttpClient client, Authentication auth) {
     this.client = Preconditions.checkNotNull(client);
-    this.hosts = Preconditions.checkNotNull(hosts);
     this.auth = Preconditions.checkNotNull(auth);
   }
 
