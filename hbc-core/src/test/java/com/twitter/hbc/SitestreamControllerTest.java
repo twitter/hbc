@@ -53,7 +53,6 @@ public class SitestreamControllerTest {
   @Before
   public void setup() {
     client = mock(HttpClient.class);
-    hosts = new HttpHosts("https://host.com");
     auth = mock(Authentication.class);
     request = mock(HttpUriRequest.class);
     mockResponse = mock(HttpResponse.class);
@@ -63,7 +62,7 @@ public class SitestreamControllerTest {
 
   @Test
   public void testFailControlStreamRequestOnNon200s() throws IOException, URISyntaxException {
-    SitestreamController controlstreams = new SitestreamController(client, hosts, auth);
+    SitestreamController controlstreams = new SitestreamController(client, auth);
 
     when(client.execute(any(HttpUriRequest.class))).thenReturn(mockResponse);
     when(mockResponse.getStatusLine()).thenReturn(mockStatusLine);
@@ -80,7 +79,7 @@ public class SitestreamControllerTest {
 
   @Test
   public void testProperlyCloseEntityContent() throws IOException, ControlStreamException {
-    SitestreamController controlstreams = new SitestreamController(client, hosts, auth);
+    SitestreamController controlstreams = new SitestreamController(client, auth);
     InputStream stream = spy(new ByteArrayInputStream("message".getBytes(Constants.DEFAULT_CHARSET)));
 
     when(mockResponse.getEntity()).thenReturn(mockEntity);
@@ -92,7 +91,7 @@ public class SitestreamControllerTest {
 
   @Test
   public void testCloseEntityContentOnError() throws IOException, ControlStreamException {
-    SitestreamController controlstreams = new SitestreamController(client, hosts, auth);
+    SitestreamController controlstreams = new SitestreamController(client, auth);
     InputStream mockStream = mock(InputStream.class);
 
     when(mockResponse.getEntity()).thenReturn(mockEntity);
@@ -112,7 +111,7 @@ public class SitestreamControllerTest {
 
 
   private SitestreamController setupSimplControlStreamRequest(int statusCode, String content) throws IOException {
-    SitestreamController controlstreams = new SitestreamController(client, hosts, auth);
+    SitestreamController controlstreams = new SitestreamController(client, auth);
 
     when(client.execute(any(HttpUriRequest.class))).thenReturn(mockResponse);
     when(mockResponse.getStatusLine()).thenReturn(mockStatusLine);
@@ -130,7 +129,7 @@ public class SitestreamControllerTest {
     Mockito.verify(client).execute(argThat(new ArgumentValidator<HttpGet>() {
       @Override
       public void validate(HttpGet get) {
-        assertEquals("https://host.com/1.1/site/c/mock_stream_id/info.json", get.getURI().toString());
+        assertEquals("https://sitestream.twitter.com/1.1/site/c/mock_stream_id/info.json", get.getURI().toString());
       }
     }));
   }
@@ -141,7 +140,7 @@ public class SitestreamControllerTest {
     controlstreams.getInfo("mock_stream_id", 1234567899L);
     Mockito.verify(client).execute(argThat(new ArgumentValidator<HttpGet>() {
       public void validate(HttpGet get) throws Exception {
-        assertEquals("https://host.com/1.1/site/c/mock_stream_id/info.json", get.getURI().toString());
+        assertEquals("https://sitestream.twitter.com/1.1/site/c/mock_stream_id/info.json", get.getURI().toString());
       }
     }));
   }
@@ -153,7 +152,7 @@ public class SitestreamControllerTest {
     Mockito.verify(client).execute(argThat(new ArgumentValidator<HttpPost>() {
       public void validate(HttpPost post) throws Exception {
         assertEquals("application/x-www-form-urlencoded", post.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue());
-        assertEquals("https://host.com/1.1/site/c/mock_stream_id/add_user.json", post.getURI().toString());
+        assertEquals("https://sitestream.twitter.com/1.1/site/c/mock_stream_id/add_user.json", post.getURI().toString());
         assertEquals("user_id=123456789", consumeUtf8String(post.getEntity().getContent()));
       }
     }));
@@ -166,7 +165,7 @@ public class SitestreamControllerTest {
     Mockito.verify(client).execute(argThat(new ArgumentValidator<HttpPost>() {
       public void validate(HttpPost post) throws Exception {
         assertEquals("application/x-www-form-urlencoded", post.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue());
-        assertEquals("https://host.com/1.1/site/c/mock_stream_id/add_user.json", post.getURI().toString());
+        assertEquals("https://sitestream.twitter.com/1.1/site/c/mock_stream_id/add_user.json", post.getURI().toString());
         assertEquals("user_id=1111%2C2222%2C3333%2C4444", consumeUtf8String(post.getEntity().getContent()));
       }
     }));
@@ -174,7 +173,7 @@ public class SitestreamControllerTest {
 
   @Test
   public void testAddUsersPrecondition() throws IOException, ControlStreamException {
-    SitestreamController controlstreams = new SitestreamController(client, hosts, auth);
+    SitestreamController controlstreams = new SitestreamController(client, auth);
     try {
       controlstreams.addUsers("mock_stream_id", Longs.asList(new long[101]));
       fail();
@@ -190,7 +189,7 @@ public class SitestreamControllerTest {
     Mockito.verify(client).execute(argThat(new ArgumentValidator<HttpPost>() {
       public void validate(HttpPost post) throws Exception {
         assertEquals("application/x-www-form-urlencoded", post.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue());
-        assertEquals("https://host.com/1.1/site/c/mock_stream_id/remove_user.json", post.getURI().toString());
+        assertEquals("https://sitestream.twitter.com/1.1/site/c/mock_stream_id/remove_user.json", post.getURI().toString());
         assertEquals("user_id=123456789", consumeUtf8String(post.getEntity().getContent()));
       }
     }));
@@ -203,7 +202,7 @@ public class SitestreamControllerTest {
     Mockito.verify(client).execute(argThat(new ArgumentValidator<HttpPost>() {
       public void validate(HttpPost post) throws Exception {
         assertEquals("application/x-www-form-urlencoded", post.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue());
-        assertEquals("https://host.com/1.1/site/c/mock_stream_id/remove_user.json", post.getURI().toString());
+        assertEquals("https://sitestream.twitter.com/1.1/site/c/mock_stream_id/remove_user.json", post.getURI().toString());
         assertEquals("user_id=1111%2C2222%2C3333%2C4444", consumeUtf8String(post.getEntity().getContent()));
       }
     }));
@@ -211,7 +210,7 @@ public class SitestreamControllerTest {
 
   @Test
   public void testRemoveUsersPrecondition() throws IOException, ControlStreamException {
-    SitestreamController controlstreams = new SitestreamController(client, hosts, auth);
+    SitestreamController controlstreams = new SitestreamController(client, auth);
     try {
       controlstreams.removeUsers("mock_stream_id", Longs.asList(new long[101]));
       fail();
