@@ -17,7 +17,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.twitter.hbc.RateTracker;
 import com.twitter.hbc.ReconnectionManager;
-import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.Hosts;
 import com.twitter.hbc.core.StatsReporter;
@@ -93,11 +92,6 @@ public class BasicClient implements Client {
     }
     executorService.execute(clientBase);
     logger.info("New connection executed: {}", this.clientBase);
-  }
-
-  @Override
-  public SitestreamController createSitestreamController() {
-    return clientBase.getSitestreamController();
   }
 
   @Override

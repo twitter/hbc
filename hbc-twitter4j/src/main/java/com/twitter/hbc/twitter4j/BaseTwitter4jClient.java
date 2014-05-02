@@ -15,7 +15,6 @@ package com.twitter.hbc.twitter4j;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.StatsReporter;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
@@ -117,11 +116,6 @@ class BaseTwitter4jClient implements Twitter4jClient {
   @Override
   public StreamingEndpoint getEndpoint() {
     return client.getEndpoint();
-  }
-
-  @Override
-  public SitestreamController createSitestreamController() {
-    return client.createSitestreamController();
   }
 
   @Override

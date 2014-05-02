@@ -13,7 +13,6 @@
 
 package com.twitter.hbc.core;
 
-import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
 
 public interface Client {
@@ -53,8 +52,6 @@ public interface Client {
   public String getName();
 
   public StreamingEndpoint getEndpoint();
-
-  public SitestreamController createSitestreamController();
 
   public StatsReporter.StatsTracker getStatsTracker();
 }

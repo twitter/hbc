@@ -17,7 +17,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.twitter.hbc.RateTracker;
 import com.twitter.hbc.ReconnectionManager;
-import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Hosts;
 import com.twitter.hbc.core.HttpConstants;
 import com.twitter.hbc.core.StatsReporter;
@@ -348,10 +347,6 @@ class ClientBase implements Runnable {
 
   public StreamingEndpoint getEndpoint() {
     return endpoint;
-  }
-
-  public SitestreamController getSitestreamController() {
-    return new SitestreamController(client, hosts, auth);
   }
 
   public StatsReporter.StatsTracker getStatsTracker() {
