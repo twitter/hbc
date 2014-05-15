@@ -37,6 +37,7 @@ public class BasicReconnectionManager implements ReconnectionManager {
 
   public BasicReconnectionManager(int maxRetries) {
     this.maxRetries = maxRetries;
+    this.backoffMillis = Constants.MIN_BACKOFF_MILLIS;
   }
 
   @Override
@@ -57,7 +58,8 @@ public class BasicReconnectionManager implements ReconnectionManager {
 
   @Override
   public int estimateBackfill(double tps) {
-    return Math.min(Constants.MAX_BACKOFF_COUNT, (int) tps * (backoffMillis));
+    int upperBound = Math.min(Constants.MAX_BACKOFF_COUNT, (int) tps * (backoffMillis));
+    return Math.max(upperBound, Constants.MIN_BACKOFF_MILLIS);
   }
 
   @Override

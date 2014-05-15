@@ -13,6 +13,7 @@
 
 package com.twitter.hbc;
 
+import com.twitter.hbc.core.Constants;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -76,6 +77,20 @@ public class ReconnectionManagerTest {
 
     assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS, b.incrAndGetLinearBackoff());
     assertEquals(BasicReconnectionManager.INITIAL_LINEAR_BACKOFF_MILLIS * 2, b.incrAndGetLinearBackoff());
+  }
+
+  @Test
+  public void testEstimateBackfill() {
+    ReconnectionManager rm = new BasicReconnectionManager(1);
+
+    // some negative value should use the lower bound
+    assertEquals(Constants.MIN_BACKOFF_MILLIS, rm.estimateBackfill(-1d));
+
+    // some large value should use the upper bound
+    assertEquals(Constants.MAX_BACKOFF_COUNT, rm.estimateBackfill(1000000d));
+
+    // a value in the middle
+    assertEquals(Constants.MIN_BACKOFF_MILLIS * 30, rm.estimateBackfill(30d));
   }
 
   @Test

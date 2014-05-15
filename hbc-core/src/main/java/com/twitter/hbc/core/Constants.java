@@ -21,7 +21,15 @@ public class Constants {
 
   public static final String CURRENT_API_VERSION = "1.1";
 
+  /**
+   * Max backoff, in milliseconds.
+   */
   public static final int MAX_BACKOFF_COUNT = 150000;
+
+  /**
+   * Min backoff, in milliseconds.
+   */
+  public static final int MIN_BACKOFF_MILLIS = 250;
 
   public static final int NUM_FIREHOSE_PARTITIONS = 16;
 
