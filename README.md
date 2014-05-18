@@ -22,7 +22,7 @@ The latest hbc artifacts are published to maven central. Bringing hbc into your 
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>hbc-core</artifactId> <!-- or hbc-twitter4j -->
-      <version>2.0.0</version> <!-- or whatever the latest version is -->
+      <version>2.0.2</version> <!-- or whatever the latest version is -->
     </dependency>
   </dependencies>
 ```
@@ -37,12 +37,12 @@ BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>(1000);
 
 /** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
 Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
-StreamingEndpoint endpoint = new StatusesFilterEndpoint();
+StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
 // Optional: set up some followings and track terms
 List<Long> followings = Lists.newArrayList(1234L, 566788L);
 List<String> terms = Lists.newArrayList("twitter", "api");
-endpoint.followings(followings);
-endpoint.trackTerms(terms);
+hosebirdEndpoint.followings(followings);
+hosebirdEndpoint.trackTerms(terms);
 
 // These secrets should be read from a config file
 Authentication hosebirdAuth = new OAuth1("consumerKey", "consumerSecret", "token", "secret");
@@ -66,7 +66,7 @@ hosebirdClient.connect();
 Now, msgQueue and eventQueue will now start being filled with messages/events. Read from these queues however you like.
 ```java
 // on a different thread, or multiple different threads....
-while (!client.isDone()) {
+while (!hosebirdClient.isDone()) {
   String msg = msgQueue.take();
   something(msg);
   profit();
@@ -112,7 +112,7 @@ Be sure not to pass your tokens/passwords as strings directly into the initializ
 
 ### Specifying an endpoint
 
-Declare a StreamingEndpoint to connect to. These classes reside in the package com.twitter.hbc.core.endpoint, and correspond to all of our endpoints, ranging from . By default, the HTTP parameter "delimited=length" is set for all of our StreamingEndpoints for compatibility with our processor (next section). If you are using our StringDelimitedProcessor this parameter must be set. For a list of available public endpoints and the http parameters we support, see [Twitter's Streaming API docs](https://dev.twitter.com/docs/streaming-apis/streams/public).
+Declare a StreamingEndpoint to connect to. These classes reside in the package com.twitter.hbc.core.endpoint, and correspond to all of our endpoints. By default, the HTTP parameter "delimited=length" is set for all of our StreamingEndpoints for compatibility with our processor (next section). If you are using our StringDelimitedProcessor this parameter must be set. For a list of available public endpoints and the http parameters we support, see [Twitter's Streaming API docs](https://dev.twitter.com/docs/streaming-apis/streams/public).
 
 #### Filter streams:
 
@@ -151,7 +151,7 @@ new StringDelimitedProcessor(msgQueue);
 
 Hosebird provides [control stream support for sitestreams](https://dev.twitter.com/docs/streaming-apis/streams/site/control).
 
-To make control stream calls with the hosebird client, first create a client. When calling connect() to create a connection to a stream with control stream support, the first message you receive will be the streamId. You'll want to hold on to that when processing the messages if you plan on using control streams, so after calling connect(), be sure to keep track of the streamId of this connection. Note that due to reconnections, the streamId could be change, so always use the latest one. If you're using our twitter4j layer, keeping track of the control messages/streamIds will be taken care of for you.
+To make control stream calls with the hosebird client, first create a client. When calling connect() to create a connection to a stream with control stream support, the first message you receive will be the streamId. You'll want to hold on to that when processing the messages if you plan on using control streams, so after calling connect(), be sure to keep track of the streamId of this connection. Note that due to reconnections, the streamId could change, so always use the latest one. If you're using our twitter4j layer, keeping track of the control messages/streamIds will be taken care of for you.
 
 ```java
 SitestreamController controlStreams = client.getSitestreamController();
