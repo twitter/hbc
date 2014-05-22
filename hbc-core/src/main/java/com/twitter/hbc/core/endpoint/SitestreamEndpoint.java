@@ -13,7 +13,11 @@
 
 package com.twitter.hbc.core.endpoint;
 
+import com.google.common.base.Joiner;
+import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpConstants;
+
+import java.util.List;
 
 public class SitestreamEndpoint extends UserstreamEndpoint {
 
@@ -21,6 +25,11 @@ public class SitestreamEndpoint extends UserstreamEndpoint {
 
   public SitestreamEndpoint() {
     super(PATH);
+  }
+
+  public SitestreamEndpoint followings(List<Long> userIds) {
+    addQueryParameter(Constants.FOLLOW_PARAM, Joiner.on(',').join(userIds));
+    return this;
   }
 
   /**
