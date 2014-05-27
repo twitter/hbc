@@ -13,14 +13,25 @@
 
 package com.twitter.hbc.core.endpoint;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpConstants;
+
+import java.util.List;
 
 public class SitestreamEndpoint extends UserstreamEndpoint {
 
   public static final String PATH = "/site.json";
 
-  public SitestreamEndpoint() {
+  public SitestreamEndpoint(List<Long> userIds) {
     super(PATH);
+
+    Preconditions.checkNotNull(userIds, "List of users to follow must be provided");
+    Preconditions.checkArgument(userIds.size() > 0, "List of users to follow must not be empty");
+    Preconditions.checkArgument(userIds.size() <= 100, "Number of users to follow must be less than or equal to 100");
+
+    addQueryParameter(Constants.FOLLOW_PARAM, Joiner.on(',').join(userIds));
   }
 
   /**

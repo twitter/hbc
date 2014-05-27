@@ -16,15 +16,14 @@ package com.twitter.hbc;
 import com.google.common.collect.Lists;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpConstants;
-import com.twitter.hbc.core.endpoint.DefaultStreamingEndpoint;
-import com.twitter.hbc.core.endpoint.Location;
-import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
-import com.twitter.hbc.core.endpoint.StreamingEndpoint;
+import com.twitter.hbc.core.endpoint.*;
 import com.twitter.joauth.UrlCodec;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.*;
 
@@ -92,4 +91,14 @@ public class EndpointTest {
     assertEquals(endpoint.getPostParamString(), "filter_level=medium");
   }
 
+  @Test
+  public void testSiteStreamEndpoint() {
+    List<Long> followings = new ArrayList<Long>();
+    followings.add(111111111L);
+    followings.add(222222222L);
+
+    SitestreamEndpoint endpoint = new SitestreamEndpoint(followings);
+
+    assertEquals(Constants.FOLLOW_PARAM + "=111111111" + UrlCodec.encode(",") + "222222222", endpoint.getQueryParamString());
+  }
 }

@@ -13,14 +13,7 @@
 
 package com.twitter.hbc.example;
 
-import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import com.google.common.collect.Lists;
-
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.SitestreamController;
 import com.twitter.hbc.core.Constants;
@@ -31,13 +24,15 @@ import com.twitter.hbc.httpclient.ControlStreamException;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 import com.twitter.hbc.twitter4j.Twitter4jSitestreamClient;
+import twitter4j.*;
 
-import twitter4j.DirectMessage;
-import twitter4j.SiteStreamsListener;
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
-import twitter4j.User;
-import twitter4j.UserList;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class SitestreamExample {
 
@@ -114,7 +109,11 @@ public class SitestreamExample {
 
     // Define our endpoint: By default, delimited=length is set (we need this for our processor)
     // and stall warnings are on.
-    SitestreamEndpoint endpoint = new SitestreamEndpoint();
+    List<Long> followings = new ArrayList<Long>();
+    followings.add(111111111L);
+    followings.add(222222222L);
+
+    SitestreamEndpoint endpoint = new SitestreamEndpoint(followings);
     Authentication auth = new OAuth1(consumerKey, consumerSecret, token, tokenSecret);
 
     // Create a new BasicClient. By default gzip is enabled.
