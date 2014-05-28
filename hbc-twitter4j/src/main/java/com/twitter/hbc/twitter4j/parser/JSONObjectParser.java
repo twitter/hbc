@@ -70,8 +70,16 @@ public class JSONObjectParser {
     return friendIds;
   }
 
+  public static boolean hasSitestreamUser(JSONObject envelope) {
+    return envelope.has("for_user");
+  }
+
   public static long getSitestreamUser(JSONObject envelope) throws JSONException {
     return envelope.getLong("for_user");
+  }
+
+  public static boolean hasSitestreamMessage(JSONObject envelope) {
+    return envelope.has("message");
   }
 
   public static JSONObject getSitestreamMessage(JSONObject envelope) throws JSONException {

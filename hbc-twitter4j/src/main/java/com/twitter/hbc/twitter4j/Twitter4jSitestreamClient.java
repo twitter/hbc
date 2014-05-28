@@ -43,7 +43,11 @@ public class Twitter4jSitestreamClient extends BaseTwitter4jClient {
   @Override
   protected long getSitestreamUser(JSONObject json) throws JSONException {
     try {
-      return JSONObjectParser.getSitestreamUser(json);
+      if(JSONObjectParser.hasSitestreamUser(json)) {
+        return JSONObjectParser.getSitestreamUser(json);
+      } else {
+        return super.getSitestreamUser(json);
+      }
     } catch (JSONException e) {
       onException(e);
       throw e;
@@ -52,18 +56,18 @@ public class Twitter4jSitestreamClient extends BaseTwitter4jClient {
 
   @Override
   protected JSONObject preprocessMessage(JSONObject json) throws JSONException {
-    // control stream message is not wrapped
-    if (JSONObjectParser.isControlStreamMessage(json)) {
+    if(JSONObjectParser.hasSitestreamMessage(json)) {
+      try {
+        return JSONObjectParser.getSitestreamMessage(json);
+      } catch (JSONException e) {
+        onException(e);
+        throw e;
+      }
+    } else {
       return json;
     }
-
-    try {
-      return JSONObjectParser.getSitestreamMessage(json);
-    } catch (JSONException e) {
-      onException(e);
-      throw e;
-    }
   }
+
 
   @Override
   protected void onStatus(long sitestreamUser, final Status status) {
