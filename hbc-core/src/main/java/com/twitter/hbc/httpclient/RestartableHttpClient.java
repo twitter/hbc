@@ -21,8 +21,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DecompressingHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 
@@ -39,19 +41,19 @@ public class RestartableHttpClient implements HttpClient {
   private final Authentication auth;
   private final HttpParams params;
   private final boolean enableGZip;
-  private final ClientConnectionManager connectionManager;
+  private final SchemeRegistry schemeRegistry;
 
-  public RestartableHttpClient(Authentication auth, boolean enableGZip, HttpParams params, ClientConnectionManager connectionManager) {
+  public RestartableHttpClient(Authentication auth, boolean enableGZip, HttpParams params, SchemeRegistry schemeRegistry) {
     this.auth = Preconditions.checkNotNull(auth);
     this.enableGZip = enableGZip;
     this.params = Preconditions.checkNotNull(params);
-    this.connectionManager = Preconditions.checkNotNull(connectionManager);
+    this.schemeRegistry = Preconditions.checkNotNull(schemeRegistry);
 
     this.underlying = new AtomicReference<HttpClient>();
   }
 
   public void setup() {
-    DefaultHttpClient defaultClient = new DefaultHttpClient(connectionManager, params);
+    DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager(schemeRegistry), params);
 
     auth.setupConnection(defaultClient);
 
