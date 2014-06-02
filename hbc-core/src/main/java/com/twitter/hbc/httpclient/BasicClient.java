@@ -25,8 +25,9 @@ import com.twitter.hbc.core.event.Event;
 import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.HttpParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,13 +54,13 @@ public class BasicClient implements Client {
 
   public BasicClient(String name, Hosts hosts, StreamingEndpoint endpoint, Authentication auth, boolean enableGZip, HosebirdMessageProcessor processor,
                      ReconnectionManager reconnectionManager, RateTracker rateTracker, ExecutorService executorService,
-                     @Nullable BlockingQueue<Event> eventsQueue, HttpParams params, ClientConnectionManager connectionManager) {
+                     @Nullable BlockingQueue<Event> eventsQueue, HttpParams params, SchemeRegistry schemeRegistry) {
     Preconditions.checkNotNull(auth);
     HttpClient client;
     if (enableGZip) {
-      client = new RestartableHttpClient(auth, enableGZip, params, connectionManager);
+      client = new RestartableHttpClient(auth, enableGZip, params, schemeRegistry);
     } else {
-      DefaultHttpClient defaultClient = new DefaultHttpClient(connectionManager, params);
+      DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager(schemeRegistry), params);
 
       /** Set auth **/
       auth.setupConnection(defaultClient);

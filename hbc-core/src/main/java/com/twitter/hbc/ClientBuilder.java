@@ -24,8 +24,8 @@ import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import org.apache.http.HttpVersion;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.conn.SchemeRegistryFactory;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -55,7 +55,7 @@ public class ClientBuilder {
   protected ReconnectionManager reconnectionManager;
   protected int socketTimeoutMillis;
   protected int connectionTimeoutMillis;
-  protected ClientConnectionManager connectionManager;
+  protected SchemeRegistry schemeRegistry;
 
   private static String loadVersion() {
     String userAgent = "Hosebird-Client";
@@ -99,7 +99,7 @@ public class ClientBuilder {
     socketTimeoutMillis = 60000;
     connectionTimeoutMillis = 4000;
 
-    connectionManager = new PoolingClientConnectionManager();
+    schemeRegistry = SchemeRegistryFactory.createDefault();
   }
 
   /**
@@ -188,8 +188,8 @@ public class ClientBuilder {
       return this;
   }
 
-  public ClientBuilder connectionManager(ClientConnectionManager connectionManager) {
-      this.connectionManager = Preconditions.checkNotNull(connectionManager);
+  public ClientBuilder schemeRegistry(SchemeRegistry schemeRegistry) {
+      this.schemeRegistry = Preconditions.checkNotNull(schemeRegistry);
       return this;
   }
 
@@ -200,7 +200,7 @@ public class ClientBuilder {
     HttpConnectionParams.setSoTimeout(params, socketTimeoutMillis);
     HttpConnectionParams.setConnectionTimeout(params, connectionTimeoutMillis);
     return new BasicClient(name, hosts, endpoint, auth, enableGZip, processor, reconnectionManager,
-            rateTracker, executorService, eventQueue, params, connectionManager);
+            rateTracker, executorService, eventQueue, params, schemeRegistry);
   }
 }
 
