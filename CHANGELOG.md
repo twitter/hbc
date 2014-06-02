@@ -1,3 +1,7 @@
+== 2.1.0
+
+* Replace configuration of ConnectionManager with configuration of SchemeRegistry to fix https://github.com/twitter/hbc/issues/113
+
 == 2.0.2
 
 * Allow for configuration of http ConnectionManager
