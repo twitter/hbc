@@ -43,7 +43,7 @@ public class Twitter4jSitestreamClient extends BaseTwitter4jClient {
   @Override
   protected long getSitestreamUser(JSONObject json) throws JSONException {
     try {
-      if(JSONObjectParser.hasSitestreamUser(json)) {
+      if (JSONObjectParser.hasSitestreamUser(json)) {
         return JSONObjectParser.getSitestreamUser(json);
       } else {
         return super.getSitestreamUser(json);
@@ -56,7 +56,7 @@ public class Twitter4jSitestreamClient extends BaseTwitter4jClient {
 
   @Override
   protected JSONObject preprocessMessage(JSONObject json) throws JSONException {
-    if(JSONObjectParser.hasSitestreamMessage(json)) {
+    if (JSONObjectParser.hasSitestreamMessage(json)) {
       try {
         return JSONObjectParser.getSitestreamMessage(json);
       } catch (JSONException e) {
