@@ -68,13 +68,20 @@ public class EndpointTest {
   public void testStatusesFilterEndpointTest() {
     StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
     endpoint.locations(Lists.newArrayList(
-        new Location(new Location.Coordinate(-122.75, 36.8), new Location.Coordinate(-121.75, 37.8))));
+            new Location(new Location.Coordinate(-122.75, 36.8), new Location.Coordinate(-121.75, 37.8))));
     assertEquals(endpoint.getPostParamString(), "locations=" + UrlCodec.encode("-122.75,36.8,-121.75,37.8"));
 
     StatusesFilterEndpoint endpoint2 = new StatusesFilterEndpoint();
     endpoint2.trackTerms(Lists.newArrayList(
             "twitterapi", "#!@?"));
     assertEquals(endpoint2.getPostParamString(), "track=" + UrlCodec.encode("twitterapi,#!@?"));
+  }
+
+  @Test
+  public void testPowerTrackEndpoint() {
+    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "label");
+    String expected = "/accounts/account/publishers/twitter/streams/track/label.json";
+    assertEquals(endpoint.getURI(), expected);
   }
 
   @Test
