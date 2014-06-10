@@ -19,11 +19,10 @@ import com.twitter.hbc.core.HttpConstants;
 import com.twitter.hbc.core.endpoint.*;
 import com.twitter.joauth.UrlCodec;
 import org.junit.Test;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
 
 import static junit.framework.Assert.*;
 
@@ -85,7 +84,34 @@ public class EndpointTest {
   }
 
   @Test
-  public void testBackfillOnEnterpriseStream() {
+  public void testEnterpriseReplayStreamEndpointAddsDateParams() throws ParseException {
+    GregorianCalendar calendar = new GregorianCalendar();
+    Date toDate = new Date();
+
+    calendar.setTime(toDate);
+    calendar.add(Calendar.MONTH, -1);
+    Date fromDate = calendar.getTime();
+
+    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account", "label", fromDate, toDate);
+
+    assertTrue(endpoint.getURI().matches(".+fromDate=[0-9]+.+"));
+    assertTrue(endpoint.getURI().matches(".+toDate=[0-9]+.+"));
+  }
+
+  @Test
+  public void testEnterpriseReplayStreamingEndpointFormatsDateParams(){
+    String expectedFormat = "201406102102";
+    Calendar calendar     = new GregorianCalendar(2014, 5, 10, 21, 02); // Months are 0 indexed
+    Date fromDate         = calendar.getTime();
+    Date toDate           = new Date();
+
+    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account", "label", fromDate, toDate);
+    String uri = endpoint.getURI();
+    assertTrue(uri.contains(expectedFormat));
+  }
+
+  @Test
+  public void testBackfillParamOnEnterpriseStreamEndpoint() {
     EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "label", "1");
     assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
   }

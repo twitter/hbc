@@ -39,7 +39,7 @@ public class EnterpriseStreamingEndpoint implements StreamingEndpoint {
     }
   }
 
-  private String generateParamString(Map<String, String> params) {
+  protected String generateParamString(Map<String, String> params) {
     return Joiner.on("&")
             .withKeyValueSeparator("=")
             .join(params);
