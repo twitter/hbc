@@ -85,6 +85,12 @@ public class EndpointTest {
   }
 
   @Test
+  public void testBackfillOnEnterpriseStream() {
+    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "label", "1");
+    assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
+  }
+
+  @Test
   public void testLanguages() {
     DefaultStreamingEndpoint endpoint = new StatusesFilterEndpoint();
     endpoint.languages(Lists.newArrayList("en", "de"));

@@ -22,4 +22,8 @@ public interface Endpoint {
   public String getPostParamString();
   public void addPostParameter(String param, String value);
   public void removePostParameter(String param);
+
+  public String getQueryParamString();
+  public void addQueryParameter(String param, String value);
+  public void removeQueryParameter(String param);
 }

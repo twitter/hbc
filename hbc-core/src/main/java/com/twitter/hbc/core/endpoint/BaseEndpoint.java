@@ -70,6 +70,7 @@ public class BaseEndpoint implements Endpoint {
             .join(params);
   }
 
+  @Override
   public String getQueryParamString() {
     return generateParamString(queryParameters);
   }
