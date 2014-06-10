@@ -22,8 +22,9 @@ import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static junit.framework.Assert.*;
 
@@ -88,6 +89,20 @@ public class EndpointTest {
   public void testBackfillOnEnterpriseStream() {
     EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "label", "1");
     assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
+  }
+
+  @Test
+  public void testReplayEnterpriseStream() throws ParseException {
+
+    String expectedToDate = "201401020300";
+    String expectedFromDate = "201301020300";
+    SimpleDateFormat formatter = EnterpriseReplayStreamingEndpoint.DATE_FORMAT;
+    Date fromDate = formatter.parse(expectedFromDate);
+    Date toDate = formatter.parse(expectedToDate);
+    EnterpriseReplayStreamingEndpoint endpoint = new  EnterpriseReplayStreamingEndpoint("account", "label", fromDate, toDate);
+
+    assertTrue( endpoint.getURI().contains("toDate=" + expectedToDate) );
+    assertTrue( endpoint.getURI().contains("fromDate=" + expectedFromDate) );
   }
 
   @Test
