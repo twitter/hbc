@@ -77,8 +77,8 @@ public class EndpointTest {
   }
 
   @Test
-  public void testPowerTrackEndpoint() {
-    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "label");
+  public void testEnterpriseStreamingEndpoint() {
+    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "track", "label");
     String expected = "/accounts/account/publishers/twitter/streams/track/label.json";
     assertEquals(endpoint.getURI(), expected);
   }
@@ -92,27 +92,27 @@ public class EndpointTest {
     calendar.add(Calendar.MONTH, -1);
     Date fromDate = calendar.getTime();
 
-    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account", "label", fromDate, toDate);
+    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account", "track", "label", fromDate, toDate);
 
     assertTrue(endpoint.getURI().matches(".+fromDate=[0-9]+.+"));
     assertTrue(endpoint.getURI().matches(".+toDate=[0-9]+.+"));
   }
 
   @Test
-  public void testEnterpriseReplayStreamingEndpointFormatsDateParams(){
+  public void testEnterpriseReplayStreamingEndpointFormatsDateParams() {
     String expectedFormat = "201406102102";
-    Calendar calendar     = new GregorianCalendar(2014, 5, 10, 21, 02); // Months are 0 indexed
-    Date fromDate         = calendar.getTime();
-    Date toDate           = new Date();
+    Calendar calendar = new GregorianCalendar(2014, 5, 10, 21, 02); // Months are 0 indexed
+    Date fromDate = calendar.getTime();
+    Date toDate = new Date();
 
-    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account", "label", fromDate, toDate);
+    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account", "track", "label", fromDate, toDate);
     String uri = endpoint.getURI();
     assertTrue(uri.contains(expectedFormat));
   }
 
   @Test
   public void testBackfillParamOnEnterpriseStreamEndpoint() {
-    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "label", "1");
+    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "label", "track", 1);
     assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
   }
 

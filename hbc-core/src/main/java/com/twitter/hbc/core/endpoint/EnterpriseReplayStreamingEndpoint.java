@@ -26,8 +26,8 @@ public class EnterpriseReplayStreamingEndpoint extends EnterpriseStreamingEndpoi
 
   protected static final String BASE_PATH = "/accounts/%s/publishers/twitter/replay/track/%s.json";
 
-  public EnterpriseReplayStreamingEndpoint(String account, String label, Date fromDate, Date toDate) {
-    super(account, label);
+  public EnterpriseReplayStreamingEndpoint(String account, String label, String product, Date fromDate, Date toDate) {
+    super(account, label, product);
 
     this.fromDate        = Preconditions.checkNotNull(fromDate);
     this.toDate          = Preconditions.checkNotNull(toDate);
