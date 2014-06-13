@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SampleStreamExample {
 
-  public static void oauth(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
+  public static void run(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
     // Create an appropriately sized blocking queue
     BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
 
@@ -41,12 +41,12 @@ public class SampleStreamExample {
 
     // Create a new BasicClient. By default gzip is enabled.
     BasicClient client = new ClientBuilder()
-      .name("sampleExampleClient")
-      .hosts(Constants.STREAM_HOST)
-      .endpoint(endpoint)
-      .authentication(auth)
-      .processor(new StringDelimitedProcessor(queue))
-      .build();
+            .name("sampleExampleClient")
+            .hosts(Constants.STREAM_HOST)
+            .endpoint(endpoint)
+            .authentication(auth)
+            .processor(new StringDelimitedProcessor(queue))
+            .build();
 
     // Establish a connection
     client.connect();
@@ -73,10 +73,10 @@ public class SampleStreamExample {
   }
 
   public static void main(String[] args) {
-	  try {
-	  SampleStreamExample.oauth(args[0], args[1], args[2], args[3]);
-	  } catch (InterruptedException e) {
-		  System.out.println(e);
-	  }
+    try {
+      SampleStreamExample.run(args[0], args[1], args[2], args[3]);
+    } catch (InterruptedException e) {
+      System.out.println(e);
+    }
   }
 }

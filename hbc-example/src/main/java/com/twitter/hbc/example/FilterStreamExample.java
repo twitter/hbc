@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class FilterStreamExample {
 
-  public void oauth(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
+  public static void run(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
     BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
     StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
     // add some track terms
@@ -38,11 +38,11 @@ public class FilterStreamExample {
 
     // Create a new BasicClient. By default gzip is enabled.
     Client client = new ClientBuilder()
-      .hosts(Constants.STREAM_HOST)
-      .endpoint(endpoint)
-      .authentication(auth)
-      .processor(new StringDelimitedProcessor(queue))
-      .build();
+            .hosts(Constants.STREAM_HOST)
+            .endpoint(endpoint)
+            .authentication(auth)
+            .processor(new StringDelimitedProcessor(queue))
+            .build();
 
     // Establish a connection
     client.connect();
@@ -55,5 +55,13 @@ public class FilterStreamExample {
 
     client.stop();
 
+  }
+
+  public static void main(String[] args) {
+    try {
+      FilterStreamExample.run(args[0], args[1], args[2], args[3]);
+    } catch (InterruptedException e) {
+      System.out.println(e);
+    }
   }
 }

@@ -19,54 +19,47 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EnterpriseReplayStreamingEndpoint extends EnterpriseStreamingEndpoint {
+  private static final String BASE_PATH = "/accounts/%s/publishers/twitter/replay/%s/%s.json";
+  private static final String DATE_FMT_STR = "yyyyMMddHHmm";
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FMT_STR);
   protected Date fromDate;
   protected Date toDate;
-  private static final String DATE_FMT_STR = "yyyyMMddHHmm";
-  public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FMT_STR);
 
-  protected static final String BASE_PATH = "/accounts/%s/publishers/twitter/replay/track/%s.json";
+  public EnterpriseReplayStreamingEndpoint(String account, String product, String label, Date fromDate, Date toDate) {
+    super(account, product, label);
 
-  public EnterpriseReplayStreamingEndpoint(String account, String label, String product, Date fromDate, Date toDate) {
-    super(account, label, product);
-
-    this.fromDate        = Preconditions.checkNotNull(fromDate);
-    this.toDate          = Preconditions.checkNotNull(toDate);
+    this.fromDate = Preconditions.checkNotNull(fromDate);
+    this.toDate = Preconditions.checkNotNull(toDate);
   }
 
   @Override
   public String getURI() {
-    String uri = String.format(BASE_PATH, this.account.trim(), this.label.trim());
-    String queryString;
+    String uri = String.format(BASE_PATH, account.trim(), product.trim(), label.trim());
 
-    String _toDate   = formatDate(this.toDate);
-    String _fromDate = formatDate(this.fromDate);
-    addQueryParameter("toDate", _toDate);
-    addQueryParameter("fromDate", _fromDate);
+    addQueryParameter("fromDate", formatDate(this.fromDate));
+    addQueryParameter("toDate", formatDate(this.toDate));
 
-    queryString = "?" + generateParamString(this.queryParameters);
-
-    return uri + queryString;
-  }
-
-  public void setFromDate(Date fromDate) {
-    this.fromDate = fromDate;
-  }
-
-  public void setToDate(Date toDate) {
-    this.toDate = toDate;
+    return uri + "?" + generateParamString(queryParameters);
   }
 
   public Date getFromDate() {
     return fromDate;
   }
 
+  public void setFromDate(Date fromDate) {
+    this.fromDate = fromDate;
+  }
+
   public Date getToDate() {
     return toDate;
+  }
+
+  public void setToDate(Date toDate) {
+    this.toDate = toDate;
   }
 
   private String formatDate(Date date) {
     return DATE_FORMAT.format(date);
   }
-
 
 }

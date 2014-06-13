@@ -21,8 +21,10 @@ import com.twitter.joauth.UrlCodec;
 import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import static junit.framework.Assert.*;
 
@@ -78,41 +80,31 @@ public class EndpointTest {
 
   @Test
   public void testEnterpriseStreamingEndpoint() {
-    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "track", "label");
-    String expected = "/accounts/account/publishers/twitter/streams/track/label.json";
+    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account_name", "track", "stream_label");
+    String expected = "/accounts/account_name/publishers/twitter/streams/track/stream_label.json";
     assertEquals(endpoint.getURI(), expected);
   }
 
   @Test
-  public void testEnterpriseReplayStreamEndpointAddsDateParams() throws ParseException {
-    GregorianCalendar calendar = new GregorianCalendar();
-    Date toDate = new Date();
+  public void testEnterpriseReplayStreamingEndpointFormatsDateParamsAndIncludesThem() {
+    String expectedBaseUri = "/accounts/account_name/publishers/twitter/replay/track/stream_label.json";
+    String expectedFormat = "201401020304";
 
-    calendar.setTime(toDate);
-    calendar.add(Calendar.MONTH, -1);
-    Date fromDate = calendar.getTime();
+    Date fromDate = new GregorianCalendar(2014, 0, 02, 03, 04).getTime(); // Months are 0 indexed
+    Date toDate = new GregorianCalendar(2015, 1, 03, 04, 05).getTime(); // Months are 0 indexed
 
-    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account", "track", "label", fromDate, toDate);
+    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account_name", "track", "stream_label", fromDate, toDate);
+    String uri = endpoint.getURI();
 
+    assertTrue(uri.startsWith(expectedBaseUri));
+    assertTrue(uri.contains(expectedFormat));
     assertTrue(endpoint.getURI().matches(".+fromDate=[0-9]+.+"));
     assertTrue(endpoint.getURI().matches(".+toDate=[0-9]+.+"));
   }
 
   @Test
-  public void testEnterpriseReplayStreamingEndpointFormatsDateParams() {
-    String expectedFormat = "201406102102";
-    Calendar calendar = new GregorianCalendar(2014, 5, 10, 21, 02); // Months are 0 indexed
-    Date fromDate = calendar.getTime();
-    Date toDate = new Date();
-
-    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account", "track", "label", fromDate, toDate);
-    String uri = endpoint.getURI();
-    assertTrue(uri.contains(expectedFormat));
-  }
-
-  @Test
   public void testBackfillParamOnEnterpriseStreamEndpoint() {
-    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account", "label", "track", 1);
+    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account_name", "stream_label", "track", 1);
     assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
   }
 

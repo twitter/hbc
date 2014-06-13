@@ -22,20 +22,20 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public class EnterpriseStreamingEndpoint implements StreamingEndpoint {
-  protected static final String BASE_PATH = "/accounts/%s/publishers/twitter/streams/%s/%s.json";
+  private static final String BASE_PATH = "/accounts/%s/publishers/twitter/streams/%s/%s.json";
   protected final String account;
+  protected final String product;
   protected final String label;
   protected final ConcurrentMap<String, String> queryParameters = Maps.newConcurrentMap();
-  private final String product;
 
-  public EnterpriseStreamingEndpoint(String account, String label, String product) {
-    this(account, label, product, 0);
+  public EnterpriseStreamingEndpoint(String account, String product, String label) {
+    this(account, product, label, 0);
   }
 
-  public EnterpriseStreamingEndpoint(String account, String label, String product, int clientId) {
+  public EnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
     this.account = Preconditions.checkNotNull(account);
-    this.label = Preconditions.checkNotNull(label);
     this.product = Preconditions.checkNotNull(product);
+    this.label = Preconditions.checkNotNull(label);
 
     if (clientId > 0) {
       addQueryParameter("client", String.valueOf(clientId));
@@ -44,7 +44,7 @@ public class EnterpriseStreamingEndpoint implements StreamingEndpoint {
 
   @Override
   public String getURI() {
-    String uri = String.format(BASE_PATH, account.trim(), label.trim(), product.trim());
+    String uri = String.format(BASE_PATH, account.trim(), product.trim(), label.trim());
 
     if (queryParameters.isEmpty()) {
       return uri;
