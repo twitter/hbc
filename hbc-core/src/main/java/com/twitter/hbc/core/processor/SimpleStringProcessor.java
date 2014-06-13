@@ -13,12 +13,12 @@
 
 package com.twitter.hbc.core.processor;
 
+import com.google.common.base.Charsets;
 import com.twitter.hbc.common.DelimitedStreamReader;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
 
 public class SimpleStringProcessor extends AbstractProcessor<String> {
@@ -47,6 +47,6 @@ public class SimpleStringProcessor extends AbstractProcessor<String> {
 
   @Override
   public void setup(InputStream input) {
-    reader = new DelimitedStreamReader(input, StandardCharsets.UTF_8, DEFAULT_BUFFER_SIZE);
+    reader = new DelimitedStreamReader(input, Charsets.UTF_8, DEFAULT_BUFFER_SIZE);
   }
 }
