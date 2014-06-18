@@ -18,16 +18,14 @@ import com.google.common.base.Preconditions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class EnterpriseReplayStreamingEndpoint extends EnterpriseStreamingEndpoint {
-  private static final String BASE_PATH = "/accounts/%s/publishers/twitter/replay/%s/%s.json";
+public class EnterpriseReplayStreamingEndpoint extends AbstractEnterpriseStreamingEndpoint {
+  private final Date fromDate;
+  private final Date toDate;
   private static final String DATE_FMT_STR = "yyyyMMddHHmm";
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FMT_STR);
-  protected Date fromDate;
-  protected Date toDate;
+  private static final String BASE_PATH = "/accounts/%s/publishers/twitter/replay/%s/%s.json";
 
   public EnterpriseReplayStreamingEndpoint(String account, String product, String label, Date fromDate, Date toDate) {
     super(account, product, label);
-
     this.fromDate = Preconditions.checkNotNull(fromDate);
     this.toDate = Preconditions.checkNotNull(toDate);
   }
@@ -46,20 +44,13 @@ public class EnterpriseReplayStreamingEndpoint extends EnterpriseStreamingEndpoi
     return fromDate;
   }
 
-  public void setFromDate(Date fromDate) {
-    this.fromDate = fromDate;
-  }
-
   public Date getToDate() {
     return toDate;
   }
 
-  public void setToDate(Date toDate) {
-    this.toDate = toDate;
-  }
-
   private String formatDate(Date date) {
-    return DATE_FORMAT.format(date);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FMT_STR);
+    return dateFormat.format(date);
   }
 
 }

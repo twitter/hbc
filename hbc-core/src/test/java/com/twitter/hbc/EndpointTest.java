@@ -19,6 +19,7 @@ import com.twitter.hbc.core.HttpConstants;
 import com.twitter.hbc.core.endpoint.*;
 import com.twitter.joauth.UrlCodec;
 import org.junit.Test;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -80,9 +81,25 @@ public class EndpointTest {
 
   @Test
   public void testEnterpriseStreamingEndpoint() {
-    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account_name", "track", "stream_label");
+    AbstractEnterpriseStreamingEndpoint endpoint = new EnterpriseRealTimeStreamingEndpoint("account_name", "track", "stream_label");
     String expected = "/accounts/account_name/publishers/twitter/streams/track/stream_label.json";
     assertEquals(endpoint.getURI(), expected);
+  }
+
+  @Test
+  public void testEnterpriseStreamingEndpointProduct() {
+    String account = "account_name";
+    String label = "test_label";
+    String powerTrackProduct = "track";
+    String decaHoseProduct = "decahose";
+    String powerTrackURI = "/accounts/account_name/publishers/twitter/streams/track/test_label.json";
+    String decaHoseProductURI = "/accounts/account_name/publishers/twitter/streams/decahose/test_label.json";
+
+    EnterpriseRealTimeStreamingEndpoint trackEndpoint = new EnterpriseRealTimeStreamingEndpoint(account, powerTrackProduct, label);
+    EnterpriseRealTimeStreamingEndpoint decaHoseEndpoint = new EnterpriseRealTimeStreamingEndpoint(account, decaHoseProduct, label);
+
+    assertEquals(powerTrackURI, trackEndpoint.getURI());
+    assertEquals(decaHoseProductURI, decaHoseEndpoint.getURI());
   }
 
   @Test
@@ -104,7 +121,7 @@ public class EndpointTest {
 
   @Test
   public void testBackfillParamOnEnterpriseStreamEndpoint() {
-    EnterpriseStreamingEndpoint endpoint = new EnterpriseStreamingEndpoint("account_name", "stream_label", "track", 1);
+    AbstractEnterpriseStreamingEndpoint endpoint = new EnterpriseRealTimeStreamingEndpoint("account_name", "stream_label", "track", 1);
     assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
   }
 

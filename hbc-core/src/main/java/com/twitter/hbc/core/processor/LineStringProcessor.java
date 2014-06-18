@@ -21,15 +21,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.BlockingQueue;
 
-public class SimpleStringProcessor extends AbstractProcessor<String> {
+/**
+ * Reads new line delimited strings according to {@link com.twitter.hbc.common.DelimitedStreamReader#readLine() }
+ * */
+
+public class LineStringProcessor extends AbstractProcessor<String> {
   private final static int DEFAULT_BUFFER_SIZE = 50000;
   private DelimitedStreamReader reader;
 
-  public SimpleStringProcessor(BlockingQueue<String> queue) {
+  public LineStringProcessor(BlockingQueue<String> queue) {
     super(queue);
   }
 
-  public SimpleStringProcessor(BlockingQueue<String> queue, long offerTimeoutMillis) {
+  public LineStringProcessor(BlockingQueue<String> queue, long offerTimeoutMillis) {
     super(queue, offerTimeoutMillis);
   }
 

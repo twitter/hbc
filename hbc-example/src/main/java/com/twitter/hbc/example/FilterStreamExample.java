@@ -57,11 +57,11 @@ public class FilterStreamExample {
 
   }
 
-  public static void main(String[] args) {
-    try {
-      FilterStreamExample.run(args[0], args[1], args[2], args[3]);
-    } catch (InterruptedException e) {
-      System.out.println(e);
-    }
-  }
+//  public static void main(String[] args) {
+//    try {
+//      FilterStreamExample.run(args[0], args[1], args[2], args[3]);
+//    } catch (InterruptedException e) {
+//      System.out.println(e);
+//    }
+//  }
 }

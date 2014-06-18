@@ -27,7 +27,7 @@ import java.util.concurrent.BlockingQueue;
 
 import static org.junit.Assert.*;
 
-public class StreamProcessorTest {
+public class LineDelimitedStreamProcessorTest {
 
   private String[] messages;
 
@@ -40,23 +40,8 @@ public class StreamProcessorTest {
     }
   }
 
-  /**
-   * StringDelimitedProcessor properly processes streams
-   */
   @Test
-  public void testDelimitedStreamProcessing() throws Exception {
-    SimpleStreamProvider simpleStream = new SimpleStreamProvider(messages, true, false);
-
-    BlockingQueue<String> queue = new ArrayBlockingQueue<String>(10);
-    HosebirdMessageProcessor processor = new StringDelimitedProcessor(queue);
-
-    int count = processStream(simpleStream, processor, queue);
-
-    assertEquals(messages.length, count);
-  }
-
-  @Test
-  public void testSimpleStreamProcessing() throws Exception {
+  public void testLineStringProcessing() throws Exception {
     SimpleStreamProvider simpleStream = new SimpleStreamProvider(messages, false, false);
 
     BlockingQueue<String> queue = new ArrayBlockingQueue<String>(10);
@@ -65,6 +50,7 @@ public class StreamProcessorTest {
     int count = processStream(simpleStream, processor, queue);
 
     assertEquals(messages.length, count);
+
   }
 
   private int processStream(SimpleStreamProvider simpleStream, HosebirdMessageProcessor processor, BlockingQueue<String> queue) throws InterruptedException {

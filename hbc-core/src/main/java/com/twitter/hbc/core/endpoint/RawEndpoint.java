@@ -42,7 +42,7 @@ public class RawEndpoint implements StreamingEndpoint {
   }
 
   /**
-   * @param uri        should be the full uri, including the starting "/" and the api version, and any query params.
+   * @param uri should be the full uri, including the starting "/" and the api version, and any query params.
    * @param postParams any http POST parameters (not encoded)
    */
   public RawEndpoint(String uri, String httpMethod, Map<String, String> postParams) {
