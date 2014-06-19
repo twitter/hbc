@@ -25,6 +25,8 @@ import twitter4j.JSONObject;
 import java.io.IOException;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.fail;
 
 public class JSONObjectParserTest extends ResourceReader {
@@ -75,12 +77,14 @@ public class JSONObjectParserTest extends ResourceReader {
   @Test
   public void testParseSitestreamUserId() throws JSONException {
     JSONObject json = new JSONObject(sitestreamFriendsList);
+    assertTrue(JSONObjectParser.hasSitestreamUser(json));
     assertEquals(JSONObjectParser.getSitestreamUser(json), 1888);
   }
 
   @Test
   public void testParseSitestreamMessage() throws JSONException {
     JSONObject json = new JSONObject(sitestreamFriendsList);
+    assertTrue(JSONObjectParser.hasSitestreamUser(json));
     long[] list = JSONObjectParser.parseFriendList(JSONObjectParser.getSitestreamMessage(json));
     assertEquals(list[0], 1);
     assertEquals(list[1], 2);
@@ -103,6 +107,8 @@ public class JSONObjectParserTest extends ResourceReader {
   @Test
   public void testParseControlStreamMessage() throws JSONException {
     JSONObject json = new JSONObject(controlMessage);
+    assertFalse(JSONObjectParser.hasSitestreamUser(json));
+    assertFalse(JSONObjectParser.hasSitestreamMessage(json));
     String streamId = JSONObjectParser.getStreamId(json);
     assertEquals(streamId, "01_225167_334389048B872A533002B34D73F8C29FD09EFC50");
   }
@@ -110,6 +116,8 @@ public class JSONObjectParserTest extends ResourceReader {
   @Test
   public void testParseDisconnectMessage() throws JSONException {
     JSONObject json = new JSONObject(disconnectMessage);
+    assertFalse(JSONObjectParser.hasSitestreamUser(json));
+    assertFalse(JSONObjectParser.hasSitestreamMessage(json));
     DisconnectMessage message = JSONObjectParser.parseDisconnectMessage(json);
     assertEquals(message.getDisconnectCode(), 5);
     assertEquals(message.getStreamName(), "somestreamname123");
