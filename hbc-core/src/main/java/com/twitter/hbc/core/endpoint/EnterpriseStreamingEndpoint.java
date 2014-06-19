@@ -21,18 +21,18 @@ import com.twitter.hbc.core.HttpConstants;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-public abstract class AbstractEnterpriseStreamingEndpoint implements StreamingEndpoint {
+public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
   private static final String BASE_PATH = "/accounts/%s/publishers/twitter/streams/%s/%s.json";
   protected final String account;
   protected final String product;
   protected final String label;
   protected final ConcurrentMap<String, String> queryParameters = Maps.newConcurrentMap();
 
-  public AbstractEnterpriseStreamingEndpoint(String account, String product, String label) {
+  public EnterpriseStreamingEndpoint(String account, String product, String label) {
     this(account, product, label, 0);
   }
 
-  public AbstractEnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
+  public EnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
     this.account = Preconditions.checkNotNull(account);
     this.product = Preconditions.checkNotNull(product);
     this.label = Preconditions.checkNotNull(label);

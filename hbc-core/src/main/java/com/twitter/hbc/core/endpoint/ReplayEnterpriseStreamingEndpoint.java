@@ -18,13 +18,13 @@ import com.google.common.base.Preconditions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class EnterpriseReplayStreamingEndpoint extends AbstractEnterpriseStreamingEndpoint {
+public class ReplayEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoint {
   private final Date fromDate;
   private final Date toDate;
   private static final String DATE_FMT_STR = "yyyyMMddHHmm";
   private static final String BASE_PATH = "/accounts/%s/publishers/twitter/replay/%s/%s.json";
 
-  public EnterpriseReplayStreamingEndpoint(String account, String product, String label, Date fromDate, Date toDate) {
+  public ReplayEnterpriseStreamingEndpoint(String account, String product, String label, Date fromDate, Date toDate) {
     super(account, product, label);
     this.fromDate = Preconditions.checkNotNull(fromDate);
     this.toDate = Preconditions.checkNotNull(toDate);

@@ -16,7 +16,7 @@ package com.twitter.hbc.example;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.Constants;
-import com.twitter.hbc.core.endpoint.AbstractEnterpriseStreamingEndpoint;
+import com.twitter.hbc.core.endpoint.RealTimeEnterpriseStreamingEndpoint;
 import com.twitter.hbc.core.processor.LineStringProcessor;
 import com.twitter.hbc.httpclient.auth.BasicAuth;
 
@@ -34,7 +34,7 @@ public class EnterpriseStreamExample {
 
     BasicAuth auth = new BasicAuth(username, password);
 
-    AbstractEnterpriseStreamingEndpoint endpoint = new AbstractEnterpriseStreamingEndpoint(account, product, label);
+    RealTimeEnterpriseStreamingEndpoint endpoint = new RealTimeEnterpriseStreamingEndpoint(account, product, label);
 
     // Create a new BasicClient. By default gzip is enabled.
     Client client = new ClientBuilder()

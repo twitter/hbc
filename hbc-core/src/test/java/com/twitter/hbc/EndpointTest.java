@@ -81,7 +81,7 @@ public class EndpointTest {
 
   @Test
   public void testEnterpriseStreamingEndpoint() {
-    AbstractEnterpriseStreamingEndpoint endpoint = new EnterpriseRealTimeStreamingEndpoint("account_name", "track", "stream_label");
+    RealTimeEnterpriseStreamingEndpoint endpoint = new RealTimeEnterpriseStreamingEndpoint("account_name", "track", "stream_label");
     String expected = "/accounts/account_name/publishers/twitter/streams/track/stream_label.json";
     assertEquals(endpoint.getURI(), expected);
   }
@@ -95,8 +95,8 @@ public class EndpointTest {
     String powerTrackURI = "/accounts/account_name/publishers/twitter/streams/track/test_label.json";
     String decaHoseProductURI = "/accounts/account_name/publishers/twitter/streams/decahose/test_label.json";
 
-    EnterpriseRealTimeStreamingEndpoint trackEndpoint = new EnterpriseRealTimeStreamingEndpoint(account, powerTrackProduct, label);
-    EnterpriseRealTimeStreamingEndpoint decaHoseEndpoint = new EnterpriseRealTimeStreamingEndpoint(account, decaHoseProduct, label);
+    RealTimeEnterpriseStreamingEndpoint trackEndpoint = new RealTimeEnterpriseStreamingEndpoint(account, powerTrackProduct, label);
+    RealTimeEnterpriseStreamingEndpoint decaHoseEndpoint = new RealTimeEnterpriseStreamingEndpoint(account, decaHoseProduct, label);
 
     assertEquals(powerTrackURI, trackEndpoint.getURI());
     assertEquals(decaHoseProductURI, decaHoseEndpoint.getURI());
@@ -110,7 +110,7 @@ public class EndpointTest {
     Date fromDate = new GregorianCalendar(2014, 0, 02, 03, 04).getTime(); // Months are 0 indexed
     Date toDate = new GregorianCalendar(2015, 1, 03, 04, 05).getTime(); // Months are 0 indexed
 
-    EnterpriseReplayStreamingEndpoint endpoint = new EnterpriseReplayStreamingEndpoint("account_name", "track", "stream_label", fromDate, toDate);
+    ReplayEnterpriseStreamingEndpoint endpoint = new ReplayEnterpriseStreamingEndpoint("account_name", "track", "stream_label", fromDate, toDate);
     String uri = endpoint.getURI();
 
     assertTrue(uri.startsWith(expectedBaseUri));
@@ -121,7 +121,7 @@ public class EndpointTest {
 
   @Test
   public void testBackfillParamOnEnterpriseStreamEndpoint() {
-    AbstractEnterpriseStreamingEndpoint endpoint = new EnterpriseRealTimeStreamingEndpoint("account_name", "stream_label", "track", 1);
+    RealTimeEnterpriseStreamingEndpoint endpoint = new RealTimeEnterpriseStreamingEndpoint("account_name", "stream_label", "track", 1);
     assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
   }
 

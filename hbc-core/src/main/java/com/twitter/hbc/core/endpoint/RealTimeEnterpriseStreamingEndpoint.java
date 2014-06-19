@@ -14,13 +14,13 @@
 package com.twitter.hbc.core.endpoint;
 
 
-public class EnterpriseRealTimeStreamingEndpoint extends AbstractEnterpriseStreamingEndpoint {
+public class RealTimeEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoint {
 
-  public EnterpriseRealTimeStreamingEndpoint(String account, String product, String label) {
+  public RealTimeEnterpriseStreamingEndpoint(String account, String product, String label) {
     super(account, product, label);
   }
 
-  public EnterpriseRealTimeStreamingEndpoint(String account, String product, String label, int clientId) {
+  public RealTimeEnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
     super(account, product, label, clientId);
   }
 }
