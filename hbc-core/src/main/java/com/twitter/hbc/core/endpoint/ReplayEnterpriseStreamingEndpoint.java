@@ -19,10 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ReplayEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoint {
-  private final Date fromDate;
-  private final Date toDate;
   private static final String DATE_FMT_STR = "yyyyMMddHHmm";
   private static final String BASE_PATH = "/accounts/%s/publishers/twitter/replay/%s/%s.json";
+  private final Date fromDate;
+  private final Date toDate;
 
   public ReplayEnterpriseStreamingEndpoint(String account, String product, String label, Date fromDate, Date toDate) {
     super(account, product, label);

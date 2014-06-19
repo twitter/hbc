@@ -24,7 +24,6 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Reads new line delimited strings according to {@link com.twitter.hbc.common.DelimitedStreamReader#readLine() }
  * */
-
 public class LineStringProcessor extends AbstractProcessor<String> {
   private final static int DEFAULT_BUFFER_SIZE = 50000;
   private DelimitedStreamReader reader;
