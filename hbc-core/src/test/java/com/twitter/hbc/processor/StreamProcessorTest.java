@@ -14,6 +14,7 @@
 package com.twitter.hbc.processor;
 
 import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
+import com.twitter.hbc.core.processor.LineStringProcessor;
 import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.test.SimpleStreamProvider;
 import org.junit.Before;
@@ -26,7 +27,7 @@ import java.util.concurrent.BlockingQueue;
 
 import static org.junit.Assert.*;
 
-public class StringDelimitedProcessorTest {
+public class StreamProcessorTest {
 
   private String[] messages;
 
@@ -38,17 +39,39 @@ public class StringDelimitedProcessorTest {
       messages[i] = "messages" + i;
     }
   }
+
   /**
    * StringDelimitedProcessor properly processes streams
    */
   @Test
-  public void testStreamProcessing() throws Exception {
+  public void testDelimitedStreamProcessing() throws Exception {
     SimpleStreamProvider simpleStream = new SimpleStreamProvider(messages, true, false);
+
+    BlockingQueue<String> queue = new ArrayBlockingQueue<String>(10);
+    HosebirdMessageProcessor processor = new StringDelimitedProcessor(queue);
+
+    int count = processStream(simpleStream, processor, queue);
+
+    assertEquals(messages.length, count);
+  }
+
+  @Test
+  public void testSimpleStreamProcessing() throws Exception {
+    SimpleStreamProvider simpleStream = new SimpleStreamProvider(messages, false, false);
+
+    BlockingQueue<String> queue = new ArrayBlockingQueue<String>(10);
+    HosebirdMessageProcessor processor = new LineStringProcessor(queue);
+
+    int count = processStream(simpleStream, processor, queue);
+
+    assertEquals(messages.length, count);
+  }
+
+  private int processStream(SimpleStreamProvider simpleStream, HosebirdMessageProcessor processor, BlockingQueue<String> queue) throws InterruptedException {
     int count = 0;
     try {
       InputStream stream = simpleStream.createInputStream();
-      BlockingQueue<String> queue = new ArrayBlockingQueue<String>(10);
-      HosebirdMessageProcessor processor = new StringDelimitedProcessor(queue);
+
       processor.setup(stream);
       // read until we hit the IOException
       while (count < messages.length * 2) {
@@ -61,7 +84,7 @@ public class StringDelimitedProcessorTest {
     } catch (IOException e) {
       // expected
     }
-    assertEquals(messages.length, count);
+    return count;
   }
 
   @Test

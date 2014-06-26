@@ -67,6 +67,10 @@ public class Constants {
   public static final String SITESTREAM_HOST = "https://sitestream.twitter.com";
   public static final String USERSTREAM_HOST = "https://userstream.twitter.com";
 
+  public static final String ENTERPRISE_STREAM_HOST = "https://stream.gnip.com";
+  public static final String FROM_DATE_PARAM = "fromDate";
+  public static final String TO_DATE_PARAM = "toDate";
+
   public static final Charset DEFAULT_CHARSET = Charsets.UTF_8;
 
   /**

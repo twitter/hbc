@@ -70,6 +70,7 @@ public class BaseEndpoint implements Endpoint {
             .join(params);
   }
 
+  @Override
   public String getQueryParamString() {
     return generateParamString(queryParameters);
   }
@@ -94,10 +95,12 @@ public class BaseEndpoint implements Endpoint {
     postParameters.remove(UrlCodec.encode(param));
   }
 
+  @Override
   public void addQueryParameter(String param, String value) {
     queryParameters.put(UrlCodec.encode(param), UrlCodec.encode(value));
   }
 
+  @Override
   public void removeQueryParameter(String param) {
     queryParameters.remove(UrlCodec.encode(param));
   }

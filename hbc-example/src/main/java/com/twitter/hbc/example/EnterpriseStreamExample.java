@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Twitter, Inc.
+ * Copyright 2014 Twitter, Inc.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,35 +13,36 @@
 
 package com.twitter.hbc.example;
 
-import com.google.common.collect.Lists;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.Constants;
-import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
-import com.twitter.hbc.core.processor.StringDelimitedProcessor;
-import com.twitter.hbc.httpclient.auth.Authentication;
-import com.twitter.hbc.httpclient.auth.OAuth1;
+import com.twitter.hbc.core.endpoint.RealTimeEnterpriseStreamingEndpoint;
+import com.twitter.hbc.core.processor.LineStringProcessor;
+import com.twitter.hbc.httpclient.auth.BasicAuth;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class FilterStreamExample {
+public class EnterpriseStreamExample {
 
-  public static void run(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
+  public static void run(String username,
+                         String password,
+                         String account,
+                         String label,
+                         String product) throws InterruptedException {
     BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
-    StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
-    // add some track terms
-    endpoint.trackTerms(Lists.newArrayList("twitterapi", "#yolo"));
 
-    Authentication auth = new OAuth1(consumerKey, consumerSecret, token, secret);
-    // Authentication auth = new BasicAuth(username, password);
+    BasicAuth auth = new BasicAuth(username, password);
+
+    RealTimeEnterpriseStreamingEndpoint endpoint = new RealTimeEnterpriseStreamingEndpoint(account, product, label);
 
     // Create a new BasicClient. By default gzip is enabled.
     Client client = new ClientBuilder()
-            .hosts(Constants.STREAM_HOST)
+            .name("PowerTrackClient-01")
+            .hosts(Constants.ENTERPRISE_STREAM_HOST)
             .endpoint(endpoint)
             .authentication(auth)
-            .processor(new StringDelimitedProcessor(queue))
+            .processor(new LineStringProcessor(queue))
             .build();
 
     // Establish a connection
@@ -54,12 +55,11 @@ public class FilterStreamExample {
     }
 
     client.stop();
-
   }
 
 //  public static void main(String[] args) {
 //    try {
-//      FilterStreamExample.run(args[0], args[1], args[2], args[3]);
+//      EnterpriseStreamExample.run(args[0], args[1], args[2], args[3], args[4]);
 //    } catch (InterruptedException e) {
 //      System.out.println(e);
 //    }

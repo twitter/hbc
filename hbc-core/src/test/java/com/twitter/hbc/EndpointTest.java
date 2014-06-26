@@ -23,6 +23,8 @@ import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static junit.framework.Assert.*;
@@ -68,13 +70,59 @@ public class EndpointTest {
   public void testStatusesFilterEndpointTest() {
     StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
     endpoint.locations(Lists.newArrayList(
-        new Location(new Location.Coordinate(-122.75, 36.8), new Location.Coordinate(-121.75, 37.8))));
+            new Location(new Location.Coordinate(-122.75, 36.8), new Location.Coordinate(-121.75, 37.8))));
     assertEquals(endpoint.getPostParamString(), "locations=" + UrlCodec.encode("-122.75,36.8,-121.75,37.8"));
 
     StatusesFilterEndpoint endpoint2 = new StatusesFilterEndpoint();
     endpoint2.trackTerms(Lists.newArrayList(
             "twitterapi", "#!@?"));
     assertEquals(endpoint2.getPostParamString(), "track=" + UrlCodec.encode("twitterapi,#!@?"));
+  }
+
+  @Test
+  public void testEnterpriseStreamingEndpoint() {
+    RealTimeEnterpriseStreamingEndpoint endpoint = new RealTimeEnterpriseStreamingEndpoint("account_name", "track", "stream_label");
+    String expected = "/accounts/account_name/publishers/twitter/streams/track/stream_label.json";
+    assertEquals(endpoint.getURI(), expected);
+  }
+
+  @Test
+  public void testEnterpriseStreamingEndpointProduct() {
+    String account = "account_name";
+    String label = "test_label";
+    String powerTrackProduct = "track";
+    String decaHoseProduct = "decahose";
+    String powerTrackURI = "/accounts/account_name/publishers/twitter/streams/track/test_label.json";
+    String decaHoseProductURI = "/accounts/account_name/publishers/twitter/streams/decahose/test_label.json";
+
+    RealTimeEnterpriseStreamingEndpoint trackEndpoint = new RealTimeEnterpriseStreamingEndpoint(account, powerTrackProduct, label);
+    RealTimeEnterpriseStreamingEndpoint decaHoseEndpoint = new RealTimeEnterpriseStreamingEndpoint(account, decaHoseProduct, label);
+
+    assertEquals(powerTrackURI, trackEndpoint.getURI());
+    assertEquals(decaHoseProductURI, decaHoseEndpoint.getURI());
+  }
+
+  @Test
+  public void testEnterpriseReplayStreamingEndpointFormatsDateParamsAndIncludesThem() {
+    String expectedBaseUri = "/accounts/account_name/publishers/twitter/replay/track/stream_label.json";
+    String expectedFormat = "201401020304";
+
+    Date fromDate = new GregorianCalendar(2014, 0, 02, 03, 04).getTime(); // Months are 0 indexed
+    Date toDate = new GregorianCalendar(2015, 1, 03, 04, 05).getTime(); // Months are 0 indexed
+
+    ReplayEnterpriseStreamingEndpoint endpoint = new ReplayEnterpriseStreamingEndpoint("account_name", "track", "stream_label", fromDate, toDate);
+    String uri = endpoint.getURI();
+
+    assertTrue(uri.startsWith(expectedBaseUri));
+    assertTrue(uri.contains(expectedFormat));
+    assertTrue(endpoint.getURI().matches(".+fromDate=[0-9]+.+"));
+    assertTrue(endpoint.getURI().matches(".+toDate=[0-9]+.+"));
+  }
+
+  @Test
+  public void testBackfillParamOnEnterpriseStreamEndpoint() {
+    RealTimeEnterpriseStreamingEndpoint endpoint = new RealTimeEnterpriseStreamingEndpoint("account_name", "stream_label", "track", 1);
+    assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
   }
 
   @Test

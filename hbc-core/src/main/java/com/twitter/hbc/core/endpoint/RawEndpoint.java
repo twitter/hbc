@@ -32,6 +32,7 @@ public class RawEndpoint implements StreamingEndpoint {
   private final String uri;
   private final String httpMethod;
   private final ConcurrentMap<String, String> postParams;
+  private final ConcurrentMap<String, String> queryParameters;
 
   /**
    * @param uri should be the full uri, including the starting "/" and the api version, and any query params
@@ -39,8 +40,9 @@ public class RawEndpoint implements StreamingEndpoint {
   public RawEndpoint(String uri, String httpMethod) {
     this(uri, httpMethod, Collections.<String, String>emptyMap());
   }
+
   /**
-   * @param uri should be the full uri, including the starting "/" and the api version, and any query params.
+   * @param uri        should be the full uri, including the starting "/" and the api version, and any query params.
    * @param postParams any http POST parameters (not encoded)
    */
   public RawEndpoint(String uri, String httpMethod, Map<String, String> postParams) {
@@ -49,6 +51,7 @@ public class RawEndpoint implements StreamingEndpoint {
     Preconditions.checkArgument(HttpConstants.checkHttpMethod(httpMethod));
     Preconditions.checkNotNull(postParams);
     this.postParams = Maps.newConcurrentMap();
+    this.queryParameters = Maps.newConcurrentMap();
     postParams.putAll(postParams);
   }
 
@@ -56,14 +59,18 @@ public class RawEndpoint implements StreamingEndpoint {
    * These don't do anything
    */
   @Override
-  public void setBackfillCount(int count) {}
+  public void setBackfillCount(int count) { }
 
   @Override
-  public void setApiVersion(String apiVersion) {}
+  public void setApiVersion(String apiVersion) { }
 
   @Override
   public String getURI() {
-    return this.uri;
+    if (queryParameters.isEmpty()) {
+      return this.uri;
+    } else {
+      return this.uri + "?" + generateParamString(queryParameters);
+    }
   }
 
   @Override
@@ -86,5 +93,26 @@ public class RawEndpoint implements StreamingEndpoint {
   @Override
   public void removePostParameter(String param) {
     postParams.remove(UrlCodec.encode(param));
+  }
+
+  @Override
+  public String getQueryParamString() {
+    return generateParamString(queryParameters);
+  }
+
+  @Override
+  public void addQueryParameter(String param, String value) {
+    queryParameters.put(param, value);
+  }
+
+  @Override
+  public void removeQueryParameter(String param) {
+    queryParameters.remove(param);
+  }
+
+  private String generateParamString(Map<String, String> params) {
+    return Joiner.on("&")
+            .withKeyValueSeparator("=")
+            .join(params);
   }
 }

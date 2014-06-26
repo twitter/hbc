@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Twitter, Inc.
+ * Copyright 2014 Twitter, Inc.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,17 +13,14 @@
 
 package com.twitter.hbc.core.endpoint;
 
-/** Endpoints must be threadsafe */
-public interface Endpoint {
-  public String getURI();
-  public String getHttpMethod();
 
-  /** Returns the string format of the post parameters for this endpoint, if applicable */
-  public String getPostParamString();
-  public void addPostParameter(String param, String value);
-  public void removePostParameter(String param);
+public class RealTimeEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoint {
 
-  public String getQueryParamString();
-  public void addQueryParameter(String param, String value);
-  public void removeQueryParameter(String param);
+  public RealTimeEnterpriseStreamingEndpoint(String account, String product, String label) {
+    super(account, product, label);
+  }
+
+  public RealTimeEnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
+    super(account, product, label, clientId);
+  }
 }
