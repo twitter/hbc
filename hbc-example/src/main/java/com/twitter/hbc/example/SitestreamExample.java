@@ -36,91 +36,70 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class SitestreamExample {
 
-  // A bare-bones SiteStreamsListener
+  // A no-op SiteStreamsListener
   private SiteStreamsListener listener = new SiteStreamsListener() {
     @Override
-    public void onDisconnectionNotice(String line) {
-    }
+    public void onDisconnectionNotice(String line) { }
 
     @Override
-    public void onStatus(long forUser, Status status) {
-    }
+    public void onStatus(long forUser, Status status) { }
 
     @Override
-    public void onDeletionNotice(long forUser, StatusDeletionNotice statusDeletionNotice) {
-    }
+    public void onDeletionNotice(long forUser, StatusDeletionNotice statusDeletionNotice) { }
 
     @Override
-    public void onFriendList(long forUser, long[] friendIds) {
-    }
+    public void onFriendList(long forUser, long[] friendIds) { }
 
     @Override
-    public void onFavorite(long forUser, User source, User target, Status status) {
-    }
+    public void onFavorite(long forUser, User source, User target, Status status) { }
 
     @Override
-    public void onUnfavorite(long forUser, User source, User target, Status status) {
-    }
+    public void onUnfavorite(long forUser, User source, User target, Status status) { }
 
     @Override
-    public void onFollow(long forUser, User source, User target) {
-    }
+    public void onFollow(long forUser, User source, User target) { }
 
     @Override
-    public void onUnfollow(long forUser, User source, User target) {
-    }
+    public void onUnfollow(long forUser, User source, User target) { }
 
     @Override
-    public void onDirectMessage(long forUser, DirectMessage directMessage) {
-    }
+    public void onDirectMessage(long forUser, DirectMessage directMessage) { }
 
     @Override
-    public void onDeletionNotice(long forUser, long dmId, long userId) {
-    }
+    public void onDeletionNotice(long forUser, long dmId, long userId) { }
 
     @Override
-    public void onUserListMemberAddition(long forUser, User source, User target, UserList userList) {
-    }
+    public void onUserListMemberAddition(long forUser, User source, User target, UserList userList) { }
 
     @Override
-    public void onUserListMemberDeletion(long forUser, User source, User target, UserList userList) {
-    }
+    public void onUserListMemberDeletion(long forUser, User source, User target, UserList userList) { }
 
     @Override
-    public void onUserListSubscription(long forUser, User source, User target, UserList userList) {
-    }
+    public void onUserListSubscription(long forUser, User source, User target, UserList userList) { }
 
     @Override
-    public void onUserListUnsubscription(long forUser, User source, User target, UserList userList) {
-    }
+    public void onUserListUnsubscription(long forUser, User source, User target, UserList userList) { }
 
     @Override
-    public void onUserListCreation(long forUser, User source, UserList userList) {
-    }
+    public void onUserListCreation(long forUser, User source, UserList userList) { }
 
     @Override
-    public void onUserListUpdate(long forUser, User source, UserList userList) {
-    }
+    public void onUserListUpdate(long forUser, User source, UserList userList) { }
 
     @Override
-    public void onUserListDeletion(long forUser, User source, UserList userList) {
-    }
+    public void onUserListDeletion(long forUser, User source, UserList userList) { }
 
     @Override
-    public void onUserProfileUpdate(long forUser, User user) {
-    }
+    public void onUserProfileUpdate(long forUser, User user) { }
 
     @Override
-    public void onBlock(long forUser, User source, User target) {
-    }
+    public void onBlock(long forUser, User source, User target) { }
 
     @Override
-    public void onUnblock(long forUser, User source, User target) {
-    }
+    public void onUnblock(long forUser, User source, User target) { }
 
     @Override
-    public void onException(Exception e) {
-    }
+    public void onException(Exception e) { }
   };
 
   public static void main(String[] args) {

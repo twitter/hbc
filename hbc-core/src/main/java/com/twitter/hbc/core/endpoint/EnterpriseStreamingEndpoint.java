@@ -86,19 +86,15 @@ public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
 
   // These don't do anything
   @Override
-  public void setBackfillCount(int count) {
-  }
+  public void setBackfillCount(int count) { }
 
   @Override
-  public void setApiVersion(String apiVersion) {
-  }
+  public void setApiVersion(String apiVersion) { }
 
   @Override
-  public void addPostParameter(String param, String value) {
-  }
+  public void addPostParameter(String param, String value) { }
 
   @Override
-  public void removePostParameter(String param) {
-  }
+  public void removePostParameter(String param) { }
 
 }
