@@ -1,4 +1,4 @@
-# Hosebird Client (hbc) [![Build Status](https://travis-ci.org/twitter/hbc.png?branch=master)](https://travis-ci.org/twitter/hbc)
+# Hosebird Client (hbc) [![Build Status](https://travis-ci.org/twitter/hbc.png?branch=master)](https://travis-ci.org/twitter/hbc) [![Coverage Status](https://coveralls.io/repos/twitter/hbc/badge.png?branch=master)](https://coveralls.io/r/twitter/hbc?branch=master)
 A Java HTTP client for consuming Twitter's [Streaming API](https://dev.twitter.com/docs/streaming-apis)
 
 ## Features
