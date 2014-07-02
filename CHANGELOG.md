@@ -1,3 +1,7 @@
+== 2.2.0
+* Add support for Gnip's PowerTrack streaming APIs.
+* Twitter4j - Fix user/message extraction for sitestreams (https://github.com/twitter/hbc/pull/118)
+
 == 2.1.0
 
 * Replace configuration of ConnectionManager with configuration of SchemeRegistry to fix https://github.com/twitter/hbc/issues/113
