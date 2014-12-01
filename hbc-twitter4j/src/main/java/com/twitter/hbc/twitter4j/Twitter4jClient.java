@@ -17,6 +17,6 @@ package com.twitter.hbc.twitter4j;
 import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.Client;
 
-interface Twitter4jClient extends Client {
+public interface Twitter4jClient extends Client {
   public void process();
 }
