@@ -76,7 +76,7 @@ while (!hosebirdClient.isDone()) {
 You can close a connection with
 
 ```java
-hosebirdClient.shutdown();
+hosebirdClient.close();
 ```
 
 ### Quick Start Example
