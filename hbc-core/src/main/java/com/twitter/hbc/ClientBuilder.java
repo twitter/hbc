@@ -23,7 +23,9 @@ import com.twitter.hbc.core.event.Event;
 import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.httpclient.auth.Authentication;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.conn.SchemeRegistryFactory;
 import org.apache.http.params.BasicHttpParams;
@@ -56,6 +58,8 @@ public class ClientBuilder {
   protected int socketTimeoutMillis;
   protected int connectionTimeoutMillis;
   protected SchemeRegistry schemeRegistry;
+  protected String proxyHost;
+  protected int proxyPort;
 
   private static String loadVersion() {
     String userAgent = "Hosebird-Client";
@@ -193,8 +197,18 @@ public class ClientBuilder {
       return this;
   }
 
+  public ClientBuilder proxy(String proxyHost, int proxyPort) {
+    this.proxyHost = Preconditions.checkNotNull(proxyHost);
+    this.proxyPort = proxyPort;
+    return this;
+  }
+
   public BasicClient build() {
     HttpParams params = new BasicHttpParams();
+    if (proxyHost != null) {
+      HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+      params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+    }
     HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
     HttpProtocolParams.setUserAgent(params, USER_AGENT);
     HttpConnectionParams.setSoTimeout(params, socketTimeoutMillis);
