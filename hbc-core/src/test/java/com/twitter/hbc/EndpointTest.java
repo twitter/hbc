@@ -129,14 +129,14 @@ public class EndpointTest {
   public void testLanguages() {
     DefaultStreamingEndpoint endpoint = new StatusesFilterEndpoint();
     endpoint.languages(Lists.newArrayList("en", "de"));
-    assertEquals(endpoint.getPostParamString(), "language=" + UrlCodec.encode("en,de"));
+    assertEquals(endpoint.getQueryParamString(), "language=" + UrlCodec.encode("en,de"));
   }
 
   @Test
   public void testFilterLevel() {
     DefaultStreamingEndpoint endpoint = new StatusesFilterEndpoint();
     endpoint.filterLevel(Constants.FilterLevel.Medium);
-    assertEquals(endpoint.getPostParamString(), "filter_level=medium");
+    assertEquals(endpoint.getQueryParamString(), "filter_level=medium");
   }
 
   @Test

@@ -87,12 +87,12 @@ public class DefaultStreamingEndpoint extends BaseEndpoint implements StreamingE
    * @return this
    */
   public DefaultStreamingEndpoint languages(List<String> languages) {
-    addPostParameter(Constants.LANGUAGE_PARAM, Joiner.on(',').join(languages));
+    addQueryParameter(Constants.LANGUAGE_PARAM, Joiner.on(',').join(languages));
     return this;
   }
 
   public DefaultStreamingEndpoint filterLevel(Constants.FilterLevel filterLevel) {
-    addPostParameter(Constants.FILTER_LEVEL_PARAM, filterLevel.asParameter());
+    addQueryParameter(Constants.FILTER_LEVEL_PARAM, filterLevel.asParameter());
     return this;
   }
 
