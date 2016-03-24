@@ -121,7 +121,7 @@ class ClientBase implements Runnable {
       while (!isDone()) {
         String host = hosts.nextHost();
         if (host == null) {
-          setExitStatus(new Event(EventType.STOPPED_BY_ERROR, "No hosts available"));
+	  setExitStatus(new Event(EventType.STOPPED_BY_ERROR, "No hosts available", name));
           break;
         }
 
@@ -150,7 +150,8 @@ class ClientBase implements Runnable {
           addEvent(
             new Event(
               EventType.CONNECTION_ERROR,
-              String.format("Error creating request: %s, %s, %s", endpoint.getHttpMethod(), host, endpoint.getURI())
+              String.format("Error creating request: %s, %s, %s", endpoint.getHttpMethod(), host, endpoint.getURI()),
+              name
             )
           );
         }
@@ -158,7 +159,7 @@ class ClientBase implements Runnable {
     } catch (Throwable e) {
       logger.warn(name + " Uncaught exception", e);
       Exception laundered = (e instanceof Exception) ? (Exception) e : new RuntimeException(e);
-      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, laundered));
+      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, laundered, name));
     } finally {
       rateTracker.stop();
       logger.info("{} Shutting down httpclient connection manager", name);
@@ -174,19 +175,19 @@ class ClientBase implements Runnable {
     // establish connection
     StatusLine status = null;
     try {
-      addEvent(new ConnectionEvent(EventType.CONNECTION_ATTEMPT, request));
+      addEvent(new ConnectionEvent(EventType.CONNECTION_ATTEMPT, request, name));
       status = conn.connect(request);
     } catch (UnknownHostException e) {
       // banking on some httpHosts.nextHost() being legitimate, or else this connection will fail.
       logger.warn("{} Unknown host - {}", name, request.getURI().getHost());
-      addEvent(new Event(EventType.CONNECTION_ERROR, e));
+      addEvent(new Event(EventType.CONNECTION_ERROR, e, name));
     } catch (IOException e) {
       logger.warn("{} IOException caught when establishing connection to {}", name, request.getURI());
-      addEvent(new Event(EventType.CONNECTION_ERROR, e));
+      addEvent(new Event(EventType.CONNECTION_ERROR, e, name));
       reconnectionManager.handleLinearBackoff();
     } catch (Exception e) {
       logger.error(String.format("%s Unknown exception while establishing connection to %s", name, request.getURI()), e);
-      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, e));
+      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, e, name));
     }
     return status;
   }
@@ -199,7 +200,7 @@ class ClientBase implements Runnable {
     statsReporter.incrNumConnects();
     if (statusLine == null) {
       logger.warn("{} failed to establish connection properly", name);
-      addEvent(new Event(EventType.CONNECTION_ERROR, "Failed to establish connection properly"));
+      addEvent(new Event(EventType.CONNECTION_ERROR, "Failed to establish connection properly", name));
       return false;
     }
     int statusCode = statusLine.getStatusCode();
@@ -207,16 +208,16 @@ class ClientBase implements Runnable {
       logger.debug("{} Connection successfully established", name);
       statsReporter.incrNum200s();
       connectionEstablished.set(true);
-      addEvent(new HttpResponseEvent(EventType.CONNECTED, statusLine));
+      addEvent(new HttpResponseEvent(EventType.CONNECTED, statusLine, name));
       reconnectionManager.resetCounts();
       return true;
     }
 
     logger.warn(name + " Error connecting w/ status code - {}, reason - {}", statusCode, statusLine.getReasonPhrase());
     statsReporter.incrNumConnectionFailures();
-    addEvent(new HttpResponseEvent(EventType.HTTP_ERROR, statusLine));
+    addEvent(new HttpResponseEvent(EventType.HTTP_ERROR, statusLine, name));
     if (HttpConstants.FATAL_CODES.contains(statusCode)) {
-      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, "Fatal error code: " + statusCode));
+	setExitStatus(new Event(EventType.STOPPED_BY_ERROR, "Fatal error code: " + statusCode, name));
     } else if (statusCode < 500 && statusCode >= 400) {
       statsReporter.incrNum400s();
       // we will retry these a set number of times, then fail
@@ -225,13 +226,13 @@ class ClientBase implements Runnable {
         reconnectionManager.handleExponentialBackoff();
       } else {
         logger.debug("{} Reconnecting retries exhausted for {}", name, statusCode);
-        setExitStatus(new Event(EventType.STOPPED_BY_ERROR, "Retries exhausted"));
+        setExitStatus(new Event(EventType.STOPPED_BY_ERROR, "Retries exhausted", name));
       }
     } else if (statusCode >= 500) {
       statsReporter.incrNum500s();
       reconnectionManager.handleExponentialBackoff();
     } else {
-      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, statusLine.getReasonPhrase()));
+       setExitStatus(new Event(EventType.STOPPED_BY_ERROR, statusLine.getReasonPhrase(), name));
     }
     return false;
   }
@@ -239,7 +240,7 @@ class ClientBase implements Runnable {
   private void processConnectionData(Connection conn) {
     logger.info("{} Processing connection data", name);
     try {
-      addEvent(new Event(EventType.PROCESSING, "Processing messages"));
+      addEvent(new Event(EventType.PROCESSING, "Processing messages", name));
       while(!isDone() && !reconnect.getAndSet(false)) {
         if (conn.processResponse()) {
           statsReporter.incrNumMessages();
@@ -251,24 +252,24 @@ class ClientBase implements Runnable {
     } catch (RuntimeException e) {
       logger.warn(name + " Unknown error processing connection: ", e);
       statsReporter.incrNumDisconnects();
-      addEvent(new Event(EventType.DISCONNECTED, e));
+      addEvent(new Event(EventType.DISCONNECTED, e, name));
     } catch (IOException ex) {
       // connection issue? whatever. let's try connecting again
       // we can't really diagnosis the actual disconnection reason without parsing (looking at disconnect message)
       // but we can make a good guess at when we're stalling. TODO
       logger.info("{} Disconnected during processing - will reconnect", name);
       statsReporter.incrNumDisconnects();
-      addEvent(new Event(EventType.DISCONNECTED, ex));
+      addEvent(new Event(EventType.DISCONNECTED, ex, name));
     } catch (InterruptedException interrupt) {
       // interrupted while trying to append message to queue. exit
       logger.info("{} Thread interrupted during processing, exiting", name);
       statsReporter.incrNumDisconnects();
-      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, interrupt));
+      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, interrupt, name));
     } catch (Exception e) {
       // Unexpected exception thrown, killing everything
       logger.warn(name + " Unexpected exception during processing", e);
       statsReporter.incrNumDisconnects();
-      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, e));
+      setExitStatus(new Event(EventType.STOPPED_BY_ERROR, e, name));
     }
   }
 
@@ -299,7 +300,7 @@ class ClientBase implements Runnable {
   public void stop(int waitMillis) throws InterruptedException {
     try {
       if (!isDone()) {
-        setExitStatus(new Event(EventType.STOPPED_BY_USER, String.format("Stopped by user: waiting for %d ms", waitMillis)));
+       setExitStatus(new Event(EventType.STOPPED_BY_USER, String.format("Stopped by user: waiting for %d ms", waitMillis), name));
       }
       if (!waitForFinish(waitMillis)) {
         logger.warn("{} Client thread failed to finish in {} millis", name, waitMillis);
