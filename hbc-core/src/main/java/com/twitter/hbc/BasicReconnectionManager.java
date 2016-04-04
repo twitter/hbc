@@ -95,7 +95,11 @@ public class BasicReconnectionManager implements ReconnectionManager {
 
   private int calculateExponentialBackoffMillis() {
     assert(exponentialBackoffCount > 0);
-    return Math.min(MAX_EXPONENTIAL_BACKOFF_MILLIS, INITIAL_EXPONENTIAL_BACKOFF_MILLIS << (exponentialBackoffCount - 1));
+    int exponentialBackoff = INITIAL_EXPONENTIAL_BACKOFF_MILLIS << (exponentialBackoffCount - 1);
+    if (exponentialBackoff < 0 || exponentialBackoff > MAX_EXPONENTIAL_BACKOFF_MILLIS) {
+      exponentialBackoff = MAX_EXPONENTIAL_BACKOFF_MILLIS;
+    }
+    return Math.min(MAX_EXPONENTIAL_BACKOFF_MILLIS, exponentialBackoff);
   }
 
   private int calculateLinearBackoffMillis() {
