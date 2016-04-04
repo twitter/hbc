@@ -35,6 +35,8 @@ public class BasicReconnectionManager implements ReconnectionManager {
   private int linearBackoffCount;
   private int backoffMillis;
 
+  private boolean backoffHasOverflown = false;
+
   public BasicReconnectionManager(int maxRetries) {
     this.maxRetries = maxRetries;
     this.backoffMillis = Constants.MIN_BACKOFF_MILLIS;
@@ -95,9 +97,16 @@ public class BasicReconnectionManager implements ReconnectionManager {
 
   private int calculateExponentialBackoffMillis() {
     assert(exponentialBackoffCount > 0);
-    int exponentialBackoff = INITIAL_EXPONENTIAL_BACKOFF_MILLIS << (exponentialBackoffCount - 1);
-    if (exponentialBackoff < 0 || exponentialBackoff > MAX_EXPONENTIAL_BACKOFF_MILLIS) {
+
+    int exponentialBackoff;
+    if (backoffHasOverflown) {
       exponentialBackoff = MAX_EXPONENTIAL_BACKOFF_MILLIS;
+    } else {
+      exponentialBackoff = INITIAL_EXPONENTIAL_BACKOFF_MILLIS << (exponentialBackoffCount - 1);
+      if (exponentialBackoff < 0) {
+        exponentialBackoff = MAX_EXPONENTIAL_BACKOFF_MILLIS;
+        backoffHasOverflown = true;
+      }
     }
     return Math.min(MAX_EXPONENTIAL_BACKOFF_MILLIS, exponentialBackoff);
   }
