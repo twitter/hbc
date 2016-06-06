@@ -16,6 +16,7 @@ package com.twitter.hbc.httpclient.auth;
 import javax.xml.bind.DatatypeConverter;
 
 import com.google.common.base.Preconditions;
+import com.google.common.net.HttpHeaders;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpUriRequest;
