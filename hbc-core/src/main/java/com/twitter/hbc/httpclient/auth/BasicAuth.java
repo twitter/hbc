@@ -13,6 +13,8 @@
 
 package com.twitter.hbc.httpclient.auth;
 
+import javax.xml.bind.DatatypeConverter;
+
 import com.google.common.base.Preconditions;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -36,5 +38,9 @@ public class BasicAuth implements Authentication {
   }
 
   @Override
-  public void signRequest(HttpUriRequest request, String postParams) {}
+  public void signRequest(HttpUriRequest request, String postParams) {
+    String authToken = username + ":" + password;
+    String encoded = DatatypeConverter.printBase64Binary(authToken.getBytes());
+    request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + encoded);
+  }
 }
