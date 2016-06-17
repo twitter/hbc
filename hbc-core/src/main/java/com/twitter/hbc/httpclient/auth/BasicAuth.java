@@ -34,6 +34,14 @@ public class BasicAuth implements Authentication {
             new UsernamePasswordCredentials(username, password)
     );
   }
+  
+  public String getUsername() {
+      return this.username;
+  }
+
+  public String getPassword() {
+        return this.password;
+  }
 
   @Override
   public void signRequest(HttpUriRequest request, String postParams) {}
