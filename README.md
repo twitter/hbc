@@ -1,3 +1,23 @@
+This fork of [Twitter/HBC](https://github.com/twitter/hbc) supports streaming from a Gnip PowerTrack 2.0 stream.
+
+The following files were updated:
+
+The following HBC files were updated to implement the basic authentication updates:
+
++ [com.twitter.hbc.core.HttpConstants]
++ [com.twitter.hbc.core.endpoint.EnterpriseStreamingEndpoint_v2]
++ [com.twitter.hbc.httpclient.ClientBase]
++ [com.twitter.hbc.httpclient.auth.Authentication]
+  + [com.twitter.hbc.httpclient.auth.BasicAuth]
+  + [com.twitter.hbc.httpclient.auth.OAuth1]
++ [com.twitter.hbc.example.EnterpriseStream_v2]
+
+
+
+
+
+
+
 # Hosebird Client (hbc) [![Build Status](https://travis-ci.org/twitter/hbc.png?branch=master)](https://travis-ci.org/twitter/hbc) [![Coverage Status](https://coveralls.io/repos/twitter/hbc/badge.png?branch=master)](https://coveralls.io/r/twitter/hbc?branch=master)
 A Java HTTP client for consuming Twitter's [Streaming API](https://dev.twitter.com/docs/streaming-apis)
 
