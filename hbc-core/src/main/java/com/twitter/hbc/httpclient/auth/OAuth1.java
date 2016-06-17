@@ -131,6 +131,14 @@ public class OAuth1 implements Authentication {
     request.setHeader(HttpHeaders.AUTHORIZATION, "OAuth " + header);
 
   }
+  
+  public String getUsername() {
+      return null;
+  }
+
+  public String getPassword() {
+     return null;
+  }
 
   private String quoted(String str) {
     return "\"" + str + "\"";
