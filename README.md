@@ -1,271 +1,177 @@
-This fork of [Twitter/HBC](https://github.com/twitter/hbc) supports streaming from a Gnip PowerTrack 2.0 stream.
+This is a fork of [Twitter/HBC](https://github.com/twitter/hbc) supports streaming from a Gnip PowerTrack 2.0 stream.
 
-The following files were updated:
+## Introduction <a class='tall' id='introduction'>&nbsp;</a>
+
+Twitter's [Hosebird client (HBC)](https://github.com/twitter/hbc) has been a popular streaming consumer app for many years. Originally built around the Twitter (public) Streaming API, it was extended a couple of years ago to work with Gnip PowerTrack streams. Since it was written to work with Twitter APIs, it natively supported OAuth authentication. The main trick with extending the library to work with Gnip streams was building in Basic Authentication. That [update was made back in 2014](https://blog.twitter.com/2014/drinking-from-the-enterprise-stream) and Gnip customers have been happily using HBC with PowerTrack v1 ever since.
+
+This week we sat down to update the HBC to work with PowerTrack V2. PowerTrack 2.0 is hosted on Twitter servers, so going in it was assumed that the only updates required were related to updates to the realtime PowerTrack endpoint URLs. However, after those straightforward updates it was discovered that the HBC's attempts to use Basic Authentication with the Twitter servers was failing with 401 errors.
+
+So after some experimentation it was discovered that explicitly adding a Authentication header to the connection request was what was needed to authenticate and start streaming data. 
+
+Several HBC files were updated to make it compatiable with PowerTrack 2.0. The updated HBC library is available [HERE](https://github.com/jimmoffitt/hbc). See below for a tour of the code changes made.
+
+
+## Code updates<a class='tall' id='code-updates'>&nbsp;</a>
 
 The following HBC files were updated to implement the basic authentication updates:
 
-+ [com.twitter.hbc.core.HttpConstants]
-+ [com.twitter.hbc.core.endpoint.EnterpriseStreamingEndpoint_v2]
-+ [com.twitter.hbc.httpclient.ClientBase]
-+ [com.twitter.hbc.httpclient.auth.Authentication]
-  + [com.twitter.hbc.httpclient.auth.BasicAuth]
-  + [com.twitter.hbc.httpclient.auth.OAuth1]
-+ [com.twitter.hbc.example.EnterpriseStream_v2]
++ [com.twitter.hbc.core.HttpConstants](#http-constants)
++ [com.twitter.hbc.core.endpoint.EnterpriseStreamingEndpoint_v2](#endpoint_v2)
++ [com.twitter.hbc.httpclient.ClientBase](#client-base)
++ [com.twitter.hbc.httpclient.auth.Authentication](#authentication)
+  + [com.twitter.hbc.httpclient.auth.BasicAuth](#basic-auth)
+  + [com.twitter.hbc.httpclient.auth.OAuth1](#oauth1)
++ [com.twitter.hbc.example.EnterpriseStream_v2](enterprise-stream-v2)
 
+Note that these updates were implemented to enable this library to stream from both versions of PowerTrack. If you only want to use HBC with PowerTrack 2.0, all the 'v2' details can be dropped, and the updates can be folded into the existing non-versioned name space. 
 
+### HttpConstants class<a class='tall' id='http-constants'>&nbsp;</a>
 
+#### com.twitter.hbc.core.HttpConstants 
 
+In this file, we just added the root host domain for PowerTrack 2.0, https://gnip-stream.twitter.com.
 
-
-
-# Hosebird Client (hbc) [![Build Status](https://travis-ci.org/twitter/hbc.png?branch=master)](https://travis-ci.org/twitter/hbc) [![Coverage Status](https://coveralls.io/repos/twitter/hbc/badge.png?branch=master)](https://coveralls.io/r/twitter/hbc?branch=master)
-A Java HTTP client for consuming Twitter's [Streaming API](https://dev.twitter.com/docs/streaming-apis)
-
-## Features
-* GZip support
-* OAuth support
-* Partitioning support
-* Automatic reconnections with appropriate backfill counts
-* Access to raw bytes payload
-* Proper backoffs/retry schemes
-* Relevant statistics/events
-* Control stream support for sitestreams
-
-## Getting Started
-
-The Hosebird client is broken down into two modules: hbc-core and hbc-twitter4j. The hbc-core module uses a message queue, which the consumer can poll for the raw String messages, while the hbc-twitter4j module uses the [twitter4j](http://twitter4j.org) listeners and data model on top of the message queue to provide a parsing layer.
-
-The latest hbc artifacts are published to maven central. Bringing hbc into your project should be as simple as adding the following to your maven pom.xml file:
-
-```xml
-  <dependencies>
-    <dependency>
-      <groupId>com.twitter</groupId>
-      <artifactId>hbc-core</artifactId> <!-- or hbc-twitter4j -->
-      <version>2.2.0</version> <!-- or whatever the latest version is -->
-    </dependency>
-  </dependencies>
-```
-
-### Quickstart
-
-Declaring the connection information:
 ```java
-/** Set up your blocking queues: Be sure to size these properly based on expected TPS of your stream */
-BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(100000);
-BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>(1000);
 
-/** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
-Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
-StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
-// Optional: set up some followings and track terms
-List<Long> followings = Lists.newArrayList(1234L, 566788L);
-List<String> terms = Lists.newArrayList("twitter", "api");
-hosebirdEndpoint.followings(followings);
-hosebirdEndpoint.trackTerms(terms);
+package com.twitter.hbc.core;
 
-// These secrets should be read from a config file
-Authentication hosebirdAuth = new OAuth1("consumerKey", "consumerSecret", "token", "secret");
-```
+public class Constants {
 
-Creating a client:
-```java
-ClientBuilder builder = new ClientBuilder()
-  .name("Hosebird-Client-01")                              // optional: mainly for the logs
-  .hosts(hosebirdHosts)
-  .authentication(hosebirdAuth)
-  .endpoint(hosebirdEndpoint)
-  .processor(new StringDelimitedProcessor(msgQueue))
-  .eventMessageQueue(eventQueue);                          // optional: use this if you want to process client events
+  public static final String ENTERPRISE_STREAM_HOST = "https://stream.gnip.com";
+  public static final String ENTERPRISE_STREAM_HOST_v2 = "https://gnip-stream.twitter.com";
 
-Client hosebirdClient = builder.build();
-// Attempts to establish a connection.
-hosebirdClient.connect();
-```
-
-Now, msgQueue and eventQueue will now start being filled with messages/events. Read from these queues however you like.
-```java
-// on a different thread, or multiple different threads....
-while (!hosebirdClient.isDone()) {
-  String msg = msgQueue.take();
-  something(msg);
-  profit();
 }
 ```
 
-You can close a connection with
+### EnterpriseStreamingEndpoint_v2 class <a class='tall' id='endpoint_v2'>&nbsp;</a>
+
+#### com.twitter.hbc.core.endpoint.EnterpriseStreamingEndpoint_v2
+
+Here, we cloned the EnterpriseStreamingEndpoint class and created a new EnterpriseSteamingEndpoint_v2 class. 
+
+The only significant change was in constructing the v2 BASE_PATH, using the same product, account name and stream label tokens, and arranging them in the v2 order:
 
 ```java
-hosebirdClient.stop();
+  private static final String BASE_PATH = "/stream/%s/accounts/%s/publishers/%s/%s.json"; //product, account_name, stream_label
 ```
 
-### Quick Start Example
+The only other changes were updating the class constructors to reflect the new class name.
 
-To run the sample stream example:
++ public EnterpriseStreamingEndpoint_v2(String account, String product, String label)
++ public EnterpriseStreamingEndpoint_v2(String account, String product, String label, int clientId) 
++ public EnterpriseStreamingEndpoint_v2(String account, String publisher, String product, String label, int clientId) 
+
+
+### ClientBase class <a class='tall' id='client-base'>&nbsp;</a>
+
+#### com.twitter.hbc.httpclient.ClientBase
+
+This class contains the key update that enables basic authentication with PowerTrack v2. After creating a HTTP request object, new code was added to explicitly add a basic authentication header to the request. Adding this header requires Base64 encoding of the authentication username and password.
+
+The Base64 encoding is implemented with this new import:
 
 ```
-mvn install && mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Daccess.token=ABC -Daccess.token.secret=ABCSECRET
+import sun.misc.BASE64Encoder;
 ```
 
-You can find these values on http://dev.twitter.com and navigating to one of your applications then to the API Keys tab.
-The API key and secrets values on that page correspond to hbc's `-Dconsumer.*` properties.
+Here is the code block that adds the header to the request:
+   
+```java
+    auth.signRequest(request, postContent);
 
-Alternatively you can set those properties in hbc-examples/pom.xml
+    //PTv2 update: Explicitly adding Authorization header with Base64 encoded username and password. 
+    BASE64Encoder encoder = new BASE64Encoder();
+    String authToken =  auth.getUsername() + ":" + auth.getPassword();
+    String authValue = "Basic " + encoder.encode(authToken.getBytes());  
+    request.addHeader("Authorization", authValue);
 
-## The Details
+    Connection conn = new Connection(client, processor);
+```
 
-### Authentication:
 
-Declaring OAuth1 credentials in the client (preferred):
+### Authentication interface <a class='tall' id='authentication'>&nbsp;</a>
+
+#### com.twitter.hbc.httpclient.auth.Authentication
+
+
+The Authentication call is an interface that gets implemented by both the ```BasicAuth``` and ```OAuth1``` classes. As a first attempt, getUsername and getPassword functions were added to the class interface. This is not ideal since both classes must implement the methods, and OAuth1 has no use of the username/password. For now the OAuth1 implements the 'get' methods by simply returing a ```null```, but a good next step would be to eliminate the (small) Authentication interface.     
 
 ```java
-new OAuth1("consumerKey", "consumerSecret", "token", "tokenSecret")
-```
+public interface Authentication {
 
-Declaring basic auth credentials in the client:
+  String getUsername();
+  String getPassword();
 
-```java
-new BasicAuth("username", "password")
-```
-
-Be sure not to pass your tokens/passwords as strings directly into the initializers. They should be read from a configuration file that isn't checked in with your code or something similar. Safety first.
-
-### Specifying an endpoint
-
-Declare a StreamingEndpoint to connect to. These classes reside in the package com.twitter.hbc.core.endpoint, and correspond to all of our endpoints. By default, the HTTP parameter "delimited=length" is set for all of our StreamingEndpoints for compatibility with our processor (next section). If you are using our StringDelimitedProcessor this parameter must be set. For a list of available public endpoints and the http parameters we support, see [Twitter's Streaming API docs](https://dev.twitter.com/docs/streaming-apis/streams/public).
-
-#### Filter streams:
-
-```java
-StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
-// Optional: set up some followings and track terms
-List<Long> followings = Lists.newArrayList(1234L, 566788L);
-List<String> terms = Lists.newArrayList("twitter", "api");
-endpoint.followings(followings);
-endpoint.trackTerms(terms);
-```
-
-#### Firehose streams:
-
-```java
-StreamingEndpoint endpoint = new StatusesFirehoseEndpoint();
-// Optional: set up the partitions you want to connect to
-List<Integer> partitions = Lists.newArrayList(0,1,2,3);
-endpoint.partitions(partitions);
-// By default, delimited=length is already set for use by our StringDelimitedProcessor
-// Do this to unset it (Be sure you really want to do this)
-// endpoint.delimited(false);
-```
-
-#### Setting up a Processor:
-
-The hosebird client uses the notion of a "processor" which processes the stream and put individual messages into the provided BlockingQueue. We provide a StringDelimitedProcessor class which should be used in conjunction with the StreamingEndpoints provided. The processor takes as its parameter a BlockingQueue, which the client will put String messages into as it streams them.
-
-Setting up a StringDelimitedProcessor is as easy as:
-
-```java
-new StringDelimitedProcessor(msgQueue);
-```
-
-### Control streams for Sitestream connections
-
-Hosebird provides [control stream support for sitestreams](https://dev.twitter.com/docs/streaming-apis/streams/site/control).
-
-To make control stream calls with the hosebird client, first create a client. When calling connect() to create a connection to a stream with control stream support, the first message you receive will be the streamId. You'll want to hold on to that when processing the messages if you plan on using control streams, so after calling connect(), be sure to keep track of the streamId of this connection. Note that due to reconnections, the streamId could change, so always use the latest one. If you're using our twitter4j layer, keeping track of the control messages/streamIds will be taken care of for you.
-
-```java
-SitestreamController controlStreams = client.getSitestreamController();
-// When making a connection to the stream with control stream support one of the response messages will include the streamId.
-// You'll want to hold on to that when processing the messages if you plan on using control streams
-
-// add userId to our control stream
-controlStreams.addUser(streamId, userId);
-// remove userId to our control stream
-controlStreams.removeUser(streamId, userId);
-```
-
-### The hbc-twitter4j module
-
-The hbc-twitter4j module uses the twitter4j listeners and models. To use it, create a normal Client object like before using the ClientBuilder, then depending on which type of stream you are reading from, create an appropriate Twitter4jClient. The Twitter4jClient wraps around the Client it is passed, and calls the callback methods in the twitter4j listeners whenever it retrieves a message from the message queue. The actual work of polling from the message queue, parsing, and executing the callback method is done by forking threads from an executor service that the client is passed.
-
-If connecting to a status stream (filter, firehose, sample), use Twitter4jStatusClient:
-
-```java
-// client is our Client object
-// msgQueue is our BlockingQueue<String> of messages that the handlers will receive from
-// listeners is a List<StatusListener> of the t4j StatusListeners
-// executorService
-Twitter4jClient t4jClient = new Twitter4jStatusClient(client, msgQueue, listeners, executorService);
-t4jClient.connect();
-
-// Call this once for every thread you want to spin off for processing the raw messages.
-// This should be called at least once.
-t4jClient.process(); // required to start processing the messages
-t4jClient.process(); // optional: another Runnable is submitted to the executorService to process the msgQueue
-t4jClient.process(); // optional
-```
-
-If connecting to a userstream, use Twitter4jUserstreamClient. If making a sitestream connection, use Twitter4jSitestreamClient.
-
-#### Using Handlers, a Twitter4j listener add-on
-
-All Twitter4jClients support Handlers, which extend their respective Twitter4j listeners: StatusStreamHandler extends StatusesListener, UserstreamHandler extends UserstreamListener, SitestreamHandler extends SitestreamHandler. These handlers have extra callback menthods that may be helpful for parsing messages that the Twitter4j listeners do not yet support
-
-```java
-UserstreamListener listener = new UserstreamHandler() {
-  /**
-   * <UserstreamListener methods here>
-   */
-
-  @Override
-  public void onDisconnectMessage(DisconnectMessage disconnectMessage) {
-    // this method is called when a disconnect message is received
-  }
-
-  @Override
-  public void onUnfollow(User source, User target) {
-    // do something
-  }
-
-  @Override
-  public void onRetweet(User source, User target, Status retweetedStatus) {
-    // do your thing
-  }
-
-  @Override
-  public void onUnknownMessageType(String msg) {
-    // msg is any message that isn't handled by any of our other callbacks
-  }
 }
 
-listeners.append(listener);
-Twitter4jClient t4jClient = new Twitter4jUserstreamClient(client, msgQueue, listeners, executorService);
 ```
 
-## Building / Testing
+### BasicAuth class <a class='tall' id='basic-auth'>&nbsp;</a>
 
-To build locally (you must use java 1.7 for compiling, though we produce 1.6 compatible classes):
+#### com.twitter.hbc.httpclient.auth.BasicAuth
+
+This class implements the Authentication class. Since we added the ```getUsername()``` and ```getPassword()``` methods to that interface, we implement the methods here.
+
+```java
+  public String getUsername() {
+      return this.username;
+  }
+
+  public String getPassword() {
+        return this.password;
+  }
 
 ```
-mvn compile
+
+### OAuth1 class <a class='tall' id='oauth1'>&nbsp;</a>
+
+#### com.twitter.hbc.httpclient.auth.OAuth1
+
+This class implements the Authentication class. Since we added the ```getUsername()``` and ```getPassword()``` methods to that interface, we implement the methods here. This is not ideal since teh OAuth1 class has no use for the username and password, and the implemented methods simply return ```null```. A good next step would be to eliminate the (small) Authentication interface.    
+
+```java
+public String getUsername() {
+      return null;
+  }
+
+  public String getPassword() {
+     return null;
+  }
 ```
-To run tests:
 
+
+### EnterpriseStream_v2 xxample client<a class='tall' id='enterprise-stream-v2'>&nbsp;</a>
+
+#### com.twitter.hbc.example.EnterpriseStream_v2
+
+To implement a HBC library that can stream from both versions of PowerTrack, this PTv2 example client is a clone of the PTv1 version (EnterpriseStreamExample.java). The updates here consist of:
+
++ Creating an ```endpoint``` object based on the RealTimeEnterpriseStreamingEndpoint_v2 class. 
++ When creating the ```client``` object, pass in the PTv2 host constant.
++ Uncommented the Main method.
+
+
+```java
+public class EnterpriseStream_v2 {
+
+    RealTimeEnterpriseStreamingEndpoint_v2 endpoint = new RealTimeEnterpriseStreamingEndpoint_v2(account, product, label);
+
+    // Create a new BasicClient. By default gzip is enabled.
+    Client client = new ClientBuilder()
+            .name("PowerTrackClient-01")
+            .hosts(Constants.ENTERPRISE_STREAM_HOST_v2)
+            .endpoint(endpoint)
+            .authentication(auth)
+            .processor(new LineStringProcessor(queue))
+            .build();
+  }
+
+  public static void main(String[] args) {
+    try {
+      EnterpriseStream_v2.run(args[0], args[1], args[2], args[3], args[4]);
+    } catch (InterruptedException e) {
+      System.out.println(e);
+    }
+  }
+}
 ```
-mvn test
-```
-
-## Problems?
-
-If you find any issues please [report them](https://github.com/twitter/hbc/issues) or better,
-send a [pull request](https://github.com/twitter/hbc/pulls).
-
-## Authors:
-* Steven Liu
-* Kevin Oliver
-
-## License
-Copyright 2013 Twitter, Inc.
-
-Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
-
