@@ -1,10 +1,10 @@
-This is a fork of [Twitter/HBC](https://github.com/twitter/hbc) supports streaming from a Gnip PowerTrack 2.0 stream.
+This is a fork of [Twitter/HBC](https://github.com/twitter/hbc) that supports streaming from a Gnip PowerTrack 2.0 stream.
 
 ## Introduction <a class='tall' id='introduction'>&nbsp;</a>
 
 Twitter's [Hosebird client (HBC)](https://github.com/twitter/hbc) has been a popular streaming consumer app for many years. Originally built around the Twitter (public) Streaming API, it was extended a couple of years ago to work with Gnip PowerTrack streams. Since it was written to work with Twitter APIs, it natively supported OAuth authentication. The main trick with extending the library to work with Gnip streams was building in Basic Authentication. That [update was made back in 2014](https://blog.twitter.com/2014/drinking-from-the-enterprise-stream) and Gnip customers have been happily using HBC with PowerTrack v1 ever since.
 
-This week we sat down to update the HBC to work with PowerTrack V2. PowerTrack 2.0 is hosted on Twitter servers, so going in it was assumed that the only updates required were related to updates to the realtime PowerTrack endpoint URLs. However, after those straightforward updates it was discovered that the HBC's attempts to use Basic Authentication with the Twitter servers was failing with 401 errors.
+This week we sat down to update the HBC to work with PowerTrack V2. PowerTrack 2.0 is hosted on Twitter servers, so going in it was assumed that the only updates required were related to changes to the realtime PowerTrack endpoint URLs. However, after those straightforward updates it was discovered that the HBC's attempts to use Basic Authentication with the Twitter servers was failing with 401 errors.
 
 So after some experimentation it was discovered that explicitly adding a Authentication header to the connection request was what was needed to authenticate and start streaming data. 
 
