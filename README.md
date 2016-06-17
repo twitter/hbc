@@ -140,7 +140,7 @@ public String getUsername() {
 ```
 
 
-### EnterpriseStream_v2 xxample client<a class='tall' id='enterprise-stream-v2'>&nbsp;</a>
+### EnterpriseStream_v2 example client<a class='tall' id='enterprise-stream-v2'>&nbsp;</a>
 
 #### com.twitter.hbc.example.EnterpriseStream_v2
 
