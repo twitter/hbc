@@ -20,5 +20,10 @@ public interface Authentication {
 
   void setupConnection(AbstractHttpClient client);
   void signRequest(HttpUriRequest request, String postContent);
-
+  
+  //Adding these here is not ideal, since this interface is implemented by both BasicAuth and OAuth1 classes, and OAuth1 has no use for username/password.
+  //This interface is small, and could be eliminated.  
+  String getUsername();
+  String getPassword();
+  
 }
