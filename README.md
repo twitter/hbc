@@ -10,18 +10,20 @@ So after some experimentation it was discovered that explicitly adding a Authent
 
 Several HBC files were updated to make it compatiable with PowerTrack 2.0. The updated HBC library is available [HERE](https://github.com/jimmoffitt/hbc). See below for a tour of the code changes made.
 
-
 ## Code updates<a class='tall' id='code-updates'>&nbsp;</a>
 
-The following HBC files were updated to implement the basic authentication updates:
+The following HBC files were updated to work with PTv2 and to add an authentication request header:
 
+#### PTv2 updates
 + [com.twitter.hbc.core.HttpConstants](#http-constants)
 + [com.twitter.hbc.core.endpoint.EnterpriseStreamingEndpoint_v2](#endpoint_v2)
++ [com.twitter.hbc.example.EnterpriseStream_v2](enterprise-stream-v2)
+
+#### Adding an authentication request header:
 + [com.twitter.hbc.httpclient.ClientBase](#client-base)
 + [com.twitter.hbc.httpclient.auth.Authentication](#authentication)
   + [com.twitter.hbc.httpclient.auth.BasicAuth](#basic-auth)
   + [com.twitter.hbc.httpclient.auth.OAuth1](#oauth1)
-+ [com.twitter.hbc.example.EnterpriseStream_v2](enterprise-stream-v2)
 
 Note that these updates were implemented to enable this library to stream from both versions of PowerTrack. If you only want to use HBC with PowerTrack 2.0, all the 'v2' details can be dropped, and the updates can be folded into the existing non-versioned name space. 
 
