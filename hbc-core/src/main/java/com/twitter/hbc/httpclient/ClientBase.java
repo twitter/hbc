@@ -140,7 +140,7 @@ class ClientBase implements Runnable {
           }
           auth.signRequest(request, postContent);
           
-          /PTv2 update: Explicitly adding Authorization header with Base64 encoded username and password. 
+          //PTv2 update: Explicitly adding Authorization header with Base64 encoded username and password. 
           BASE64Encoder encoder = new BASE64Encoder();
           String authToken =  auth.getUsername() + ":" + auth.getPassword();
           String authValue = "Basic " + encoder.encode(authToken.getBytes());  
