@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public abstract class EnterpriseStreamingEndpoint_v2 implements StreamingEndpoint {
   ///stream/powertrack/accounts/{accountName}/publishers/twitter/{streamLabel}.json
-  private static final String BASE_PATH = "/stream/%s/accounts/%s/publishers/%s/%s.json"; //product, account, label
+  private static final String BASE_PATH = "/stream/%s/accounts/%s/publishers/%s/%s.json"; //product, account_name, publisher, stream_label
   protected final String account;
   protected final String publisher;
   protected final String product;
@@ -34,18 +34,18 @@ public abstract class EnterpriseStreamingEndpoint_v2 implements StreamingEndpoin
     this(account, product, label, 0);
   }
 
-  public EnterpriseStreamingEndpoint_v2(String account, String product, String label, int clientId) {
-      this(account, "twitter", product, label, clientId);
+  public EnterpriseStreamingEndpoint_v2(String account, String product, String label, int backfillMinutes) {
+      this(account, "twitter", product, label, backfillMinutes);
   }
 
-  public EnterpriseStreamingEndpoint_v2(String account, String publisher, String product, String label, int clientId) {
+  public EnterpriseStreamingEndpoint_v2(String account, String publisher, String product, String label, int backfillMinutes) {
     this.account = Preconditions.checkNotNull(account);
     this.product = Preconditions.checkNotNull(product);
     this.label = Preconditions.checkNotNull(label);
     this.publisher = Preconditions.checkNotNull(publisher);
 
-    if (clientId > 0) {
-      addQueryParameter("client", String.valueOf(clientId));
+    if (backfillMinutes > 0) {
+      addQueryParameter("backfillMinutes", String.valueOf(backfillMinutes));
     }
 
   }
