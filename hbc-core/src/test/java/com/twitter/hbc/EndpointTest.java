@@ -17,8 +17,13 @@ import com.google.common.collect.Lists;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpConstants;
 import com.twitter.hbc.core.endpoint.*;
+import com.twitter.hbc.core.endpoint.v2.ComplianceStreamingEndpoint;
+import com.twitter.hbc.core.endpoint.v2.StreamingProduct;
+import com.twitter.hbc.core.endpoint.v2.VolumeStreamingEndpoint;
 import com.twitter.joauth.UrlCodec;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -84,6 +89,77 @@ public class EndpointTest {
     RealTimeEnterpriseStreamingEndpoint endpoint = new RealTimeEnterpriseStreamingEndpoint("account_name", "track", "stream_label");
     String expected = "/accounts/account_name/publishers/twitter/streams/track/stream_label.json";
     assertEquals(endpoint.getURI(), expected);
+  }
+
+  @Test
+  public void testVolumeStreamingEndpoint() {
+    VolumeStreamingEndpoint endpoint = new VolumeStreamingEndpoint("account_name", StreamingProduct.FIREHOSE, "stream_label", 1, 0);
+    String expected = "/stream/firehose/accounts/account_name/publishers/twitter/stream_label.json?partition=1&backfillMinutes=0";
+    assertEquals(endpoint.getURI(), expected);
+  }
+
+  @Test
+  public void testComplianceStreamingEndpoint() {
+    ComplianceStreamingEndpoint endpoint = new ComplianceStreamingEndpoint("account_name", "stream_label", 5);
+    String expected = "/stream/compliance/accounts/account_name/publishers/twitter/stream_label.json?partition=5";
+    assertEquals(endpoint.getURI(), expected);
+  }
+
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+
+  @Test
+  public void testVolumeStreamingEndpointDecahosePartitionsUnder() {
+    expectedEx.expect(IllegalArgumentException.class);
+    expectedEx.expectMessage("partition must be between 1 and 2");
+
+    new VolumeStreamingEndpoint("account_name", StreamingProduct.DECAHOSE, "stream_label", 0, 0);
+    fail();
+  }
+
+  @Test
+  public void testVolumeStreamingEndpointDecahosePartitionsOver() {
+    expectedEx.expect(IllegalArgumentException.class);
+    expectedEx.expectMessage("partition must be between 1 and 2");
+
+    new VolumeStreamingEndpoint("account_name", StreamingProduct.DECAHOSE, "stream_label", 3, 0);
+    fail();
+  }
+
+  @Test
+  public void testVolumeStreamingEndpointFirehosePartitionsUnder() {
+    expectedEx.expect(IllegalArgumentException.class);
+    expectedEx.expectMessage("partition must be between 1 and 20");
+
+    new VolumeStreamingEndpoint("account_name", StreamingProduct.FIREHOSE, "stream_label", 0, 0);
+    fail();
+  }
+
+  @Test
+  public void testVolumeStreamingEndpointFirehosePartitionsOver() {
+    expectedEx.expect(IllegalArgumentException.class);
+    expectedEx.expectMessage("partition must be between 1 and 20");
+
+    new VolumeStreamingEndpoint("account_name", StreamingProduct.FIREHOSE, "stream_label", 21, 0);
+    fail();
+  }
+
+  @Test
+  public void testVolumeStreamingEndpointMentionsPartitionsUnder() {
+    expectedEx.expect(IllegalArgumentException.class);
+    expectedEx.expectMessage("partition must be between 1 and 8");
+
+    new VolumeStreamingEndpoint("account_name", StreamingProduct.MENTIONS, "stream_label", 0, 0);
+    fail();
+  }
+
+  @Test
+  public void testVolumeStreamingEndpointMentionsPartitionsOver() {
+    expectedEx.expect(IllegalArgumentException.class);
+    expectedEx.expectMessage("partition must be between 1 and 8");
+
+    new VolumeStreamingEndpoint("account_name", StreamingProduct.MENTIONS, "stream_label", 9, 0);
+    fail();
   }
 
   @Test
