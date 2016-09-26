@@ -67,7 +67,9 @@ public class Constants {
   public static final String SITESTREAM_HOST = "https://sitestream.twitter.com";
   public static final String USERSTREAM_HOST = "https://userstream.twitter.com";
 
-  public static final String ENTERPRISE_STREAM_HOST = "https://stream.gnip.com";
+  public static final String ENTERPRISE_STREAM_HOST_v1 = "https://stream.gnip.com";
+  public static final String ENTERPRISE_STREAM_HOST_v2 = "https://gnip-stream.twitter.com";
+
   public static final String FROM_DATE_PARAM = "fromDate";
   public static final String TO_DATE_PARAM = "toDate";
 
@@ -103,5 +105,9 @@ public class Constants {
     public String asParameter() {
       return this.parameterValue;
     }
+  }
+
+  public static enum API_VERSION {
+    v1, v2
   }
 }

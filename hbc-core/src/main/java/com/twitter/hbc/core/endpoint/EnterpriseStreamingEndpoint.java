@@ -16,17 +16,22 @@ package com.twitter.hbc.core.endpoint;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpConstants;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
-  private static final String BASE_PATH = "/accounts/%s/publishers/%s/streams/%s/%s.json";
+
+  private static final String BASE_PATH_V1 = "/accounts/%s/publishers/%s/streams/%s/%s.json";
+  private static final String BASE_PATH_V2 = "/stream/%s/accounts/%s/publishers/%s/%s.json";
+
   protected final String account;
   protected final String publisher;
   protected final String product;
   protected final String label;
+  protected final Constants.API_VERSION apiVersion;
   protected final ConcurrentMap<String, String> queryParameters = Maps.newConcurrentMap();
 
   public EnterpriseStreamingEndpoint(String account, String product, String label) {
@@ -34,14 +39,15 @@ public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
   }
 
   public EnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
-      this(account, "twitter", product, label, clientId);
+      this(Constants.API_VERSION.v1, account, "twitter", product, label, clientId);
   }
 
-  public EnterpriseStreamingEndpoint(String account, String publisher, String product, String label, int clientId) {
+  public EnterpriseStreamingEndpoint(Constants.API_VERSION apiVersion, String account, String publisher, String product, String label, int clientId) {
     this.account = Preconditions.checkNotNull(account);
     this.product = Preconditions.checkNotNull(product);
     this.label = Preconditions.checkNotNull(label);
     this.publisher = Preconditions.checkNotNull(publisher);
+    this.apiVersion = Preconditions.checkNotNull(apiVersion);
 
     if (clientId > 0) {
       addQueryParameter("client", String.valueOf(clientId));
@@ -49,9 +55,16 @@ public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
 
   }
 
+  public Constants.API_VERSION getApiVersion() {
+    return apiVersion;
+  }
+
   @Override
   public String getURI() {
-    String uri = String.format(BASE_PATH, account.trim(), publisher.trim(), product.trim(), label.trim());
+
+    String uri = apiVersion.equals(Constants.API_VERSION.v1) ?
+      String.format(BASE_PATH_V1, account.trim(), publisher.trim(), product.trim(), label.trim()) :
+            String.format(BASE_PATH_V2, product.trim(), account.trim(), label.trim());
 
     if (queryParameters.isEmpty()) {
       return uri;

@@ -27,6 +27,7 @@ import com.twitter.hbc.core.event.EventType;
 import com.twitter.hbc.core.event.HttpResponseEvent;
 import com.twitter.hbc.core.processor.HosebirdMessageProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
+import com.twitter.hbc.httpclient.auth.BasicAuth;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -137,6 +138,11 @@ class ClientBase implements Runnable {
             postContent = endpoint.getPostParamString();
           }
           auth.signRequest(request, postContent);
+
+          if(auth instanceof BasicAuth) {
+            request.addHeader("Authorization", ((BasicAuth)auth).getAuthToken());
+          }
+
           Connection conn = new Connection(client, processor);
           StatusLine status = establishConnection(conn, request);
           if (handleConnectionResult(status)) {
