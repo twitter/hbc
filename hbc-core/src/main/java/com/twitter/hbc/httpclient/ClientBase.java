@@ -140,7 +140,7 @@ class ClientBase implements Runnable {
           auth.signRequest(request, postContent);
 
           if(auth instanceof BasicAuth) {
-            request.addHeader("Authorization", ((BasicAuth)auth).getAuthToken());
+            request.addHeader("Authorization", "Basic " + ((BasicAuth)auth).getAuthToken());
           }
 
           Connection conn = new Connection(client, processor);
