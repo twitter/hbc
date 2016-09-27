@@ -67,7 +67,7 @@ public class Constants {
   public static final String SITESTREAM_HOST = "https://sitestream.twitter.com";
   public static final String USERSTREAM_HOST = "https://userstream.twitter.com";
 
-  public static final String ENTERPRISE_STREAM_HOST_v1 = "https://stream.gnip.com";
+  public static final String ENTERPRISE_STREAM_HOST_v1 = "https://stream.gnip.com:443";
   public static final String ENTERPRISE_STREAM_HOST_v2 = "https://gnip-stream.twitter.com";
 
   public static final String FROM_DATE_PARAM = "fromDate";

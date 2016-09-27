@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
 
   private static final String BASE_PATH_V1 = "/accounts/%s/publishers/%s/streams/%s/%s.json";
-  private static final String BASE_PATH_V2 = "/stream/%s/accounts/%s/publishers/%s/%s.json";
+  private static final String BASE_PATH_V2 = "/stream/powertrack/accounts/%s/publishers/%s/%s.json";
 
   protected final String account;
   protected final String publisher;
@@ -41,6 +41,11 @@ public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
   public EnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
       this(Constants.API_VERSION.v1, account, "twitter", product, label, clientId);
   }
+
+  public EnterpriseStreamingEndpoint(Constants.API_VERSION apiVersion, String account, String product, String label) {
+    this(apiVersion, account, "twitter", product, label, 0);
+  }
+
 
   public EnterpriseStreamingEndpoint(Constants.API_VERSION apiVersion, String account, String publisher, String product, String label, int clientId) {
     this.account = Preconditions.checkNotNull(account);
@@ -64,7 +69,7 @@ public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
 
     String uri = apiVersion.equals(Constants.API_VERSION.v1) ?
       String.format(BASE_PATH_V1, account.trim(), publisher.trim(), product.trim(), label.trim()) :
-            String.format(BASE_PATH_V2, product.trim(), account.trim(), label.trim());
+            String.format(BASE_PATH_V2, account.trim(), publisher.trim(), label.trim());
 
     if (queryParameters.isEmpty()) {
       return uri;

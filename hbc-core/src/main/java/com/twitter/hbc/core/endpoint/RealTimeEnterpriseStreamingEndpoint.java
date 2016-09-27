@@ -14,6 +14,8 @@
 package com.twitter.hbc.core.endpoint;
 
 
+import com.twitter.hbc.core.Constants;
+
 public class RealTimeEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoint {
 
   public RealTimeEnterpriseStreamingEndpoint(String account, String product, String label) {
@@ -22,5 +24,9 @@ public class RealTimeEnterpriseStreamingEndpoint extends EnterpriseStreamingEndp
 
   public RealTimeEnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
     super(account, product, label, clientId);
+  }
+
+  public RealTimeEnterpriseStreamingEndpoint(Constants.API_VERSION apiVersion, String account, String product, String label) {
+    super(apiVersion, account, product, label);
   }
 }

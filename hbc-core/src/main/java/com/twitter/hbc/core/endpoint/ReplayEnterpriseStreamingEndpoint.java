@@ -14,13 +14,15 @@
 package com.twitter.hbc.core.endpoint;
 
 import com.google.common.base.Preconditions;
+import com.twitter.hbc.core.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ReplayEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoint {
   private static final String DATE_FMT_STR = "yyyyMMddHHmm";
-  private static final String BASE_PATH = "/accounts/%s/publishers/twitter/replay/%s/%s.json";
+  private static final String BASE_PATH_V1 = "/accounts/%s/publishers/twitter/replay/track/%s.json";
+  private static final String BASE_PATH_V2 = "/replay/powertrack/accounts/%s/publishers/twitter/%s.json";
   private final Date fromDate;
   private final Date toDate;
 
@@ -30,9 +32,18 @@ public class ReplayEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoi
     this.toDate = Preconditions.checkNotNull(toDate);
   }
 
+  public ReplayEnterpriseStreamingEndpoint(Constants.API_VERSION apiVersion, String account, String product, String label, Date fromDate, Date toDate) {
+    super(apiVersion, account, product, label);
+    this.fromDate = Preconditions.checkNotNull(fromDate);
+    this.toDate = Preconditions.checkNotNull(toDate);
+  }
+
   @Override
   public String getURI() {
-    String uri = String.format(BASE_PATH, account.trim(), product.trim(), label.trim());
+
+    String uri = apiVersion.equals(Constants.API_VERSION.v1) ?
+            String.format(BASE_PATH_V1, account.trim(), label.trim()) :
+            String.format(BASE_PATH_V2, account.trim(), label.trim());
 
     addQueryParameter("fromDate", formatDate(this.fromDate));
     addQueryParameter("toDate", formatDate(this.toDate));
