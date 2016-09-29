@@ -28,6 +28,11 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <scm>
+    <connection>scm:git:git@github.com:twitter/hbc.git</connection>
+    <url>scm:git:git@github.com:twitter/hbc.git</url>
+    <developerConnection>scm:git:git@github.com:twitter/hbc.git</developerConnection>
+  </scm>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -50,18 +55,30 @@
     <encoding>UTF-8</encoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
   <distributionManagement>
-    <repository>
-      <id>releases</id>
-      <url>http://nexus.services.klood.net:8081/nexus/content/repositories/releases</url>
-    </repository>
     <snapshotRepository>
-      <id>snapshots</id>
-      <url>http://nexus.services.klood.net:8081/nexus/content/repositories/snapshots/</url>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype OSS</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Nexus Release Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
   </distributionManagement>
-
+  <repositories>
+    <repository>
+      <id>sonatype-nexus-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
   <build>
     <pluginManagement>
       <plugins>
@@ -149,7 +166,20 @@
               </execution>
             </executions>
           </plugin>
-
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
     </profile>
