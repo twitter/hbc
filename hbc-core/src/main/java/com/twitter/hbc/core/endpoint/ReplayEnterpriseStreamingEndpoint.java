@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ReplayEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoint {
+
   private static final String DATE_FMT_STR = "yyyyMMddHHmm";
   private static final String BASE_PATH_V1 = "/accounts/%s/publishers/twitter/replay/track/%s.json";
   private static final String BASE_PATH_V2 = "/replay/powertrack/accounts/%s/publishers/twitter/%s.json";
@@ -41,7 +42,7 @@ public class ReplayEnterpriseStreamingEndpoint extends EnterpriseStreamingEndpoi
   @Override
   public String getURI() {
 
-    String uri = apiVersion.equals(Constants.API_VERSION.v1) ?
+    String uri = apiVersion.equals(Constants.API_VERSION.V1) ?
             String.format(BASE_PATH_V1, account.trim(), label.trim()) :
             String.format(BASE_PATH_V2, account.trim(), label.trim());
 

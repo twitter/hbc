@@ -39,7 +39,7 @@ public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
   }
 
   public EnterpriseStreamingEndpoint(String account, String product, String label, int clientId) {
-      this(Constants.API_VERSION.v1, account, "twitter", product, label, clientId);
+      this(Constants.API_VERSION.V1, account, "twitter", product, label, clientId);
   }
 
   public EnterpriseStreamingEndpoint(Constants.API_VERSION apiVersion, String account, String product, String label) {
@@ -67,7 +67,7 @@ public abstract class EnterpriseStreamingEndpoint implements StreamingEndpoint {
   @Override
   public String getURI() {
 
-    String uri = apiVersion.equals(Constants.API_VERSION.v1) ?
+    String uri = apiVersion.equals(Constants.API_VERSION.V1) ?
       String.format(BASE_PATH_V1, account.trim(), publisher.trim(), product.trim(), label.trim()) :
             String.format(BASE_PATH_V2, account.trim(), publisher.trim(), label.trim());
 

@@ -108,6 +108,6 @@ public class Constants {
   }
 
   public static enum API_VERSION {
-    v1, v2
+    V1, V2
   }
 }
