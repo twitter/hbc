@@ -30,7 +30,10 @@ public class VolumeStreamingEndpoint extends EnterpriseStreamingEndpoint_v2 impl
     this.partition = partition;
     Preconditions.checkArgument(5 >= backfillMins && backfillMins >= 0);
     addQueryParameter("partition", String.valueOf(partition));
-    addQueryParameter("backfillMinutes", String.valueOf(backfillMins));
+    // don't add backfill of 0, GNIP deems this request as invalid.
+    if (backfillMins > 0) {
+      addQueryParameter("backfillMinutes", String.valueOf(backfillMins));
+    }
   }
 
   @Override
