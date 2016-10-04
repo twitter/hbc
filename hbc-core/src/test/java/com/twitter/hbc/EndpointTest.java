@@ -94,7 +94,7 @@ public class EndpointTest {
   @Test
   public void testVolumeStreamingEndpoint() {
     VolumeStreamingEndpoint endpoint = new VolumeStreamingEndpoint("account_name", StreamingProduct.FIREHOSE, "stream_label", 1, 0);
-    String expected = "/stream/firehose/accounts/account_name/publishers/twitter/stream_label.json?partition=1&backfillMinutes=0";
+    String expected = "/stream/firehose/accounts/account_name/publishers/twitter/stream_label.json?partition=1";
     assertEquals(endpoint.getURI(), expected);
   }
 
