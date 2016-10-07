@@ -20,9 +20,9 @@ public class StallWarningMessage {
 
   private final String code;
   private final String message;
-  private final int percentFull;
+  private final Integer percentFull;
 
-  public StallWarningMessage(String code, String message, int percentFull) {
+  public StallWarningMessage(String code, String message, Integer percentFull) {
     this.code = code;
     this.message = message;
     this.percentFull = percentFull;
@@ -36,7 +36,7 @@ public class StallWarningMessage {
     return message;
   }
 
-  public int getPercentFull() {
+  public Integer getPercentFull() {
     return percentFull;
   }
 
@@ -47,7 +47,7 @@ public class StallWarningMessage {
 
     StallWarningMessage that = (StallWarningMessage) o;
 
-    if (percentFull != that.percentFull) return false;
+    if (percentFull != null ? !percentFull.equals(that.percentFull) : that.percentFull != null) return false;
     if (code != null ? !code.equals(that.code) : that.code != null) return false;
     if (message != null ? !message.equals(that.message) : that.message != null) return false;
 
@@ -58,7 +58,7 @@ public class StallWarningMessage {
   public int hashCode() {
     int result = code != null ? code.hashCode() : 0;
     result = 31 * result + (message != null ? message.hashCode() : 0);
-    result = 31 * result + percentFull;
+    result = 31 * result + (percentFull != null ? percentFull.hashCode() : 0);
     return result;
   }
 

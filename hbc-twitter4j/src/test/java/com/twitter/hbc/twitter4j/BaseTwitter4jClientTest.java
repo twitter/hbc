@@ -15,6 +15,7 @@ package com.twitter.hbc.twitter4j;
 
 import com.twitter.hbc.httpclient.BasicClient;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
 import org.junit.Before;
 import org.junit.Test;
 import twitter4j.*;
@@ -45,6 +46,7 @@ public class BaseTwitter4jClientTest {
   private String disconnectMessage;
   private String controlMessage;
   private String directMessageDelete;
+  private String followsOverLimit;
 
   @Before
   public void setup() throws IOException {
@@ -62,6 +64,7 @@ public class BaseTwitter4jClientTest {
     controlMessage = reader.readFile("control-message.json");
     directMessage = reader.readFile("direct-message.json");
     directMessageDelete = reader.readFile("direct-message-delete.json");
+    followsOverLimit = reader.readFile("follows-over-limit.json");
   }
 
   @Test
@@ -130,6 +133,12 @@ public class BaseTwitter4jClientTest {
   public void testFriendsListListener() throws TwitterException, IOException, JSONException {
     t4jClient.processMessage(-1, new JSONObject(friendsList));
     verify(t4jClient).onFriends(anyInt(), any(long[].class));
+  }
+
+  @Test
+  public void testStallWarning() throws TwitterException, IOException, JSONException {
+    t4jClient.processMessage(-1, new JSONObject(followsOverLimit));
+    verify(t4jClient).onStallWarning(any(StallWarningMessage.class));
   }
 
   @Test
