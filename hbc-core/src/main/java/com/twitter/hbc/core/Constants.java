@@ -69,6 +69,7 @@ public class Constants {
 
   public static final String ENTERPRISE_STREAM_HOST = "https://stream.gnip.com";
   public static final String ENTERPRISE_STREAM_HOST_v2 = "https://gnip-stream.twitter.com";
+  public static final String ENTERPRISE_STREAM_REPLAY_HOST_v2 = "https://gnip-stream.gnip.com";
   public static final String FROM_DATE_PARAM = "fromDate";
   public static final String TO_DATE_PARAM = "toDate";
 
