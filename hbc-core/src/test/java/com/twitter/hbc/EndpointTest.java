@@ -120,6 +120,23 @@ public class EndpointTest {
   }
 
   @Test
+  public void testEnterpriseReplayStreamingEndpointV2FormatsDateParamsAndIncludesThem() {
+    String expectedBaseUri = "/replay/track/accounts/account_name/publishers/twitter/stream_label.json";
+    String expectedFormat = "201401020304";
+
+    Date fromDate = new GregorianCalendar(2014, 0, 02, 03, 04).getTime(); // Months are 0 indexed
+    Date toDate = new GregorianCalendar(2015, 1, 03, 04, 05).getTime(); // Months are 0 indexed
+
+    ReplayEnterpriseStreamingEndpoint_v2 endpoint = new ReplayEnterpriseStreamingEndpoint_v2("account_name", "track", "stream_label", fromDate, toDate);
+    String uri = endpoint.getURI();
+
+    assertTrue(uri.startsWith(expectedBaseUri));
+    assertTrue(uri.contains(expectedFormat));
+    assertTrue(endpoint.getURI().matches(".+fromDate=[0-9]+.+"));
+    assertTrue(endpoint.getURI().matches(".+toDate=[0-9]+.+"));
+  }
+
+  @Test
   public void testBackfillParamOnEnterpriseStreamEndpoint() {
     RealTimeEnterpriseStreamingEndpoint endpoint = new RealTimeEnterpriseStreamingEndpoint("account_name", "stream_label", "track", 1);
     assertTrue("Endpoint should contain clientId", endpoint.getURI().contains("client=1"));
