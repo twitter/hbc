@@ -27,6 +27,12 @@ The latest hbc artifacts are published to maven central. Bringing hbc into your 
   </dependencies>
 ```
 
+Or if using Gradle you can add the following line to the dependencies in build.gradle:
+
+```gradle
+compile group: 'com.twitter', name: 'hbc-core', version: '2.2.0'
+```
+
 ### Quickstart
 
 Declaring the connection information:
