@@ -1,5 +1,7 @@
 # Hosebird Client (hbc) [![Build Status](https://travis-ci.org/twitter/hbc.png?branch=master)](https://travis-ci.org/twitter/hbc) [![Coverage Status](https://coveralls.io/repos/twitter/hbc/badge.png?branch=master)](https://coveralls.io/r/twitter/hbc?branch=master)
-A Java HTTP client for consuming Twitter's [Streaming API](https://dev.twitter.com/docs/streaming-apis)
+A Java HTTP client for consuming Twitter's standard [Streaming API](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview)
+
+!! Note that, as of August 16th, 2018, the [user streams and site streams features have been retired](https://twittercommunity.com/t/reminder-site-streams-user-streams-and-legacy-dm-endpoints-will-be-sunset-august-16th/109482), so code that attempts to connect to these endpoints will no longer work.
 
 ## Features
 * GZip support
@@ -87,8 +89,8 @@ To run the sample stream example:
 mvn install && mvn exec:java -pl hbc-example -Dconsumer.key=XYZ -Dconsumer.secret=SECRET -Daccess.token=ABC -Daccess.token.secret=ABCSECRET
 ```
 
-You can find these values on http://dev.twitter.com and navigating to one of your applications then to the API Keys tab.
-The API key and secrets values on that page correspond to hbc's `-Dconsumer.*` properties.
+You can find these values on http://developer.twitter.com and navigating to one of your applications then to the Keys and Tokens tab.
+The Consumer API key and secrets values on that page correspond to hbc's `-Dconsumer.*` properties.
 
 Alternatively you can set those properties in hbc-examples/pom.xml
 
@@ -96,23 +98,17 @@ Alternatively you can set those properties in hbc-examples/pom.xml
 
 ### Authentication:
 
-Declaring OAuth1 credentials in the client (preferred):
+Declaring OAuth1 credentials in the client:
 
 ```java
 new OAuth1("consumerKey", "consumerSecret", "token", "tokenSecret")
 ```
 
-Declaring basic auth credentials in the client:
-
-```java
-new BasicAuth("username", "password")
-```
-
-Be sure not to pass your tokens/passwords as strings directly into the initializers. They should be read from a configuration file that isn't checked in with your code or something similar. Safety first.
+Be sure not to pass your tokens as strings directly into the initializers. They should be read from a configuration file that isn't checked in with your code or something similar. Safety first.
 
 ### Specifying an endpoint
 
-Declare a StreamingEndpoint to connect to. These classes reside in the package com.twitter.hbc.core.endpoint, and correspond to all of our endpoints. By default, the HTTP parameter "delimited=length" is set for all of our StreamingEndpoints for compatibility with our processor (next section). If you are using our StringDelimitedProcessor this parameter must be set. For a list of available public endpoints and the http parameters we support, see [Twitter's Streaming API docs](https://dev.twitter.com/docs/streaming-apis/streams/public).
+Declare a StreamingEndpoint to connect to. These classes reside in the package com.twitter.hbc.core.endpoint, and correspond to all of our endpoints. By default, the HTTP parameter "delimited=length" is set for all of our StreamingEndpoints for compatibility with our processor (next section). If you are using our StringDelimitedProcessor this parameter must be set. For a list of available public endpoints and the http parameters we support, see [Twitter's Streaming API docs](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview).
 
 #### Filter streams:
 
@@ -125,18 +121,6 @@ endpoint.followings(followings);
 endpoint.trackTerms(terms);
 ```
 
-#### Firehose streams:
-
-```java
-StreamingEndpoint endpoint = new StatusesFirehoseEndpoint();
-// Optional: set up the partitions you want to connect to
-List<Integer> partitions = Lists.newArrayList(0,1,2,3);
-endpoint.partitions(partitions);
-// By default, delimited=length is already set for use by our StringDelimitedProcessor
-// Do this to unset it (Be sure you really want to do this)
-// endpoint.delimited(false);
-```
-
 #### Setting up a Processor:
 
 The hosebird client uses the notion of a "processor" which processes the stream and put individual messages into the provided BlockingQueue. We provide a StringDelimitedProcessor class which should be used in conjunction with the StreamingEndpoints provided. The processor takes as its parameter a BlockingQueue, which the client will put String messages into as it streams them.
@@ -145,23 +129,6 @@ Setting up a StringDelimitedProcessor is as easy as:
 
 ```java
 new StringDelimitedProcessor(msgQueue);
-```
-
-### Control streams for Sitestream connections
-
-Hosebird provides [control stream support for sitestreams](https://dev.twitter.com/docs/streaming-apis/streams/site/control).
-
-To make control stream calls with the hosebird client, first create a client. When calling connect() to create a connection to a stream with control stream support, the first message you receive will be the streamId. You'll want to hold on to that when processing the messages if you plan on using control streams, so after calling connect(), be sure to keep track of the streamId of this connection. Note that due to reconnections, the streamId could change, so always use the latest one. If you're using our twitter4j layer, keeping track of the control messages/streamIds will be taken care of for you.
-
-```java
-SitestreamController controlStreams = client.getSitestreamController();
-// When making a connection to the stream with control stream support one of the response messages will include the streamId.
-// You'll want to hold on to that when processing the messages if you plan on using control streams
-
-// add userId to our control stream
-controlStreams.addUser(streamId, userId);
-// remove userId to our control stream
-controlStreams.removeUser(streamId, userId);
 ```
 
 ### The hbc-twitter4j module
@@ -185,42 +152,9 @@ t4jClient.process(); // optional: another Runnable is submitted to the executorS
 t4jClient.process(); // optional
 ```
 
-If connecting to a userstream, use Twitter4jUserstreamClient. If making a sitestream connection, use Twitter4jSitestreamClient.
-
 #### Using Handlers, a Twitter4j listener add-on
 
-All Twitter4jClients support Handlers, which extend their respective Twitter4j listeners: StatusStreamHandler extends StatusesListener, UserstreamHandler extends UserstreamListener, SitestreamHandler extends SitestreamHandler. These handlers have extra callback menthods that may be helpful for parsing messages that the Twitter4j listeners do not yet support
-
-```java
-UserstreamListener listener = new UserstreamHandler() {
-  /**
-   * <UserstreamListener methods here>
-   */
-
-  @Override
-  public void onDisconnectMessage(DisconnectMessage disconnectMessage) {
-    // this method is called when a disconnect message is received
-  }
-
-  @Override
-  public void onUnfollow(User source, User target) {
-    // do something
-  }
-
-  @Override
-  public void onRetweet(User source, User target, Status retweetedStatus) {
-    // do your thing
-  }
-
-  @Override
-  public void onUnknownMessageType(String msg) {
-    // msg is any message that isn't handled by any of our other callbacks
-  }
-}
-
-listeners.append(listener);
-Twitter4jClient t4jClient = new Twitter4jUserstreamClient(client, msgQueue, listeners, executorService);
-```
+All Twitter4jClients support Handlers, which extend their respective Twitter4j listeners: StatusStreamHandler extends StatusesListener. These handlers have extra callback menthods that may be helpful for parsing messages that the Twitter4j listeners do not yet support
 
 ## Building / Testing
 
