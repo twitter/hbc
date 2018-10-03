@@ -11,7 +11,6 @@ A Java HTTP client for consuming Twitter's standard [Streaming API](https://deve
 * Access to raw bytes payload
 * Proper backoffs/retry schemes
 * Relevant statistics/events
-* Control stream support for sitestreams
 
 ## Getting Started
 
