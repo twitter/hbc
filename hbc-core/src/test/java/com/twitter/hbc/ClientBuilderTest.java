@@ -16,9 +16,15 @@ package com.twitter.hbc;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.HttpHosts;
 import com.twitter.hbc.core.endpoint.StatusesSampleEndpoint;
+import com.twitter.hbc.core.event.Event;
+import com.twitter.hbc.core.event.EventType;
 import com.twitter.hbc.httpclient.auth.BasicAuth;
 import com.twitter.hbc.processor.NullProcessor;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.junit.Test;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import static org.junit.Assert.fail;
 
@@ -121,5 +127,181 @@ public class ClientBuilderTest {
             .authentication(new BasicAuth("username", "password"))
             .build();
 
+  }
+
+  @Test
+  public void testNotNullName() {
+    new ClientBuilder()
+            .name("abc")
+            .hosts(new HttpHosts(Constants.STREAM_HOST))
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .build();
+
+  }
+
+  @Test
+  public void testGzipEnable() {
+    new ClientBuilder()
+            .hosts(new HttpHosts(Constants.STREAM_HOST))
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .gzipEnabled(true)
+            .build();
+  }
+  @Test
+  public void testStringHost() {
+    new ClientBuilder()
+            .hosts("https://stream.twitter.com")
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .build();
+  }
+
+  @Test
+  public void testTimeout() {
+    new ClientBuilder()
+            .hosts("https://stream.twitter.com")
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .socketTimeout(500)
+            .connectionTimeout(1000)
+            .build();
+  }
+
+  @Test
+  public void testRetries() {
+    new ClientBuilder()
+            .hosts("https://stream.twitter.com")
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .socketTimeout(500)
+            .retries(2)
+            .build();
+  }
+
+  @Test
+  public void testProxyHost() {
+    new ClientBuilder()
+            .hosts(new HttpHosts(Constants.STREAM_HOST))
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .socketTimeout(500)
+            .proxy("https://stream.twitter.com", 22)
+            .build();
+  }
+
+  @Test
+  public void testEventMessageQueue() {
+    Event event1 = new Event(EventType.CONNECTION_ATTEMPT, "abc");
+    BlockingQueue<Event> blockingQueue = new LinkedBlockingDeque();
+    blockingQueue.add(event1);
+    new ClientBuilder()
+            .hosts(new HttpHosts(Constants.STREAM_HOST))
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .eventMessageQueue(blockingQueue)
+            .build();
+  }
+
+  @Test
+  public void testReconnectionMAnager() {
+    ReconnectionManager manager  = new ReconnectionManager() {
+      @Override
+      public void handleExponentialBackoff() {
+      }
+
+      @Override
+      public void handleLinearBackoff() {
+      }
+
+      @Override
+      public boolean shouldReconnectOn400s() {
+        return false;
+      }
+
+      @Override
+      public int estimateBackfill(double tps) {
+        return 0;
+      }
+
+      @Override
+      public void resetCounts() {
+      }
+    };
+    new ClientBuilder()
+            .hosts(new HttpHosts(Constants.STREAM_HOST))
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .reconnectionManager(manager)
+            .build();
+  }
+
+  @Test
+  public void testRateTracker() {
+    RateTracker tracker = new RateTracker() {
+      @Override
+      public void eventObserved() {
+
+      }
+
+      @Override
+      public void pause() {
+
+      }
+
+      @Override
+      public void resume() {
+
+      }
+
+      @Override
+      public void start() {
+
+      }
+
+      @Override
+      public void stop() {
+
+      }
+
+      @Override
+      public void shutdown() {
+
+      }
+
+      @Override
+      public double getCurrentRateSeconds() {
+        return 0;
+      }
+    };
+    new ClientBuilder()
+            .name("abc")
+            .hosts(new HttpHosts(Constants.STREAM_HOST))
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .rateTracker(tracker)
+            .build();
+
+  }
+
+  @Test
+  public void testSchemeRegistry() {
+    new ClientBuilder()
+            .hosts(new HttpHosts(Constants.STREAM_HOST))
+            .endpoint(StatusesSampleEndpoint.PATH, "gEt")
+            .processor(new NullProcessor())
+            .authentication(new BasicAuth("username", "password"))
+            .schemeRegistry(new SchemeRegistry())
+            .build();
   }
 }
