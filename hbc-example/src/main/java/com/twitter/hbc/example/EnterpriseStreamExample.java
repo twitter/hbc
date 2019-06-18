@@ -39,7 +39,7 @@ public class EnterpriseStreamExample {
     // Create a new BasicClient. By default gzip is enabled.
     Client client = new ClientBuilder()
             .name("PowerTrackClient-01")
-            .hosts(Constants.ENTERPRISE_STREAM_HOST)
+            .hosts(Constants.ENTERPRISE_STREAM_HOST_v1)
             .endpoint(endpoint)
             .authentication(auth)
             .processor(new LineStringProcessor(queue))
