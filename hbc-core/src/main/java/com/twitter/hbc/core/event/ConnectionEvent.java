@@ -19,8 +19,8 @@ public class ConnectionEvent extends Event {
 
   private final HttpUriRequest request;
 
-  public ConnectionEvent(EventType eventType, HttpUriRequest request) {
-    super(eventType, request.toString());
+  public ConnectionEvent(EventType eventType, HttpUriRequest request, String clientName) {
+    super(eventType, request.toString(), clientName);
     this.request = request;
   }
 

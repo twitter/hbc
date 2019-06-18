@@ -22,20 +22,19 @@ public class Event {
   private final EventType eventType;
   private final String message;
   private final Exception exception;
+  private final String clientName;
 
-  public Event(EventType eventType) {
-    this(eventType, eventType.toString());
-  }
-
-  public Event(EventType eventType, String message) {
+  public Event(EventType eventType, String message, String clientName) {
     this.eventType = Preconditions.checkNotNull(eventType);
     this.message = Preconditions.checkNotNull(message);
+    this.clientName = Preconditions.checkNotNull(clientName);
     this.exception = null;
   }
 
-  public Event(EventType eventType, Exception exception) {
+  public Event(EventType eventType, Exception exception, String clientName) {
     this.eventType = Preconditions.checkNotNull(eventType);
     this.exception = Preconditions.checkNotNull(exception);
+    this.clientName = Preconditions.checkNotNull(clientName);
     this.message = exception.getMessage();
   }
 
@@ -45,6 +44,10 @@ public class Event {
 
   public EventType getEventType() {
     return eventType;
+  }
+
+  public String getClientName() {
+    return clientName;
   }
 
   @Nullable
