@@ -252,7 +252,7 @@ class BaseTwitter4jClient implements Twitter4jClient {
     JSONObject warning = json.getJSONObject("warning");
     String code = ((String) warning.opt("code"));
     String message = ((String) warning.opt("message"));
-    int percentFull = warning.getInt("percent_full");
+    Integer percentFull = warning.has("percent_full") ? warning.getInt("percent_full") : null;
 
     onStallWarning(new StallWarningMessage(code, message, percentFull));
   }

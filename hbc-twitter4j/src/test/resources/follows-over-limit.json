@@ -1,0 +1,8 @@
+{
+  "warning": {
+    "code":"FOLLOWS_OVER_LIMIT",
+    "message":"The requested user follows more accounts than the maximum supported by this streaming endpoint. Only a subset of 10000 followed accounts are included in this stream.",
+    "user_id":777925,
+    "timestamp_ms":"1439407322431"
+  }
+}
