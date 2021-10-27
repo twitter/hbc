@@ -116,6 +116,9 @@
             <include>**/*Test.java</include>
             <include>**/*Spec.java</include>
           </includes>
+        	<parallel>classes</parallel>
+        	<useUnlimitedThreads>true</useUnlimitedThreads>
+
         </configuration>
       </plugin>
       <plugin>
