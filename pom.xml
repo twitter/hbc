@@ -54,7 +54,7 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <encoding>UTF-8</encoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  	<closeTestReports>true</closeTestReports>
+    <closeTestReports>true</closeTestReports>
   </properties>
   <distributionManagement>
     <snapshotRepository>
@@ -117,7 +117,7 @@
             <include>**/*Test.java</include>
             <include>**/*Spec.java</include>
           </includes>
-        	<disableXmlReport>${closeTestReports}</disableXmlReport>
+          <disableXmlReport>${closeTestReports}</disableXmlReport>
         </configuration>
       </plugin>
       <plugin>
