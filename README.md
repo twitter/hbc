@@ -171,11 +171,6 @@ To run tests:
 mvn test
 ```
 
-## Problems?
-
-If you find any issues please [report them](https://github.com/twitter/hbc/issues) or better,
-send a [pull request](https://github.com/twitter/hbc/pulls).
-
 ## Authors:
 * Steven Liu
 * Kevin Oliver
