@@ -1,5 +1,8 @@
-# Hosebird Client (hbc) [![Build Status](https://travis-ci.org/twitter/hbc.png?branch=master)](https://travis-ci.org/twitter/hbc) [![Coverage Status](https://coveralls.io/repos/twitter/hbc/badge.png?branch=master)](https://coveralls.io/r/twitter/hbc?branch=master)
+# Hosebird Client (hbc) [![status: retired](https://opensource.twitter.dev/status/retired.svg)](https://opensource.twitter.dev/status/#retired)
+ [![Build Status](https://travis-ci.org/twitter/hbc.png?branch=master)](https://travis-ci.org/twitter/hbc) [![Coverage Status](https://coveralls.io/repos/twitter/hbc/badge.png?branch=master)](https://coveralls.io/r/twitter/hbc?branch=master)
 A Java HTTP client for consuming Twitter's standard [Streaming API](https://developer.twitter.com/en/docs/tweets/filter-realtime/overview)
+
+!! As of March 2022, this code is [no longer maintained or supported](https://github.com/twitter/hbc/issues/210). 
 
 !! Note that, as of August 16th, 2018, the [user streams and site streams features have been retired](https://twittercommunity.com/t/reminder-site-streams-user-streams-and-legacy-dm-endpoints-will-be-sunset-august-16th/109482), so code that attempts to connect to these endpoints will no longer work.
 
